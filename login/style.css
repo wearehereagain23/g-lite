@@ -1,0 +1,354 @@
+:root {
+    --primary-color: rgb(12, 64, 31);
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Montserrat, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+  }
+  /* Global Stylings */
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  input {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+  }
+
+  .form-select{
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem; 
+  }
+  
+  .width-50 {
+    width: 50%;
+  }
+  
+  .ml-auto {
+    margin-left: auto;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Progressbar */
+  .progressbar {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    counter-reset: step;
+    margin: 2rem 0 4rem;
+  }
+  
+  .progressbar::before,
+  .progress {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    width: 100%;
+    background-color: #dcdcdc;
+    z-index: -1;
+  }
+  
+  .progress {
+    background-color: var(--primary-color);
+    width: 0%;
+    transition: 0.3s;
+  }
+  
+  .progress-step {
+    width: 2.1875rem;
+    height: 2.1875rem;
+    background-color: #dcdcdc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .progress-step::before {
+    counter-increment: step;
+    content: counter(step);
+  }
+  
+  .progress-step::after {
+    content: attr(data-title);
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
+  .progress-step-active {
+    background-color: var(--primary-color);
+    color: #f3f3f3;
+  }
+  
+  /* Form */
+  .form {
+    width: clamp(320px, 30%, 430px);
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 0.35rem;
+    padding: 1.5rem;
+  }
+  
+  .form-step {
+    display: none;
+    transform-origin: top;
+    animation: animate 0.5s;
+  }
+  
+  .form-step-active {
+    display: block;
+  }
+  
+  .input-group {
+    margin: 2rem 0;
+  }
+  
+  @keyframes animate {
+    from {
+      transform: scale(1, 0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1, 1);
+      opacity: 1;
+    }
+  }
+  
+  /* Button */
+  .btns-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .btn {
+    padding: 0.75rem;
+    display: block;
+    text-decoration: none;
+    background-color: var(--primary-color);
+    color: #f3f3f3;
+    text-align: center;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .btn:hover {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--primary-color);
+  }
+
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+main {
+  transition-duration: .6s;
+
+  .pin-wrapper {
+    font-weight: 600;
+    color: gold;
+    align-items: center;
+    background: #FFFEFE;
+    font-size: 1.7em;
+    line-height: 1;
+    position: relative;
+
+    .digits {
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      height: 1em;
+      padding: 40px 45px;
+      width: 280px;
+
+      .digit {
+        position: relative;
+        display: block;
+        min-height: 1rem;
+        min-width: 1rem;
+
+        &::before {
+          content: attr(data-digit);
+          display: block;
+          opacity: 0;
+          transform: scale(.6);
+          transition-duration: .2s;
+          transition-delay: .15s;
+          margin-top: -1px;
+        }
+
+        &[data-digit=""] {
+          &::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 28px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: @bg;
+          }
+        }
+
+        &.shown {
+          &::before {
+            opacity: 1;
+            transform: scale(1);
+            transition-duration: .45s;
+          }
+        }
+      }
+
+      .caret {
+        position: absolute;
+        width: 0;
+        height: 28px;
+        background: @accent;
+        left: 0;
+      }
+    }
+
+    .submit {
+      position: absolute;
+      background: @accent;
+      top: 0;
+      left: 100%;
+      height: 100%;
+      width: calc(1rem + 90px);
+      border: none;
+      z-index: -1;
+      transform: translateX(-100%);
+      transition-duration: .6s;
+
+      svg {
+        width: 40px;
+        position: absolute;
+        top: 50%;
+        transform: translate(-25%, -50%);
+        opacity: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        fill: white;
+        transition-duration: .6s;
+        transition-delay: .25s;
+      }
+    }
+
+    .result {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      color: white;
+      background: #F05A5D;
+      font-weight: 300;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      padding: 25px 30px;
+      box-sizing: border-box;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition-duration: .4s;
+      transition-delay: .2s;
+      z-index: 99;
+      flex-direction: column;
+
+      .result-pin {
+        font-weight: 600;
+      }
+
+      &.shown {
+        opacity: 1;
+        transform: none;
+        pointer-events: all;
+        transition-delay: .85s;
+      }
+
+      button.reset {
+        background: none;
+        border: none;
+        border-bottom: 2px solid white;
+        padding: 0 0 2px;
+        font-weight: 600;
+        font-size: .8em;
+        font-family: 'Roboto Mono';
+        color: white;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .focus {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+
+    &:focus {
+      & ~ .caret.blink {
+        animation: blink .5s infinite alternate;
+      }
+    }
+  }
+
+  &.show-button {
+    transform: translateX(calc(-.5rem - 45px));
+
+    .pin-wrapper {
+      .submit {
+        transform: none;
+
+        svg {
+          transform: translateY(-50%);
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  
+  a {
+    color: @accent;
+    text-decoration: none;
+    font-weight: 600;
+  }
+}

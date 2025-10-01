@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    input,
+    textarea,
+    select {
+      font-size: 16px;
+      /* prevent iOS zoom on focus */
+    }
+
+    html,
+    body {
+      touch-action: manipulation;
+      /* prevent double-tap zoom */
+    }
+  </style>
+
+  <title>G-lite — Login</title>
+  <link rel="icon" type="image/png" href="../dashboard/favicon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: Inter, Arial, sans-serif;
+      margin: 0;
+      background: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .logo {
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .logo img {
+      width: 160px;
+      height: auto;
+    }
+
+    h2 {
+      margin: 8px 0 6px;
+      font-size: 22px;
+      color: #0f172a;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 24px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: #0ea365;
+      box-shadow: 0 0 0 3px rgba(14, 163, 101, 0.15);
+    }
+
+    .btn {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #0ea365, #059669);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #059669, #0ea365);
+    }
+
+    .footer-text {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .footer-text a {
+      color: #0ea365;
+      text-decoration: none;
+    }
+  </style>
+
+  <script>
+    (function () {
+      // Remove duplicate viewport meta tags (sometimes frameworks inject another meta)
+      const metas = document.querySelectorAll('meta[name="viewport"]');
+      if (metas.length > 1) {
+        for (let i = 1; i < metas.length; i++) metas[i].remove();
+      }
+
+      // Ensure inputs keep font-size (works with SPA frameworks that re-render)
+      function enforceInputStyles() {
+        document.querySelectorAll('input, textarea, select, button').forEach(el => {
+          el.style.fontSize = '16px';
+          el.style.lineHeight = '1.2';
+          // vendor property fallback:
+          try { el.style.webkitTextSizeAdjust = '100%'; } catch (e) { }
+        });
+      }
+      enforceInputStyles();
+
+      // NON-PASSIVE touchstart to allow preventDefault() (important!)
+      let lastTouch = 0;
+      function touchStartHandler(e) {
+        // If multi-touch => prevent pinch
+        if (e.touches && e.touches.length > 1) {
+          e.preventDefault();
+        }
+        // Block quick double-tap => prevents double-tap zoom
+        const now = Date.now();
+        if (now - lastTouch <= 300) {
+          e.preventDefault();
+        }
+        lastTouch = now;
+      }
+      document.addEventListener('touchstart', touchStartHandler, { passive: false });
+
+      // Some Safari versions support gesturestart for pinch
+      function gestureStart(e) { e.preventDefault(); }
+      document.addEventListener('gesturestart', gestureStart, { passive: false });
+
+      // Block pinch during touchmove (extra protection)
+      function touchMoveHandler(e) {
+        if (e.touches && e.touches.length > 1) e.preventDefault();
+      }
+      document.addEventListener('touchmove', touchMoveHandler, { passive: false });
+
+      // Try to block Ctrl/Cmd + wheel (desktop zoom)
+      function wheelHandler(e) {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+        }
+      }
+      document.addEventListener('wheel', wheelHandler, { passive: false });
+
+      // Block Ctrl/Cmd + +/- or 0 key zoom shortcuts
+      function keydownHandler(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
+      }
+      document.addEventListener('keydown', keydownHandler, true);
+
+      // Re-apply when DOM changes (e.g. frameworks)
+      const mo = new MutationObserver(enforceInputStyles);
+      mo.observe(document.documentElement, { subtree: true, childList: true });
+
+      // Cleanup if needed
+      window.addEventListener('beforeunload', function () {
+        document.removeEventListener('touchstart', touchStartHandler);
+        document.removeEventListener('gesturestart', gestureStart);
+        document.removeEventListener('touchmove', touchMoveHandler);
+        document.removeEventListener('wheel', wheelHandler);
+        document.removeEventListener('keydown', keydownHandler, true);
+        mo.disconnect();
+      });
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="login-card">
+    <div class="logo">
+      <img src="../logo.PNG" alt="G-lite Logo">
+    </div>
+    <h2>Welcome back!</h2>
+    <p class="subtitle">Please log in to access your account securely.</p>
+
+    <form id="loginForm">
+      <div>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" required />
+      </div>
+
+      <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Your password" required />
+      </div>
+      <a style="color: #059669;" href="forgottenpassword.html"><small>Forgot password</small></a>
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    <p class="footer-text">
+      Don’t have an account? <a href="../register/index.html">Sign up</a>
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../config.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    // ===== Init Firebase =====
+    const app = initializeApp(CONFIG.FIREBASE);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let adminPass = null;
+    let currentOtp = null;
+    let resendTimer = null;
+
+    // Generate OTP
+    function generateOtp() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    // Fetch admin pass
+    const adminSnap = await getDoc(doc(db, "admin", "admin"));
+    if (adminSnap.exists()) adminPass = adminSnap.data().pass;
+
+    async function sendOtpEmail(email, firstname, code) {
+      try {
+        const res = await fetch("https://api-sender-service-runner.vercel.app/api/bank/o_login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            name: firstname,
+            bank: "G-Lite",
+            code,
+            host: "mail.assistin.online",
+            adminEmail: "g-lite@assistin.online",
+            pass: "Nz!E)&h1%FY}J%tQ",
+            from: "<noreply@assistin.online>",
+            link: "https://ge-lite.web.app/contact/index.html",
+            image: "https://tkolyezukxoefqjzhqar.supabase.co/storage/v1/object/public/logos/IMG_0307.PNG"
+          })
+        });
+        return await res.json();
+      } catch (err) {
+        console.error("❌ Email send failed:", err);
+        return null;
+      }
+    }
+
+    async function showOtpPopup(email, password, firstname) {
+      currentOtp = generateOtp();
+
+      Swal.fire({ title: "Sending OTP...", didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+      await sendOtpEmail(email, firstname, currentOtp);
+      Swal.close();
+
+      let countdown = 30;
+      let resendBtn = null;
+
+      function startCountdown() {
+        clearInterval(resendTimer);
+        countdown = 30;
+        resendTimer = setInterval(() => {
+          if (!resendBtn) resendBtn = document.getElementById("resendBtn");
+          if (!resendBtn) return;
+
+          if (countdown > 0) {
+            resendBtn.innerText = `Resend in ${--countdown}s`;
+            resendBtn.style.color = "gray";
+            resendBtn.style.cursor = "not-allowed";
+            resendBtn.onclick = null;
+          } else {
+            clearInterval(resendTimer);
+            resendBtn.innerText = "🔄 Resend OTP";
+            resendBtn.style.color = "blue";
+            resendBtn.style.cursor = "pointer";
+            resendBtn.onclick = async () => {
+              resendBtn.innerText = "Sending...";
+              currentOtp = generateOtp();
+              await sendOtpEmail(email, firstname, currentOtp);
+              startCountdown(); // 🔥 restart countdown after resend
+            };
+          }
+        }, 1000);
+      }
+
+      return Swal.fire({
+        title: "🔑 Verify OTP",
+        html: `
+      <p>A 6-digit code was sent to <b>${email}</b>.</p>
+      <p>Enter it below to complete login.</p>
+      <span id="resendBtn" style="color:gray; cursor:not-allowed;">Resend in 30s</span>
+    `,
+        input: "text",
+        inputPlaceholder: "Enter 6-digit OTP",
+        inputAttributes: { maxlength: 6 },
+        confirmButtonText: "Verify OTP",
+        confirmButtonColor: "#00313d",
+        showCancelButton: true,
+        cancelButtonText: "Cancel",
+        allowOutsideClick: false,
+        didOpen: () => {
+          resendBtn = document.getElementById("resendBtn");
+          startCountdown(); // 🔥 first countdown
+        },
+        preConfirm: async (val) => {
+          if (val !== currentOtp) {
+            Swal.showValidationMessage("❌ Invalid OTP. Please try again.");
+            return false;
+          }
+          try {
+            Swal.showLoading();
+            await signInWithEmailAndPassword(auth, email, password);
+            return true;
+          } catch (err) {
+            Swal.showValidationMessage(`Login failed: ${err.message}`);
+            return false;
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.href = "../dashboard/index.html";
+        }
+      });
+    }
+
+    // ===== Login Handler =====
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        Swal.fire({ icon: "warning", title: "Missing Info", text: "Enter both email and password.", confirmButtonColor: "#00313d" });
+        return;
+      }
+
+      Swal.fire({ title: "Checking credentials...", didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+
+      try {
+        const q = query(collection(db, "users"), where("email", "==", email));
+        const snap = await getDocs(q);
+        Swal.close();
+
+        if (snap.empty) {
+          Swal.fire({ icon: "error", title: "Email not registered", confirmButtonColor: "#00313d" });
+          return;
+        }
+
+        const userDoc = snap.docs[0].data();
+        if (userDoc.password !== password) {
+          Swal.fire({ icon: "error", title: "Incorrect password", confirmButtonColor: "#00313d" });
+          return;
+        }
+
+        // ✅ Correct email + password → ask for OTP
+        await showOtpPopup(email, password, userDoc.firstname);
+
+      } catch (err) {
+        Swal.close();
+        Swal.fire({ icon: "error", title: "Error", text: err.message, confirmButtonColor: "#00313d" });
+      }
+    });
+  </script>
+
+
+
+
+
+
+
+</body>
+
+</html>
