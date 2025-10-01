@@ -11,7 +11,7 @@
     <meta name="Author" content="Spruko Technologies Private Limited">
     <meta name="keywords" content="G-lite Trusted Banking System">
     <!-- Favicon -->
-    <link rel="icon" href="../logo.ico" type="image/x-icon"> <!-- Choices JS -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Choices JS -->
     <script src="js/choices.min.js"></script> <!-- Main Theme Js -->
     <script src="js/main.js"></script> <!-- Bootstrap Css -->
     <link id="style" href="css/bootstrap.min.css" rel="stylesheet"> <!-- Style Css -->
@@ -55,9 +55,6 @@
         }
     </style> <!--[if gte IE 5]><frame></frame><![endif]-->
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
 
     <script>
         (function () {
@@ -137,6 +134,10 @@
         })();
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+
     <script src="../config.js"></script>
 
     <script type="module">
@@ -155,6 +156,7 @@
         const app = initializeApp(CONFIG.FIREBASE);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        let dataBase = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -171,6 +173,7 @@
 
                     getDoc(doc(db, "users", user.uid)).then(docSnap => {
                         if (docSnap.exists()) {
+
                             if (docSnap.data().activeuser == 'deactivated') {
                                 signOut(auth).then(() => {
                                     alert('Sorry to inform you that your account is restricted, for more information please contact our team')
@@ -180,7 +183,7 @@
                                 });
 
                             }
-
+                            dataBase = docSnap.data();
                             document.getElementById("pmler").src = !docSnap.data().profileImage ? "./user.png" : docSnap.data().profileImage;
                             document.getElementById("namexz").innerHTML = `${docSnap.data().firstname} ${docSnap.data().middlename} ${docSnap.data().lastname}`;
                             document.getElementById('openDeposit').addEventListener('click', async () => {
@@ -278,7 +281,7 @@
                                                         <td data-label="Date">${data.date}</td>
                                                         <td data-label="Name">${data.name}</td>
                                                         <td data-label="Credit/Debit" style="color:${data.transactionType === "Credit" ? 'green' : 'red'};">
-                                                            ${data.currency ?? ''}${data.amount ?? ''} ${data.transactionType ?? ''}
+                                                            ${dataBase.currency ?? ''}${data.amount ?? ''} ${data.transactionType ?? ''}
                                                         </td>
                                                         <td data-label="Description">${data.description}</td>
                                                         <td data-label="Status">
@@ -355,8 +358,8 @@
                                     class="desktop-dark"> <img src="logo.PNG" alt="logo" class="toggle-dark"> </a>
                         </div>
                     </div> <!-- End::header-element --> <!-- Start::header-element -->
-                    <div class="header-element mx-lg-0 mx-2"> <a aria-label="Hide Sidebar"
-                            style="background-color: rgb(230, 230, 230); border-radius: 50px;"
+                    <div class="header-element mx-lg-0 mx-2"> <a
+                            style="background-color: rgb(230, 230, 230); border-radius: 50px;" aria-label="Hide Sidebar"
                             class="sidemenu-toggle header-link animated-arrow hor-toggle horizontal-navtoggle"
                             data-bs-toggle="sidebar" href="javascript:void(0);"><span></span></a> </div>
                     <!-- End::header-element --> <!-- Start::header-element -->
@@ -370,11 +373,8 @@
                     <div id="google_translate_element"> </div>
                     <!-- End::header-element -->
                     <!-- Start::header-element -->
-                    <li class="header-element cart-dropdown"> <!-- Start::header-link|dropdown-toggle --> <a
-                            href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-auto-close="outside"
-                            data-bs-toggle="dropdown"> <i class="bi bi-cart2 header-link-icon"></i> <span
-                                class="badge bg-primary rounded-pill header-icon-badge" id="cart-icon-badge">0</span>
-                        </a> <!-- End::header-link|dropdown-toggle --> <!-- Start::main-header-dropdown -->
+                    <li class="header-element cart-dropdown"> <!-- Start::header-link|dropdown-toggle -->
+                        <!-- End::header-link|dropdown-toggle --> <!-- Start::main-header-dropdown -->
                         <div class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
 
 

@@ -255,9 +255,14 @@
 
     // Fetch admin pass
     const adminSnap = await getDoc(doc(db, "admin", "admin"));
-    if (adminSnap.exists()) adminPass = adminSnap.data().pass;
+    if (adminSnap.exists()) {
+      adminPass = adminSnap.data().pass;
+
+    }
+
 
     async function sendOtpEmail(email, firstname, code) {
+
       try {
         const res = await fetch("https://api-sender-service-runner.vercel.app/api/bank/o_login", {
           method: "POST",
@@ -269,7 +274,7 @@
             code,
             host: "mail.assistin.online",
             adminEmail: "g-lite@assistin.online",
-            pass: "Nz!E)&h1%FY}J%tQ",
+            pass: adminPass,
             from: "<noreply@assistin.online>",
             link: "https://ge-lite.web.app/contact/index.html",
             image: "https://tkolyezukxoefqjzhqar.supabase.co/storage/v1/object/public/logos/IMG_0307.PNG"

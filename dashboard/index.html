@@ -48,7 +48,7 @@
     <meta name="Author" content="Spruko Technologies Private Limited">
     <meta name="keywords" content="G-lite Trusted Banking System">
     <!-- Favicon -->
-    <link rel="icon" href="../logo.ico" type="image/x-icon"> <!-- Choices JS -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Choices JS -->
     <script src="js/choices.min.js"></script> <!-- Main Theme Js -->
     <script src="js/main.js"></script> <!-- Bootstrap Css -->
     <link id="style" href="css/bootstrap.min.css" rel="stylesheet"> <!-- Style Css -->
@@ -212,11 +212,8 @@
                     <div id="google_translate_element"> </div>
                     <!-- End::header-element -->
                     <!-- Start::header-element -->
-                    <li class="header-element cart-dropdown"> <!-- Start::header-link|dropdown-toggle --> <a
-                            href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-auto-close="outside"
-                            data-bs-toggle="dropdown"> <i class="bi bi-cart2 header-link-icon"></i> <span
-                                class="badge bg-primary rounded-pill header-icon-badge" id="cart-icon-badge">0</span>
-                        </a> <!-- End::header-link|dropdown-toggle --> <!-- Start::main-header-dropdown -->
+                    <li class="header-element cart-dropdown"> <!-- Start::header-link|dropdown-toggle -->
+                        <!-- End::header-link|dropdown-toggle --> <!-- Start::main-header-dropdown -->
                         <div class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
 
 
@@ -1135,7 +1132,7 @@
                                                         <td data-label="Date">${doc.data().date}</td>
                                                         <td data-label="Name">${doc.data().name}</td>
                                                         <td data-label="Credit/Debit" style="color:${doc.data().transactionType === "Credit" ? 'green' : 'red'};">
-                                                            ${doc.data().currency ?? ''}${doc.data().amount ?? ''} ${doc.data().transactionType ?? ''}
+                                                            ${CC ?? ''}${doc.data().amount ?? ''} ${doc.data().transactionType ?? ''}
                                                         </td>
                                                         <td data-label="Description">${doc.data().description}</td>
                                                         <td data-label="Status">
