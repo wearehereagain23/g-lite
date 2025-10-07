@@ -461,6 +461,15 @@
                 handleTransfer(user, data, form);
             });
         });
+
+
+        ["log1", "log2"].forEach((id) => {
+            document.getElementById(id)?.addEventListener("click", () => {
+                signOut(auth).then(() => {
+                    window.location.replace("../index.html");
+                }).catch((error) => notyf.error(error.message));
+            });
+        });
     </script>
 
 

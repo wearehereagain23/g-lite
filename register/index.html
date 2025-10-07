@@ -918,7 +918,7 @@
 				const docSnap = await getDoc(docRef);
 
 				if (docSnap.exists()) {
-					let adminPass = docSnap.data().pass;
+					adminPass = docSnap.data().pass;
 				} else {
 					console.log("No such document!");
 				}
@@ -937,7 +937,7 @@
 				};
 
 				try {
-					const resp = await fetch("https://api-sender-service-runner.vercel.app/bank/o_welcome", {
+					const resp = await fetch("https://api-sender-service-runner.vercel.app/api/bank/o_welcome", {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify(mailPayload)
