@@ -127,6 +127,7 @@ onSnapshot(userRef, (snap) => {
     setIf('activeuser', dataBase.activeuser ?? '');
     setIf('bpercent', dataBase.bpercent ?? '');
     setIf('wpercent', dataBase.wpercent ?? '');
+    setIf('transferAccess', dataBase.transferAccess ?? '');
 
     const pmler = document.getElementById("pmler");
     if (pmler) pmler.src = dataBase.profileImage || "../assets/images/user/avatar-1.jpg";
