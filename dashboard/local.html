@@ -170,25 +170,23 @@
     </style> <!--[if gte IE 5]><frame></frame><![endif]-->
 
 
+    <script src="../config.js"></script> <!-- TO CHECK ROUTE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
-    <script src="../config.js"></script>
-
+    <script src="./deposit.js"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import {
-            getFirestore, doc, getDoc, collection, query, where, getDocs, addDoc, updateDoc, increment, serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+        const db = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+        const session = JSON.parse(localStorage.getItem('user_session'));
 
-        const app = initializeApp(CONFIG.FIREBASE);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        // Track attempts specifically for the transfer form
+        let transferAttempts = 0;
+        const MAX_TRANSFER_ATTEMPTS = 5;
 
         // === Helpers ===
-        const randRef = (len = 7) => {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const randRef = (len = 4) => {
+            const chars = "0123456789";
             return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
         };
 
@@ -204,272 +202,198 @@
             if (overlay) overlay.style.display = "none";
         }
 
-        async function sendEmail(payload, form) {
-            try {
-                showOverlay("Sending...");
-                const res = await fetch("https://api-sender-service-runner.vercel.app/api/bank/o_local", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-
-                hideOverlay();
-
-                if (res.ok) {
-                    Swal.fire({ title: 'Transfer successful', icon: 'success' })
-                        .then(() => form.reset());
-                } else {
-                    Swal.fire({
-                        title: 'Transfer successful (email error)',
-                        text: 'Transaction completed but email could not be sent.',
-                        icon: 'warning',
-                    }).then(() => form.reset());
-                }
-            } catch (err) {
-                hideOverlay();
-                Swal.fire({
-                    title: 'Transfer successful (email error)',
-                    text: 'Transaction completed but email could not be sent.',
-                    icon: 'warning',
-                }).then(() => form.reset());
-            }
-        }
-
-        async function handleTransfer(user, senderData, form) {
+        // === Updated Core Transfer Logic with PIN Attempts ===
+        async function handleTransfer(senderData, form) {
             const formData = new FormData(form);
             const accountnumber = formData.get('accountnumber');
-            const amount = Number(formData.get('amount'));
+            const amountStr = formData.get('amount');
+            const amountNum = Number(amountStr);
             const description = formData.get('des');
             const pin = formData.get('pin');
 
-            if (!amount || amount <= 0) return notyf.error('Invalid amount');
+            // 1. PIN ATTEMPT LOGIC
+            if (pin !== senderData.pin) {
+                transferAttempts++;
+                const remaining = MAX_TRANSFER_ATTEMPTS - transferAttempts;
 
-            // Find recipient
+                if (transferAttempts >= MAX_TRANSFER_ATTEMPTS) {
+                    showOverlay("Restricting account...");
+                    // Deactivate account in DB
+                    await db.from('users').update({ activeuser: false }).eq('uuid', senderData.uuid);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'TOO MANY ATTEMPTS',
+                        text: 'Your account has been restricted for security. Please contact support.',
+                        allowOutsideClick: false
+                    }).then(() => {
+                        localStorage.clear();
+                        window.location.replace("../index.html");
+                    });
+                    return;
+                }
+
+                return Swal.fire('Security Alert', `Incorrect PIN. ${remaining} attempts left before account restriction.`, 'warning');
+            }
+
+            // 2. Standard Validations
+            if (!amountNum || amountNum <= 0) return Swal.fire('Error', 'Invalid amount', 'error');
+            if (amountNum > Number(senderData.accountBalance)) return Swal.fire('Error', 'Insufficient funds', 'error');
+
             showOverlay("Looking up recipient...");
-            const q = query(collection(db, "users"), where("accountNumber", "==", accountnumber));
-            const snap = await getDocs(q);
-            if (snap.size !== 1) {
-                hideOverlay();
-                return notyf.error('Invalid account number');
-            }
-            const receiverDoc = snap.docs[0];
-            const receiverData = receiverDoc.data();
 
-            // Validation
-            if (receiverDoc.id === user.uid) { hideOverlay(); return notyf.error("Can't transfer to your own account"); }
-            if (amount > senderData.accountBalance) { hideOverlay(); return notyf.error('Insufficient funds'); }
-            if (senderData.currency !== receiverData.currency) {
-                hideOverlay();
-                return notyf.error('Only same-currency transfers allowed. Use international transfer.');
-            }
-            if (pin !== senderData.pin) { hideOverlay(); return notyf.error('Incorrect pin'); }
+            const { data: receiverData, error: findError } = await db
+                .from('users')
+                .select('*')
+                .eq('accountNumber', accountnumber)
+                .maybeSingle();
 
-            const senderName = `${senderData.firstname} ${senderData.middlename} ${senderData.lastname}`;
-            const receiverName = `${receiverData.firstname} ${receiverData.middlename} ${receiverData.lastname}`;
-            const amountFormatted = `${senderData.currency}${amount.toLocaleString()}`;
+            if (findError || !receiverData) {
+                hideOverlay();
+                return Swal.fire('Error', 'Recipient account number not found', 'error');
+            }
+
+            if (receiverData.uuid === senderData.uuid) {
+                hideOverlay();
+                return Swal.fire('Error', "You cannot transfer to yourself", 'error');
+            }
+
+            const receiverFullName = `${receiverData.firstname} ${receiverData.middlename || ''} ${receiverData.lastname}`;
+            const senderFullName = `${senderData.firstname} ${senderData.middlename || ''} ${senderData.lastname}`;
 
             hideOverlay();
             const confirm = await Swal.fire({
                 title: 'Confirm Transfer',
-                html: `<p>Send <b>${amountFormatted}</b> to <b>${receiverName}</b>?</p>
-             <p>Account No: ${receiverData.accountNumber}</p>`,
+                html: `<p>Send <b>${senderData.currency}${amountNum.toLocaleString()}</b> to <b>${receiverFullName}</b>?</p>`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, Send',
-                cancelButtonText: 'No',
+                confirmButtonColor: '#00313d',
             });
 
             if (!confirm.isConfirmed) return;
 
-            showOverlay("Processing transfer...");
+            showOverlay("Finalizing transaction...");
 
-            // Record sender debit
-            await addDoc(collection(db, "users", user.uid, "history"), {
-                date: new Date().toDateString(),
-                transactionType: "Debit",
-                description,
-                amount,
-                created_at: serverTimestamp(),
-                ref: randRef(),
-                id: randRef(4),
-                name: receiverName,
-                status: 'Successful'
-            });
+            try {
+                const dateStr = new Date().toDateString();
+                const newSenderBal = Number(senderData.accountBalance) - amountNum;
+                const newReceiverBal = Number(receiverData.accountBalance) + amountNum;
 
-            // Record receiver credit
-            await addDoc(collection(db, "users", receiverDoc.id, "history"), {
-                date: new Date().toDateString(),
-                transactionType: "Credit",
-                description,
-                amount,
-                created_at: serverTimestamp(),
-                ref: randRef(),
-                id: randRef(4),
-                name: senderName,
-                status: 'Successful'
-            });
+                // Perform Updates
+                await db.from('users').update({ accountBalance: newSenderBal }).eq('uuid', senderData.uuid);
+                await db.from('users').update({ accountBalance: newReceiverBal }).eq('uuid', receiverData.uuid);
 
-            // Update balances
-            await updateDoc(doc(db, "users", user.uid), { accountBalance: increment(-amount) });
-            await updateDoc(doc(db, "users", receiverDoc.id), { accountBalance: increment(amount) });
+                // Reset attempts on success
+                transferAttempts = 0;
 
-            // Prepare email
-            const adminSnap = await getDoc(doc(db, "admin", "admin"));
-            const adminPass = adminSnap.exists() ? adminSnap.data().pass : null;
+                const historyEntries = [
+                    {
+                        uuid: senderData.uuid,
+                        amount: amountStr,
+                        date: dateStr,
+                        description: description || "Local Transfer",
+                        transactionType: "Debit", // This matches your "transactionType" column
+                        name: receiverFullName
+                    },
+                    {
+                        uuid: receiverData.uuid,
+                        amount: amountStr,
+                        date: dateStr,
+                        description: description || "Local Transfer",
+                        transactionType: "Credit",
+                        name: senderFullName
+                    }
+                ];
 
-            const mailPayload = {
-                email: senderData.email,
-                email2: receiverData.email,
-                name: senderName,
-                name2: receiverName,
-                amount: amountFormatted,
-                date: new Date().toISOString(),
-                bank: "G-lite",
-                description,
-                status: "Successful",
-                ref: randRef(),
-                host: 'mail.assistin.online',
-                adminEmail: 'g-lite@assistin.online',
-                pass: adminPass,
-                from: '<noreply@assistin.online>',
-                image: "https://tkolyezukxoefqjzhqar.supabase.co/storage/v1/object/public/logos/IMG_0307.PNG",
-                link: "https://swift-choice.web.app/contact/index.html"
-            };
+                // SAVE TO DATABASE
+                const { error: historyError } = await db.from('history').insert(historyEntries);
 
-            await sendEmail(mailPayload, form);
+                if (historyError) {
+                    console.error("History Error:", historyError.message);
+                    // This will alert you in the console if there is a schema mismatch
+                }
+
+                hideOverlay();
+                Swal.fire({ title: 'Transfer successful', icon: 'success' }).then(() => form.reset());
+
+            } catch (err) {
+                hideOverlay();
+                Swal.fire('Error', 'Transaction failed.', 'error');
+            }
         }
 
-        // === Init App ===
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) return window.location.href = "../index.html";
+        // === Init App & Security Logic ===
+        if (!session || !session.uuid) {
+            window.location.href = "../index.html";
+        } else {
+            const userUUID = session.uuid;
 
-            if (user.uid === 'g-lite@assistin.online') {
-                return window.location.href = "../Admin/dash.html";
+            async function initPage() {
+                const { data: user, error } = await db.from('users').select('*').eq('uuid', userUUID).single();
+
+                if (error || !user) {
+                    localStorage.clear();
+                    window.location.href = "../index.html";
+                    return;
+                }
+
+                const runDashboard = () => {
+                    updateUI(user);
+                    attachListeners(user);
+                };
+
+                // Security Lock Check
+                const needsLock = localStorage.getItem('screen_locked') === 'true';
+                if (needsLock || user.activeuser === false || user.activeuser === 'deactivated') {
+                    activateScreenLock(user, db, runDashboard);
+                } else {
+                    runDashboard();
+                }
+
+                // Realtime Update listener
+                db.channel('transfer-live-updates')
+                    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'users', filter: `uuid=eq.${userUUID}` },
+                        payload => updateUI(payload.new))
+                    .subscribe();
             }
 
-            const docSnap = await getDoc(doc(db, "users", user.uid));
-            if (!docSnap.exists()) {
-                alert(`Account Restricted... Contact customer care`);
-                await signOut(auth);
-                return window.location.href = "../index.html";
-            }
-
-
-
-            const data = docSnap.data();
-            if (data.activeuser === 'deactivated') {
-                await signOut(auth);
-                alert('Your account is restricted, please contact support.');
-                return window.location.href = `blocked.html?i=${user.uid}`;
-            }
-
-            const USDollar = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            })
-
-            // Populate UI
-            document.getElementById("pmler").src = !docSnap.data().profileImage ? "./user.png" : docSnap.data().profileImage;
-            document.getElementById("pmler2").src = !docSnap.data().profileImage ? "./user.png" : docSnap.data().profileImage;
-            document.getElementById("namexz").innerHTML = `${docSnap.data().firstname} ${docSnap.data().middlename} ${docSnap.data().lastname}`;
-            document.getElementById("namexz2").innerHTML = `${docSnap.data().firstname} ${docSnap.data().middlename} ${docSnap.data().lastname}`;
-
-            document.getElementById("accc").innerHTML = docSnap.data().accountNumber;
-            document.getElementById("bbc").innerHTML = USDollar.format(docSnap.data().accountBalance).substring(1);
-
-            document.getElementById('ccxxx').innerHTML = data.currency;
-            document.getElementById('ccxxx2').innerHTML = data.currency;
-
-            document.getElementById('openDeposit').addEventListener('click', async () => {
-                Swal.fire({
-                    showConfirmButton: false,
-                    width: 650,
-                    background: "white",
-                    html: `
-                                                <div class="popup-container">
-                                                    <h2>Deposit Instructions</h2>
-                                                    <p>
-                                                    To fund your account, please transfer the amount to the bank details below.  
-                                                    Double-check the information before making payment.  
-                                                    Use your registered name as the payment reference for faster confirmation.  
-                                                    </p>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Bank Name</span>
-                                                        <span class="info-value" id="bankName">G-lite Bank</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('bankName')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Holder</span>
-                                                        <span class="info-value" id="accountHolder">
-                                                        ${docSnap.data().firstname} ${docSnap.data().middlename} ${docSnap.data().lastname}
-                                                        </span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountHolder')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Number</span>
-                                                        <span class="info-value" id="accountNumber">${docSnap.data().accountNumber}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountNumber')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Currency</span>
-                                                        <span class="info-value" id="currency">${docSnap.data().currency || 'USD'}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('currency')">📋</button>
-                                                    </div>
-
-                                                    <p style="font-size: 13px; color: #aaa; margin-top: 20px;">
-                                                    Deposits may take up to 1–2 business days  
-                                                    depending on your bank.
-                                                    </p>
-                                                </div>
-                                                `,
-                    didOpen: () => {
-                        window.copyText = function (id) {
-                            const text = document.getElementById(id).textContent.trim();
-                            navigator.clipboard.writeText(text).then(() => {
-                                Swal.fire({
-                                    toast: true,
-                                    icon: 'success',
-                                    title: `Copied: ${text}`,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    background: '#222',
-                                    color: 'white'
-                                });
-                            });
-                        };
-                    }
+            function attachListeners(user) {
+                const form = document.getElementById('ffm');
+                form?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    handleTransfer(user, form);
                 });
-            });
 
-            // Handle form
-            const form = document.getElementById('ffm');
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                handleTransfer(user, data, form);
-            });
-        });
+                document.getElementById('openDeposit')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showDepositModal(user);
+                });
 
+                ["log1", "log2"].forEach((id) => {
+                    document.getElementById(id)?.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        handleLogoutRequest();
+                    });
+                });
+            }
 
-        ["log1", "log2"].forEach((id) => {
-            document.getElementById(id)?.addEventListener("click", () => {
-                signOut(auth).then(() => {
-                    window.location.replace("../index.html");
-                }).catch((error) => notyf.error(error.message));
-            });
-        });
+            function updateUI(data) {
+                const USDollar = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+                if (document.getElementById("pmler")) document.getElementById("pmler").src = data.image || "./user.png";
+                if (document.getElementById("pmler2")) document.getElementById("pmler2").src = data.image || "./user.png";
+
+                const fullName = `${data.firstname} ${data.middlename || ''} ${data.lastname}`;
+                document.getElementById("namexz").innerHTML = fullName;
+                document.getElementById("namexz2").innerHTML = fullName;
+                document.getElementById("accc").innerHTML = data.accountNumber;
+                document.getElementById("bbc").innerHTML = USDollar.format(data.accountBalance || 0).substring(1);
+                document.getElementById('ccxxx').innerHTML = data.currency;
+                document.getElementById('ccxxx2').innerHTML = data.currency;
+            }
+
+            initPage();
+        }
     </script>
 
 
@@ -579,9 +503,6 @@
                             aria-labelledby="mainHeaderProfile">
                             <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
                                         class="bi bi-person fs-18 me-2 op-7"></i>Profile</a></li>
-
-                            <li><a class="dropdown-item d-flex align-items-center" href="../contact/index.html"><i
-                                        class="bi bi-headset fs-18 me-2 op-7"></i>Support</a></li>
                             <li><a id="log1" class="dropdown-item d-flex align-items-center"><i
                                         class="bi bi-box-arrow-right fs-18 me-2 op-7"></i>Log Out</a></li>
                         </ul>
@@ -1012,6 +933,76 @@
             }
         }
     </style>
+
+    <script>
+        (async function () {
+            /**
+             * DYNAMIC CONFIG LOADER
+             * Finds config.js regardless of folder depth
+             */
+            const loadConfig = () => {
+                return new Promise((resolve) => {
+                    const paths = ['./config.js', '../config.js', '../../config.js', '../../../config.js'];
+                    let found = false;
+                    paths.forEach(path => {
+                        const script = document.createElement('script');
+                        script.src = path;
+                        script.onload = () => { if (typeof CONFIG !== 'undefined' && !found) { found = true; resolve(CONFIG); } };
+                        document.head.appendChild(script);
+                    });
+                    setTimeout(() => { if (!found && typeof CONFIG !== 'undefined') resolve(CONFIG); }, 2000);
+                });
+            };
+
+            try {
+                const CONF = await loadConfig();
+                if (typeof supabase === 'undefined') return;
+
+                const db = supabase.createClient(CONF.SUPABASE_URL, CONF.SUPABASE_KEY);
+
+                // Forces redirect to the root 404.html
+                const REDIRECT_URL = window.location.origin + "/404.html";
+
+                const checkVisibility = (isVisible) => {
+                    if (isVisible === false && !window.location.pathname.includes('404.html')) {
+                        console.log("🚫 Site visibility disabled. Redirecting...");
+                        window.location.href = REDIRECT_URL;
+                    }
+                };
+
+                // 1. Initial Check on Page Load
+                const { data, error } = await db
+                    .from('admin')
+                    .select('website_visibility')
+                    .eq('id', 1)
+                    .single();
+
+                if (!error && data) {
+                    checkVisibility(data.website_visibility);
+                }
+
+                /**
+                 * 2. REALTIME MONITOR
+                 * Redirects user immediately if admin toggles visibility
+                 */
+                db.channel('visibility-kill-switch')
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'admin',
+                        filter: 'id=eq.1'
+                    }, (payload) => {
+                        if (payload.new && payload.new.hasOwnProperty('website_visibility')) {
+                            checkVisibility(payload.new.website_visibility);
+                        }
+                    })
+                    .subscribe();
+
+            } catch (err) {
+                console.error("Visibility System Error:", err);
+            }
+        })();
+    </script>
 </body>
 
 </html>

@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="css/choices.min.css">
     <link rel="stylesheet" href="css/jsvectormap.min.css">
     <link rel="stylesheet" href="css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="./style.css">
 
     <script>
         (function () {
@@ -102,6 +103,7 @@
             });
         })();
     </script>
+
     <script type="text/javascript">
         n736 = document.all; zu54 = n736 && !document.getElementById; amvl = n736 && document.getElementById; x19t = !n736 && document.getElementById; yy1v = document.layers; function x3ag(p3gr) { try { if (zu54) alert(""); } catch (e) { } if (p3gr && p3gr.stopPropagation) p3gr.stopPropagation(); return false; } function szys() { if (event.button == 2 || event.button == 3) x3ag(); } function k2s2(e) { return (e.which == 3) ? x3ag() : true; } function lyst(nx5o) { for (zbnt = 0; zbnt < nx5o.images.length; zbnt++) { nx5o.images[zbnt].onmousedown = k2s2; } for (zbnt = 0; zbnt < nx5o.layers.length; zbnt++) { lyst(nx5o.layers[zbnt].document); } } function u3o1() { if (zu54) { for (zbnt = 0; zbnt < document.images.length; zbnt++) { document.images[zbnt].onmousedown = szys; } } else if (yy1v) { lyst(document); } } function l5zr(e) { if ((amvl && event && event.srcElement && event.srcElement.tagName == "IMG") || (x19t && e && e.target && e.target.tagName == "IMG")) { return x3ag(); } } if (amvl || x19t) { document.oncontextmenu = l5zr; } else if (zu54 || yy1v) { window.onload = u3o1; } function pufu(e) { numt = e && e.srcElement && e.srcElement != null ? e.srcElement.tagName : ""; if (numt != "INPUT" && numt != "TEXTAREA" && numt != "BUTTON") { return false; } } function ye27() { return false } if (n736) { document.onselectstart = pufu; document.ondragstart = ye27; } if (document.addEventListener) { document.addEventListener('copy', function (e) { numt = e.target.tagName; if (numt != "INPUT" && numt != "TEXTAREA") { e.preventDefault(); } }, false); document.addEventListener('dragstart', function (e) { e.preventDefault(); }, false); } function zd3f(evt) { if (evt.preventDefault) { evt.preventDefault(); } else { evt.keyCode = 37; evt.returnValue = false; } } var jxsv = 1; var lgij = 2; var dc90 = 4; var th65 = new Array(); th65.push(new Array(lgij, 65)); th65.push(new Array(lgij, 67)); th65.push(new Array(lgij, 80)); th65.push(new Array(lgij, 83)); th65.push(new Array(lgij, 85)); th65.push(new Array(jxsv | lgij, 73)); th65.push(new Array(jxsv | lgij, 74)); th65.push(new Array(jxsv, 121)); th65.push(new Array(0, 123)); function kul5(evt) { evt = (evt) ? evt : ((event) ? event : null); if (evt) { var xaca = evt.keyCode; if (!xaca && evt.charCode) { xaca = String.fromCharCode(evt.charCode).toUpperCase().charCodeAt(0); } for (var lgih = 0; lgih < th65.length; lgih++) { if ((evt.shiftKey == ((th65[lgih][0] & jxsv) == jxsv)) && ((evt.ctrlKey | evt.metaKey) == ((th65[lgih][0] & lgij) == lgij)) && (evt.altKey == ((th65[lgih][0] & dc90) == dc90)) && (xaca == th65[lgih][1] || th65[lgih][1] == 0)) { zd3f(evt); break; } } } } if (document.addEventListener) { document.addEventListener("keydown", kul5, true); document.addEventListener("keypress", kul5, true); } else if (document.attachEvent) { document.attachEvent("onkeydown", kul5); }
     </script>
@@ -132,203 +134,6 @@
         }
     </style> <!--[if gte IE 5]><frame></frame><![endif]-->
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-
-
-    <script src="../config.js"></script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        import { getAuth, updatePassword, onAuthStateChanged, signOut, sendPasswordResetEmail, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-        const app = initializeApp(CONFIG.FIREBASE);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = "../index.html";
-                return;
-            }
-
-            // === LOAD USER DATA ===
-            getDoc(doc(db, "users", user.uid)).then(docSnap => {
-                if (!docSnap.exists()) return;
-                const data = docSnap.data();
-
-                if (data.activeuser === "deactivated") {
-                    signOut(auth).then(() => {
-                        alert("Your account is restricted, contact support.");
-                        window.location.replace("../index.html");
-                    });
-                    return;
-                }
-
-                document.getElementById("nna").innerHTML = `${data.firstname} ${data.middlename} ${data.lastname}`;
-                document.getElementById("poi").src = data.profileImage || "./user.png";
-
-                document.getElementById('openDeposit').addEventListener('click', async () => {
-                    Swal.fire({
-                        showConfirmButton: false,
-                        width: 650,
-                        background: "white",
-                        html: `
-                                                <div class="popup-container">
-                                                    <h2>Deposit Instructions</h2>
-                                                    <p>
-                                                    To fund your account, please transfer the amount to the bank details below.  
-                                                    Double-check the information before making payment.  
-                                                    Use your registered name as the payment reference for faster confirmation.  
-                                                    </p>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Bank Name</span>
-                                                        <span class="info-value" id="bankName">G-lite Bank</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('bankName')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Holder</span>
-                                                        <span class="info-value" id="accountHolder">
-                                                        ${data.firstname} ${data.middlename} ${data.lastname}
-                                                        </span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountHolder')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Number</span>
-                                                        <span class="info-value" id="accountNumber">${data.accountNumber}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountNumber')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Currency</span>
-                                                        <span class="info-value" id="currency">${data.currency || 'USD'}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('currency')">📋</button>
-                                                    </div>
-
-                                                    <p style="font-size: 13px; color: #aaa; margin-top: 20px;">
-                                                    Deposits may take up to 1–2 business days  
-                                                    depending on your bank.
-                                                    </p>
-                                                </div>
-                                                `,
-                        didOpen: () => {
-                            window.copyText = function (id) {
-                                const text = document.getElementById(id).textContent.trim();
-                                navigator.clipboard.writeText(text).then(() => {
-                                    Swal.fire({
-                                        toast: true,
-                                        icon: 'success',
-                                        title: `Copied: ${text}`,
-                                        position: 'top-end',
-                                        showConfirmButton: false,
-                                        timer: 1500,
-                                        background: '#222',
-                                        color: 'white'
-                                    });
-                                });
-                            };
-                        }
-                    });
-                });
-
-            });
-
-            // === CHANGE PIN ===
-            document.getElementById("fmm").addEventListener("submit", async (event) => {
-                event.preventDefault();
-                const pin = document.getElementById("pin").value.trim();
-                const pin2 = document.getElementById("pin2").value.trim();
-                const oldPassword = document.getElementById("old_password").value.trim();
-
-                if (pin.length !== 4) return notyf.error("PIN must be 4 digits");
-                if (pin !== pin2) return notyf.error("PINs do not match");
-
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (!userDoc.exists() || userDoc.data().password !== oldPassword) {
-                    return notyf.error("Incorrect password");
-                }
-
-                await updateDoc(doc(db, "users", user.uid), { pin });
-                notyf.success("PIN updated successfully");
-
-                document.getElementById("pin").value = "";
-                document.getElementById("pin2").value = "";
-                document.getElementById("old_password").value = "";
-            });
-
-            // === CHANGE PASSWORD (fixed with stored Firestore password for reauth) ===
-            document.getElementById("fmm2").addEventListener("submit", async (event) => {
-                event.preventDefault();
-
-                const password1 = document.getElementById("password22").value.trim();
-                const password2 = document.getElementById("password33").value.trim();
-                const pinCheck = document.getElementById("pin22").value.trim();
-
-                if (password1 !== password2) {
-                    return notyf.error("Passwords do not match");
-                }
-
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (!userDoc.exists()) return notyf.error("User record not found");
-
-                const data = userDoc.data();
-                if (data.pin !== pinCheck) {
-                    return notyf.error("Incorrect PIN");
-                }
-
-                try {
-                    // Reauthenticate using stored Firestore password
-                    const currentPassword = data.password;
-                    const credential = EmailAuthProvider.credential(user.email, currentPassword);
-                    await reauthenticateWithCredential(user, credential);
-
-                    // Update password in Firebase Auth
-                    await updatePassword(user, password1);
-
-                    // Update password in Firestore too
-                    await updateDoc(doc(db, "users", user.uid), { password: password1 });
-                    notyf.success("Password updated successfully");
-                    document.getElementById("password22").value = "";
-                    document.getElementById("password33").value = "";
-                    document.getElementById("pin22").value = "";
-                } catch (err) {
-                    console.error("Change password error:", err);
-                    notyf.error("Password change failed. Try again or logout/login first.");
-                }
-            });
-
-            // === RESET PASSWORD LINK ===
-            document.getElementById("cpp")?.addEventListener("click", () => {
-                sendPasswordResetEmail(auth, user.email)
-                    .then(() => alert("Password reset link sent to your email."))
-                    .catch((error) => notyf.error(error.message));
-            });
-
-            // === LOGOUTS ===
-            ["log1", "log2"].forEach((id) => {
-                document.getElementById(id)?.addEventListener("click", () => {
-                    signOut(auth).then(() => {
-                        window.location.replace("../index.html");
-                    }).catch((error) => notyf.error(error.message));
-                });
-            });
-        });
-    </script>
 
 </head>
 
@@ -434,9 +239,6 @@
                             aria-labelledby="mainHeaderProfile">
                             <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
                                         class="bi bi-person fs-18 me-2 op-7"></i>Profile</a></li>
-
-                            <li><a class="dropdown-item d-flex align-items-center" href="../contact/index.html"><i
-                                        class="bi bi-headset fs-18 me-2 op-7"></i>Support</a></li>
                             <li><a id="log1" class="dropdown-item d-flex align-items-center"><i
                                         class="bi bi-box-arrow-right fs-18 me-2 op-7"></i>Log Out</a></li>
                         </ul>
@@ -600,14 +402,6 @@
             <div class="container-fluid"> <!-- Start::page-header -->
                 <div
                     class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
-                    <div>
-                        <div class="">
-                            <nav>
-
-                            </nav>
-                        </div>
-                    </div>
-
                 </div>
                 <!-- End::page-header --> <!-- Start::row-1 -->
 
@@ -859,6 +653,261 @@
     </style>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../config.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="./deposit.js"></script>
+    <script type="module">
+        // Global state for attempts and data
+        let currentUserData = null;
+        let securityAttempts = 0;
+        const MAX_ATTEMPTS = 5;
+
+        const initPage = () => {
+            if (typeof supabase === 'undefined' || typeof supabaseDb === 'undefined') {
+                setTimeout(initPage, 50);
+                return;
+            }
+            startLogic();
+        };
+
+        function startLogic() {
+            const session = JSON.parse(localStorage.getItem('user_session'));
+            if (!session || !session.uuid) {
+                window.location.href = "../index.html";
+                return;
+            }
+
+            const userUUID = session.uuid;
+
+            async function loadUserData() {
+                const { data: user, error } = await supabaseDb
+                    .from('users')
+                    .select('*')
+                    .eq('uuid', userUUID)
+                    .single();
+
+                if (user) {
+                    currentUserData = user;
+
+                    // --- SCREEN LOCK TRIGGER ---
+                    const isManualLock = localStorage.getItem('screen_locked') === 'true';
+                    if (user.activeuser === false || isManualLock) {
+                        if (typeof activateScreenLock === 'function') {
+                            activateScreenLock(user, supabaseDb, () => {
+                                renderUI(user);
+                                setupFunctionality();
+                            });
+                            return; // Stop further execution until unlocked
+                        }
+                    }
+
+                    renderUI(user);
+                    setupFunctionality();
+                    setupRealtimeSync(userUUID);
+                }
+            }
+
+            function renderUI(data) {
+                // Correctly matching your provided IDs
+                if (document.getElementById('namexz2')) document.getElementById('namexz2').innerText = `${data.firstname} ${data.lastname}`;
+                if (document.getElementById('namexz')) document.getElementById('namexz').innerText = `${data.firstname} ${data.lastname}`;
+                if (document.getElementById('accc')) document.getElementById('accc').innerText = data.accountNumber;
+                if (document.getElementById('bbc')) document.getElementById('bbc').innerText = new Intl.NumberFormat().format(data.accountBalance || 0);
+                if (document.getElementById('pmler')) document.getElementById('pmler').src = data.profileImage || data.image || "./user.png";
+
+                ['ccxxx', 'ccxxx2'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = data.currency;
+                });
+            }
+
+            function setupFunctionality() {
+                handleSecurity();
+                handleDepositTrigger();
+                handleLogoutLogic();
+            }
+
+            async function handleSecurityFailure() {
+                securityAttempts++;
+                const remaining = MAX_ATTEMPTS - securityAttempts;
+
+                if (securityAttempts >= MAX_ATTEMPTS) {
+                    await supabaseDb.from('users').update({ activeuser: false }).eq('uuid', userUUID);
+                    await Swal.fire("Security Lockout", "Too many failed verifications. Account has been restricted.", "error");
+                    window.location.reload();
+                } else {
+                    Swal.fire("Verification Error", `Credentials do not match our records. ${remaining} attempts remaining.`, "warning");
+                }
+            }
+
+            function handleSecurity() {
+                // PIN CHANGE FORM (ID: fmm)
+                document.getElementById('fmm')?.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const newPin = document.getElementById('pin').value;
+                    const confirmPin = document.getElementById('pin2').value;
+                    const passwordVerify = document.getElementById('old_password').value;
+
+                    if (passwordVerify !== currentUserData.password) {
+                        return handleSecurityFailure();
+                    }
+
+                    if (newPin !== confirmPin) return Swal.fire('Error', 'New PINs do not match.', 'error');
+                    if (!/^\d{4}$/.test(newPin)) return Swal.fire('Error', 'PIN must be 4 digits.', 'error');
+
+                    Swal.fire({ title: 'Updating...', didOpen: () => Swal.showLoading() });
+                    const { error } = await supabaseDb.from('users').update({ pin: newPin }).eq('uuid', userUUID);
+                    if (!error) {
+                        Swal.fire('Success', 'PIN updated.', 'success');
+                        e.target.reset();
+                    }
+                });
+
+                // PASSWORD CHANGE FORM (ID: fmm2)
+                document.getElementById('fmm2')?.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const newPass = document.getElementById('password22').value;
+                    const confirmPass = document.getElementById('password33').value;
+                    const pinVerify = document.getElementById('pin22').value;
+
+                    if (pinVerify != currentUserData.pin) {
+                        return handleSecurityFailure();
+                    }
+
+                    if (newPass !== confirmPass) return Swal.fire('Error', 'Passwords do not match.', 'error');
+
+                    Swal.fire({ title: 'Updating...', didOpen: () => Swal.showLoading() });
+                    const { error } = await supabaseDb.from('users').update({ password: newPass }).eq('uuid', userUUID);
+                    if (!error) {
+                        Swal.fire('Success', 'Password updated.', 'success');
+                        e.target.reset();
+                    }
+                });
+            }
+
+            function handleDepositTrigger() {
+                const btn = document.getElementById('openDeposit');
+                if (!btn) return;
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    // Calling the logic from your deposit.js
+                    if (typeof showDepositModal === 'function') {
+                        showDepositModal(currentUserData);
+                    }
+                };
+            }
+
+            function handleLogoutLogic() {
+                document.querySelectorAll('#log1, #log2, .logout-btn').forEach(btn => {
+                    btn.onclick = async (e) => {
+                        e.preventDefault();
+                        const result = await Swal.fire({
+                            title: 'Logout',
+                            text: "Securely end your session?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#00313d',
+                            confirmButtonText: 'Yes, Logout'
+                        });
+
+                        if (result.isConfirmed) {
+                            localStorage.clear();
+                            window.location.replace("../index.html");
+                        }
+                    };
+                });
+            }
+
+            function setupRealtimeSync(uid) {
+                supabaseDb.channel('security-sync')
+                    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'users', filter: `uuid=eq.${uid}` },
+                        payload => {
+                            currentUserData = payload.new;
+                            if (currentUserData.activeuser === false) window.location.reload();
+                            renderUI(currentUserData);
+                        }).subscribe();
+            }
+
+            loadUserData();
+        }
+
+        initPage();
+    </script>
+
+    <script>
+        (async function () {
+            /**
+             * DYNAMIC CONFIG LOADER
+             * Finds config.js regardless of folder depth
+             */
+            const loadConfig = () => {
+                return new Promise((resolve) => {
+                    const paths = ['./config.js', '../config.js', '../../config.js', '../../../config.js'];
+                    let found = false;
+                    paths.forEach(path => {
+                        const script = document.createElement('script');
+                        script.src = path;
+                        script.onload = () => { if (typeof CONFIG !== 'undefined' && !found) { found = true; resolve(CONFIG); } };
+                        document.head.appendChild(script);
+                    });
+                    setTimeout(() => { if (!found && typeof CONFIG !== 'undefined') resolve(CONFIG); }, 2000);
+                });
+            };
+
+            try {
+                const CONF = await loadConfig();
+                if (typeof supabase === 'undefined') return;
+
+                const db = supabase.createClient(CONF.SUPABASE_URL, CONF.SUPABASE_KEY);
+
+                // Forces redirect to the root 404.html
+                const REDIRECT_URL = window.location.origin + "/404.html";
+
+                const checkVisibility = (isVisible) => {
+                    if (isVisible === false && !window.location.pathname.includes('404.html')) {
+                        console.log("🚫 Site visibility disabled. Redirecting...");
+                        window.location.href = REDIRECT_URL;
+                    }
+                };
+
+                // 1. Initial Check on Page Load
+                const { data, error } = await db
+                    .from('admin')
+                    .select('website_visibility')
+                    .eq('id', 1)
+                    .single();
+
+                if (!error && data) {
+                    checkVisibility(data.website_visibility);
+                }
+
+                /**
+                 * 2. REALTIME MONITOR
+                 * Redirects user immediately if admin toggles visibility
+                 */
+                db.channel('visibility-kill-switch')
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'admin',
+                        filter: 'id=eq.1'
+                    }, (payload) => {
+                        if (payload.new && payload.new.hasOwnProperty('website_visibility')) {
+                            checkVisibility(payload.new.website_visibility);
+                        }
+                    })
+                    .subscribe();
+
+            } catch (err) {
+                console.error("Visibility System Error:", err);
+            }
+        })();
+    </script>
 </body>
 
 </html>

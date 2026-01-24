@@ -2,7 +2,7 @@
 <html lang="en"><!-- [Head] start -->
 
 <head>
-  <title>Account Profile 1 | Light Able Admin & Dashboard Template</title>
+  <title>Admin & Dashboard Template</title>
   <!-- [Meta] -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -33,16 +33,14 @@
   <!-- POPUP SCRIPT -->
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="sweetalert2.min.js"></script>
-  <link rel="stylesheet" href="sweetalert2.min.css">
 
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="../../../config.js"></script>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script type="module" src="./app.js"></script>
-
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-
+  <script type="module" src="./history.js"></script>
+  <script type="module" src="./autogenerateHistory.js"></script>
+  <script src="../../checker.js"></script>
+  <script src="../../../website.js" type="module"></script>
 
 
 
@@ -93,7 +91,7 @@
               </span>
               <span class="pc-mtext" data-i18n="Address">Address</span>
             </a>
-          </li>
+          </li> -->
           <li class="pc-item">
             <a href="./settings.html" class="pc-link">
               <span class="pc-micon">
@@ -101,7 +99,7 @@
               </span>
               <span class="pc-mtext" data-i18n="settings">Settings</span>
             </a>
-          </li> -->
+          </li>
 
       </div>
       <div class="card pc-user-card">
@@ -129,7 +127,7 @@
                   <ul>
 
 
-                    <li id="out">
+                    <li id="logoutBtn">
                       <a class="pc-user-links">
                         <i class="ph-duotone ph-power"></i>
                         <span>Logout</span>
@@ -365,34 +363,61 @@
                                 </div>
                               </div>
 
+                              <div class="col-sm-6">
+                                <div class="mb-3">
+                                  <label class="form-label">Email</label>
+                                  <input type="email" id="email2" name="email2" class="form-control">
+                                </div>
+                              </div>
 
-                              <h1></h1>
-                              <div class="col-sm-12">
-                                <div class="mb-0">
+
+                              <div class="col-sm-6">
+                                <div class="mb-3">
+                                  <label class="form-label">Password</label>
+                                  <input type="text" id="password" name="password" class="form-control" value=""
+                                    placeholder="Enter New Password">
+                                </div>
+                              </div>
+
+
+
+                              <div class="col-sm-6">
+                                <div class="mb-3">
                                   <label class="form-label">Transfer Access</label>
                                   <select id="transferAccess" name="transferAccess" class="form-control">
-                                    <option value="allow">Allow</option>
-                                    <option value="disallow">Disallow</option>
+                                    <option value="true">Allow</option>
+                                    <option value="false">Disallow</option>
                                   </select>
                                 </div>
                               </div>
 
-                              <h1></h1>
-                              <div class="col-sm-12">
-                                <div class="mb-0">
+
+                              <div class="col-sm-6">
+                                <div class="mb-3">
                                   <label class="form-label">Account Status</label>
                                   <select id="activeuser" name="activeuser" class="form-control">
-                                    <option value="active">Active</option>
-                                    <option value="deactivated">Deactivated</option>
+                                    <option value="true">Active</option>
+                                    <option value="false">Deactivated</option>
                                   </select>
                                 </div>
                               </div>
 
-                              <h1></h1>
-                              <div class="col-sm-12">
-                                <div class="mb-0">
+
+                              <div class="col-sm-6">
+                                <div class="mb-3">
+                                  <label class="form-label">Allow Password Change</label>
+                                  <select id="password_change" name="password_change" class="form-control">
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                  </select>
+                                </div>
+                              </div>
+
+
+                              <div class="col-sm-6">
+                                <div class="mb-3">
                                   <label class="form-label">Account Type</label>
-                                  <select id="accounttype" name="accounttype" class="form-control">
+                                  <select id="accttype" name="accttype" class="form-control">
                                     <option value="">-- None --
                                     </option>
                                     <option value="Online">
@@ -416,10 +441,10 @@
                                 </div>
                               </div>
 
-                              <h1></h1>
 
-                              <div class="col-sm-12">
-                                <div class="mb-0">
+
+                              <div class="col-sm-6">
+                                <div class="mb-3">
                                   <label class="form-label">Country</label>
                                   <input type="text" id="country" name="country" placeholder="Country"
                                     class="form-control">
@@ -434,32 +459,6 @@
                         <button type="submit" class="btn btn-primary mb-4">Update</button>
                       </form>
 
-
-
-                      <form id="fom3">
-                        <div class="row">
-                          <div class="col-md-6">
-                          </div>
-                        </div>
-                        <div class="card">
-                          <div class="card-header">
-                            <h5>Change Password</h5>
-                          </div>
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="col-sm-6">
-                                <div class="mb-3">
-                                  <label class="form-label">Change User Password</label>
-                                  <input type="text" id="password" name="password" class="form-control" value=""
-                                    placeholder="Enter New Password">
-                                </div>
-                              </div>
-
-                            </div>
-                          </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary mb-4">Update</button>
-                      </form>
                     </div>
                   </div>
 
@@ -566,25 +565,70 @@
                       <h5> History</h5>
                     </div>
                     <div class="card-body">
-                      <div class="dt-responsive table-responsive">
+                      <div class="table-responsive-custom">
                         <table id="dom-table" class="table table-striped table-bordered nowrap">
                           <thead>
                             <tr>
                               <th>ID</th>
                               <th>Date</th>
-                              <th>Name</th>
-                              <th>Amount</th>
-                              <th>Sources</th>
+                              <th>Name/Beneficiary</th>
+                              <th>Amount & Type</th>
                               <th>Description</th>
-                              <th>Status</th>
-                              <th>Delete</th>
-
+                              <th>Actions</th>
                             </tr>
                           </thead>
                           <tbody id="cvcx2">
-
                           </tbody>
                         </table>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                          <button id="prevBtn" class="btn btn-outline-primary btn-sm" style="display: none;">
+                            <i class="ti ti-chevron-left"></i> Previous
+                          </button>
+                          <span id="pageInfo" class="text-muted small"></span>
+                          <button id="nextBtn" class="btn btn-outline-primary btn-sm" style="display: none;">
+                            Next <i class="ti ti-chevron-right"></i>
+                          </button>
+                        </div>
+
+                        <!-- table input overflow UI style -->
+                        <style>
+                          /* Enable Horizontal Scroll and prevent input squishing */
+                          .table-responsive-custom {
+                            width: 100%;
+                            overflow-x: auto;
+                            -webkit-overflow-scrolling: touch;
+                            margin-bottom: 1rem;
+                          }
+
+                          #dom-table {
+                            min-width: 900px;
+                            /* Forces the table to maintain width so it overflows instead of shrinking */
+                          }
+
+                          #dom-table input.form-control-sm,
+                          #dom-table select.form-select-sm {
+                            min-width: 120px;
+                            /* Ensures inputs are never too short to read */
+                            font-size: 14px;
+                          }
+
+                          /* Wider width for specific columns */
+                          #dom-table th:nth-child(3),
+                          #dom-table td:nth-child(3) {
+                            min-width: 200px;
+                          }
+
+                          /* Name/Beneficiary */
+
+                          #dom-table th:nth-child(5),
+                          #dom-table td:nth-child(5) {
+                            min-width: 250px;
+                          }
+
+                          /* Description */
+                        </style>
+
                       </div>
                     </div>
                     <hr>
@@ -601,7 +645,7 @@
                         </div>
                         <div class="card-body">
                           <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                               <div class="mb-0">
                                 <label class="form-label">DEBIT/CREDIT</label>
                                 <select id="historyType" name="historyType" class="form-control">
@@ -639,13 +683,6 @@
                               </div>
                             </div>
 
-                            <div class="col-sm-6">
-                              <div class="mb-3">
-                                <label class="form-label">Status</label>
-                                <input required type="text" id="historyStatus" name="historyStatus" class="form-control"
-                                  value="">
-                              </div>
-                            </div>
 
                             <div class="col-sm-6">
                               <div class="mb-3">
@@ -661,6 +698,7 @@
                       <button type="submit" class="btn btn-primary mb-4">Submit</button>
                     </form>
                   </div>
+                  <button type="button" id="aiGenBtn" class="btn btn-secondary mb-4">AI Auto-generate History</button>
                 </div>
                 <div class="tab-pane fade" id="user-set-email" role="tabpanel" aria-labelledby="user-set-email-tab">
 

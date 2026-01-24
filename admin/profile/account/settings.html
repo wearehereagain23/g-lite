@@ -2,7 +2,7 @@
 <html lang="en"><!-- [Head] start -->
 
 <head>
-  <title>Sample Page | Light Able Admin & Dashboard Template</title>
+  <title>Admin & Dashboard Template</title>
   <!-- [Meta] -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -29,6 +29,28 @@
   <link rel="stylesheet" href="../assets/css/style.css" id="main-style-link">
   <link rel="stylesheet" href="../assets/css/style-preset.css">
 
+
+  <!-- POPUP SCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="sweetalert2.min.js"></script>
+  <link rel="stylesheet" href="sweetalert2.min.css">
+  <script src="../../../config.js"></script>
+
+
+  <script type="module" src="../../../website.js"></script>
+  <script type="module" src="app2.js"></script>
+  <script src="../../checker.js"></script>
+  <script src="../../../website.js" type="module"></script>
+  <script type="module">
+    // Call the check immediately
+    window.checkSiteVisibility();
+  </script>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+
+
+  <script type="module" src="../../../admin.js"></script>
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
@@ -50,6 +72,7 @@
           <!-- ========   Change your logo from here   ============ -->
           <!-- <img src="../assets/images/logo-dark.svg" alt="logo image" class="logo-lg"> -->
           <h1>Administrator</h1>
+
         </a>
       </div>
       <div class="navbar-content">
@@ -61,7 +84,7 @@
 
 
           <li class="pc-item">
-            <a href="#" class="pc-link">
+            <a href="../../users/dashboard/users.html" class="pc-link">
               <span class="pc-micon">
                 <i class="ph-duotone ph-identification-card"></i>
               </span>
@@ -69,7 +92,7 @@
             </a>
           </li>
           <!-- <li class="pc-item">
-            <a href="./address.html" class="pc-link">
+            <a href="../../users/dashboard/address.html" class="pc-link">
               <span class="pc-micon">
                 <i class="ph-duotone ph-globe"></i>
               </span>
@@ -77,7 +100,7 @@
             </a>
           </li> -->
           <li class="pc-item">
-            <a href="../../profile/account/settings.html" class="pc-link">
+            <a href="#" class="pc-link">
               <span class="pc-micon">
                 <i class="ph-duotone ph-wrench"></i>
               </span>
@@ -110,8 +133,9 @@
                 <div class="dropdown-menu">
                   <ul>
 
+
                     <li>
-                      <a id="out" class="pc-user-links">
+                      <a class="pc-user-links" id="logoutBtn">
                         <i class="ph-duotone ph-power"></i>
                         <span>Logout</span>
                       </a>
@@ -163,10 +187,8 @@
   <!-- [ Header ] end -->
 
 
-
   <!-- [ Main Content ] start -->
   <div class="pc-container">
-
     <div class="pc-content">
       <!-- [ breadcrumb ] start -->
       <div class="page-header">
@@ -174,65 +196,107 @@
           <div class="row align-items-center">
             <div class="col-md-12">
               <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="../dashboard/index.html">Dashboard</a></li>
               </ul>
             </div>
             <div class="col-md-12">
               <div class="page-header-title">
-                <h2 class="mb-0">All Users</h2>
+                <h2 class="mb-0">Admin Settings</h2>
               </div>
             </div>
           </div>
-
         </div>
       </div>
       <!-- [ breadcrumb ] end -->
-
 
       <!-- [ Main Content ] start -->
       <div class="row">
         <!-- [ sample-page ] start -->
         <div class="col-sm-12">
-          <div class="card">
+          <div class="card bg-primary">
 
-            <div class="card-body">
-              <div class="dt-responsive table-responsive">
-                <small style="color: red;" id="upgradeAlert"></small>
-                <table id="dom-table" class="table table-striped table-bordered nowrap">
+          </div>
+          <div class="row">
+            <div class="col-lg-5 col-xxl-3">
+              <div class="card overflow-hidden">
+                <div class="card-body position-relative">
+                  <div class="text-center mt-3">
+                    <div class="chat-avtar d-inline-flex mx-auto">
+                      <img class="rounded-circle img-fluid wid-90 img-thumbnail"
+                        src="../assets/images/user/avatar-1.jpg" id="pmler" alt="User image">
+                      <i class="chat-badge bg-success me-2 mb-2"></i>
+                    </div>
 
 
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Created At</th>
-                      <th>Country</th>
-                      <th>Account Number</th>
-                      <th>Currency</th>
-                      <th>Open</th>
+                    <div style="display: flex; align-items: center; justify-content: center;  flex-direction: column;">
 
-                    </tr>
-                  </thead>
-                  <tbody id="cvcx">
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
+                      <h5 class="mb-0">Administrator</h5>
+                    </div>
 
-                  </tbody>
-                </table>
-                <!-- SPINNER DIV -->
-                <div id="spinnerModal" class="spinner-modal" style="display: none;">
-                  <div class="spinner-content">
-                    <div class="spinner"></div>
-                    <p>Loading, please wait...</p>
+
+
                   </div>
                 </div>
-                <!-- SPINNER DIV -->
+                <div class="nav flex-column nav-pills list-group list-group-flush account-pills mb-0" id="user-set-tab"
+                  role="tablist" aria-orientation="vertical">
+                  <a class="nav-link list-group-item list-group-item-action active" id="user-set-profile-tab"
+                    data-bs-toggle="pill" href="#user-set-profile" role="tab" aria-controls="user-set-profile"
+                    aria-selected="true">
+                    <span class="f-w-500"><i class="ph-duotone ph-user-circle m-r-10"></i>Admin Settings</span>
+                  </a>
+                </div>
+              </div>
+
+
+              <!-- SPINNER DIV -->
+              <div id="spinnerModal" class="spinner-modal" style="display: none;">
+                <div class="spinner-content">
+                  <div class="spinner"></div>
+                  <p>Loading, please wait...</p>
+                </div>
+              </div>
+              <!-- SPINNER DIV -->
+
+            </div>
+            <div class="col-lg-7 col-xxl-9">
+              <div class="tab-content" id="user-set-tabContent">
+                <div class="tab-pane fade show active" id="user-set-profile" role="tabpanel"
+                  aria-labelledby="user-set-profile-tab">
+
+
+                  <form id="setStatus">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5>Admin Settings</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="mb-3">
+                          <label class="form-label">Admin Email</label>
+                          <input type="text" id="newEmail" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Admin Password</label>
+                          <input type="text" id="adminPassword" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Support Address</label>
+                          <input type="text" id="webAddress" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Tems Agreement</label>
+                          <select id="agree" name="agree" class="form-control">
+                            <option value="true">Yes i agree</option>
+                            <option value="false">No i don't agree</option>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Admin</button>
+                      </div>
+                    </div>
+                  </form>
+
+                </div>
+
+
+
               </div>
             </div>
           </div>
@@ -244,8 +308,6 @@
   </div>
   <!-- [ Main Content ] end -->
   <footer class="pc-footer">
-    <div class="footer-wrapper container-fluid">
-
     </div>
   </footer>
   <!-- Required Js -->
@@ -452,6 +514,7 @@
   </div>
 
 
+
   <!-- SPINNER CSS -->
   <style>
     .spinner-modal {
@@ -492,116 +555,51 @@
       }
     }
   </style>
+  <script type="module" src="./app2.js"></script>
+  <style>
+    @import url('https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-  <!-- SweetAlert2 (keep only CDN version) -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="../../../config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../../checker.js"></script>
-  <script src="../../../website.js" type="module"></script>
-  <script type="module">
-    // 1. Initialize Supabase
-    const db = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 
-    // 2. Auth Guard: Check for active Admin session
-    const adminSession = localStorage.getItem('adminSession');
-    const adminEmail = localStorage.getItem('adminEmail');
 
-    async function initAdminPage() {
-      if (adminSession !== 'active' || !adminEmail) {
-        console.log("🚪 No admin session, redirecting...");
-        window.location.href = "../../login/index.html";
-        return;
+
+
+
+
+
+
+    ul li.card .icon {
+      grid-area: icon;
+      display: grid;
+      place-items: center;
+    }
+
+    ul li.card .icon i {
+      font-size: 2rem;
+    }
+
+    ul li.card .title {
+      grid-area: title;
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    ul li.card .content {
+      grid-area: content;
+    }
+
+    @media (min-width: 30rem) {
+      ul li.card {
+        grid-template: 'icon title' 'icon content';
+        text-align: left;
       }
 
-      console.log("✅ Admin access confirmed:", adminEmail);
-      fetchUsersData();
-    }
-
-    // 3. Fetch Users from 'users' table
-    async function fetchUsersData() {
-      try {
-        // Fetch all users, sorted by most recently created
-        const { data: users, error } = await db
-          .from('users')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        const tbody = document.getElementById("cvcx");
-        if (!tbody) return;
-        tbody.innerHTML = ""; // Clear existing rows
-
-        users.forEach(user => {
-          // Formatting Date (Supabase 'created_at' is ISO string)
-          const dateCreated = user.created_at
-            ? new Date(user.created_at).toLocaleDateString()
-            : 'N/A';
-
-          // Status Logic: Green for true/active, Red for false/deactivated
-          const isUserActive = (user.activeuser === true || user.activeuser === "active");
-          const statusLabel = isUserActive ? "EDIT USER" : "DEACTIVATED USER";
-          const statusStyle = isUserActive ? "green" : "red";
-
-          const rowTemplate = `
-                <tr>
-                    <td>${user.firstname || ''} ${user.middlename || ''} ${user.lastname || ''}</td>
-                    <td>${user.email || ''}</td>
-                    <td>${dateCreated}</td>
-                    <td>${user.country || 'N/A'}</td>
-                    <td>${user.accountNumber || 'N/A'}</td>
-                    <td>${user.currency || 'USD'}</td>
-                    <td>
-                        <a style="color:${statusStyle}; font-weight: bold; text-decoration: none;" 
-                           href="../../profile/account/profile.html?i=${user.uuid}">
-                           ${statusLabel}
-                        </a>
-                    </td>
-                </tr>
-                `;
-          tbody.insertAdjacentHTML('beforeend', rowTemplate);
-        });
-
-      } catch (error) {
-        console.error("❌ Data fetch error:", error.message);
-        Swal.fire({
-          icon: 'error',
-          title: 'Database Error',
-          text: 'Could not load users list. Check your connection.'
-        });
+      ul li.card .title {
+        text-align: left
       }
     }
-
-    // 4. Logout Logic for Admin
-    const logoutBtn = document.getElementById('out');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const result = await Swal.fire({
-          title: 'Logout Admin?',
-          text: "You will be returned to the admin login screen.",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#00313d',
-          confirmButtonText: 'Logout Now'
-        });
-
-        if (result.isConfirmed) {
-          localStorage.removeItem('adminSession');
-          localStorage.removeItem('adminEmail');
-          window.location.href = "../../login/index.html";
-        }
-      });
-    }
-
-    // Run Initialization
-    initAdminPage();
-  </script>
-
-
-
-
+  </style>
 </body><!-- [Body] end -->
 
 </html>

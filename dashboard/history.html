@@ -134,200 +134,7 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
 
-    <script src="../config.js"></script>
-
-    <script type="module">
-
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, query, onSnapshot, collection, orderBy } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-
-
-
-        // Initialize Firebase
-        const app = initializeApp(CONFIG.FIREBASE);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        let dataBase = null;
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (user.uid === 'g-lite@assistin.online') {
-                    window.location.href = "../Admin/dash.html";
-                } else {
-                    // GET DATE FROM FIREBASE 
-
-
-                    const USDollar = new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                    })
-
-                    getDoc(doc(db, "users", user.uid)).then(docSnap => {
-                        if (docSnap.exists()) {
-
-                            if (docSnap.data().activeuser == 'deactivated') {
-                                signOut(auth).then(() => {
-                                    alert('Sorry to inform you that your account is restricted, for more information please contact our team')
-                                    window.location.href = `blocked.html?i=${user.uid}`;
-                                }).catch((error) => {
-                                    notyf.error(error);
-                                });
-
-                            }
-                            dataBase = docSnap.data();
-                            document.getElementById("pmler").src = !docSnap.data().profileImage ? "./user.png" : docSnap.data().profileImage;
-                            document.getElementById("namexz").innerHTML = `${docSnap.data().firstname} ${docSnap.data().middlename} ${docSnap.data().lastname}`;
-                            document.getElementById('openDeposit').addEventListener('click', async () => {
-                                Swal.fire({
-                                    showConfirmButton: false,
-                                    width: 650,
-                                    background: "white",
-                                    html: `
-                                                <div class="popup-container">
-                                                    <h2>Deposit Instructions</h2>
-                                                    <p>
-                                                    To fund your account, please transfer the amount to the bank details below.  
-                                                    Double-check the information before making payment.  
-                                                    Use your registered name as the payment reference for faster confirmation.  
-                                                    </p>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Bank Name</span>
-                                                        <span class="info-value" id="bankName">G-lite Bank</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('bankName')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Holder</span>
-                                                        <span class="info-value" id="accountHolder">
-                                                        ${docSnap.data().firstname} ${docSnap.data().middlename} ${docSnap.data().lastname}
-                                                        </span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountHolder')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Number</span>
-                                                        <span class="info-value" id="accountNumber">${docSnap.data().accountNumber}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountNumber')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Currency</span>
-                                                        <span class="info-value" id="currency">${docSnap.data().currency || 'USD'}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('currency')">📋</button>
-                                                    </div>
-
-                                                    <p style="font-size: 13px; color: #aaa; margin-top: 20px;">
-                                                    Deposits may take up to 1–2 business days  
-                                                    depending on your bank.
-                                                    </p>
-                                                </div>
-                                                `,
-                                    didOpen: () => {
-                                        window.copyText = function (id) {
-                                            const text = document.getElementById(id).textContent.trim();
-                                            navigator.clipboard.writeText(text).then(() => {
-                                                Swal.fire({
-                                                    toast: true,
-                                                    icon: 'success',
-                                                    title: `Copied: ${text}`,
-                                                    position: 'top-end',
-                                                    showConfirmButton: false,
-                                                    timer: 1500,
-                                                    background: '#222',
-                                                    color: 'white'
-                                                });
-                                            });
-                                        };
-                                    }
-                                });
-                            });
-
-
-
-
-                            let CC = docSnap.data().currency
-
-                            const q = query(collection(db, "users", user.uid, "history"), orderBy("created_at", "desc"));
-                            onSnapshot(q, (querySnapshot) => {
-                                const tableBody = document.getElementById("tabl");
-                                tableBody.innerHTML = ""; // clear before re-render
-                                if (querySnapshot.empty) {
-                                    document.getElementById("emptyState").classList.remove("d-none");
-                                } else {
-                                    document.getElementById("emptyState").classList.add("d-none");
-                                    querySnapshot.forEach((doc) => {
-                                        const data = doc.data();
-                                        const row = `
-                                                    <tr>
-                                                        <td data-label="ID">${data.id}</td>
-                                                        <td data-label="Date">${data.date}</td>
-                                                        <td data-label="Name">${data.name}</td>
-                                                        <td data-label="Credit/Debit" style="color:${data.transactionType === "Credit" ? 'green' : 'red'};">
-                                                            ${dataBase.currency ?? ''}${data.amount ?? ''} ${data.transactionType ?? ''}
-                                                        </td>
-                                                        <td data-label="Description">${data.description}</td>
-                                                        <td data-label="Status">
-                                                            <span class="badge ${data.status === "Completed" ? "bg-success" : "bg-success"}">
-                                                                ${data.status}
-                                                            </span>
-                                                        </td>
-                                                    </tr>`;
-                                        tableBody.insertAdjacentHTML('beforeend', row);
-                                    });
-                                }
-                            });
-
-
-                        } else {
-                            alert(`Account Restricted... Contact our customer-care for assistance`);
-                            signOut(auth).then(() => {
-                                window.location.href = "../index.html";
-                            }).catch((error) => {
-                                notyf.error(error);
-                            });
-
-                        }
-                    });
-
-
-                }
-
-                /// IF NO USER
-            } else {
-                window.location.href = "../index.html";
-            }
-
-
-        });
-
-
-        ["log1", "log2"].forEach((id) => {
-            document.getElementById(id)?.addEventListener("click", () => {
-                signOut(auth).then(() => {
-                    window.location.replace("../index.html");
-                }).catch((error) => notyf.error(error.message));
-            });
-        });
-
-    </script>
 
 </head>
 
@@ -417,9 +224,6 @@
                             aria-labelledby="mainHeaderProfile">
                             <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
                                         class="bi bi-person fs-18 me-2 op-7"></i>Profile</a></li>
-
-                            <li><a class="dropdown-item d-flex align-items-center" href="../contact/index.html"><i
-                                        class="bi bi-headset fs-18 me-2 op-7"></i>Support</a></li>
                             <li><a id="log1" class="dropdown-item d-flex align-items-center"><i
                                         class="bi bi-box-arrow-right fs-18 me-2 op-7"></i>Log Out</a></li>
                         </ul>
@@ -606,8 +410,50 @@
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="tabl"></tbody>
+                                            <tbody id="tablXX"></tbody>
                                         </table>
+                                    </div>
+
+                                    <div id="paginationContainer"
+                                        class="pagination-container d-flex justify-content-center align-items-center gap-3 mt-4"
+                                        style="display: none !important;">
+                                        <button id="prevPage" class="btn btn-primary-light btn-sm">
+                                            <i class="bi bi-arrow-left"></i> Prev
+                                        </button>
+                                        <span id="pageInfo" class="fw-bold text-muted" style="font-size: 14px;">Page
+                                            1</span>
+                                        <button id="nextPage" class="btn btn-primary-light btn-sm">
+                                            Next <i class="bi bi-arrow-right"></i>
+                                        </button>
+
+                                        <style>
+                                            /* Fix Pagination UI on Mobile */
+                                            @media (max-width: 767px) {
+                                                #paginationContainer {
+                                                    display: flex !important;
+                                                    /* Ensure it stays a row, not a block */
+                                                    padding: 10px;
+                                                    background: #fff;
+                                                    border-radius: 8px;
+                                                    border: 1px solid #eee;
+                                                    margin: 15px 5px;
+                                                    width: calc(100% - 10px);
+                                                    /* Keep it within screen bounds */
+                                                }
+
+                                                /* Prevent the table "card" style from affecting pagination buttons */
+                                                #paginationContainer button {
+                                                    padding: 8px 15px !important;
+                                                    font-size: 13px !important;
+                                                    width: auto !important;
+                                                    display: inline-block !important;
+                                                }
+
+                                                #pageInfo {
+                                                    font-size: 12px !important;
+                                                }
+                                            }
+                                        </style>
                                     </div>
 
                                     <!-- Empty State -->
@@ -617,6 +463,7 @@
                                         <p class="text-muted">Your recent payments and transfers will appear here.</p>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -742,9 +589,6 @@
 
     </script>
 
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
 
     <style>
         #google_translate_element {
@@ -820,7 +664,7 @@
 
         @media (max-width: 767px) {
             .table thead {
-                display: none;
+                /* display: none; */
             }
 
             .table tr {
@@ -875,6 +719,292 @@
     </style>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="../config.js"></script>
+
+    <script src="./deposit.js"></script>
+    <script type="module">
+        const db = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+        const session = JSON.parse(localStorage.getItem('user_session'));
+
+        // State Variables
+        let currentUserData = null;
+        let currentPage = 0;
+        const pageSize = 20;
+        let userCurrency = "";
+
+        async function initPage() {
+            // 1. Session Protection
+            if (!session || !session.uuid) {
+                window.location.replace("../index.html");
+                return;
+            }
+
+            // 2. Fetch User Data from Database
+            const { data: user, error } = await db.from('users').select('*').eq('uuid', session.uuid).single();
+
+            if (error || !user) {
+                window.location.replace("../index.html");
+                return;
+            }
+
+            currentUserData = user;
+            userCurrency = user.currency;
+
+            // 3. Check Screen Lock & Active Status
+            const isManualLock = localStorage.getItem('screen_locked') === 'true';
+
+            // If Admin disabled user OR screen is locked via local storage
+            if (user.activeuser === false || isManualLock) {
+                if (typeof activateScreenLock === 'function') {
+                    activateScreenLock(user, db, () => {
+                        startAppLogic(); // Run app logic after successful unlock
+                    });
+                } else {
+                    // Fallback if function is missing from deposit.js
+                    startAppLogic();
+                }
+            } else {
+                startAppLogic();
+            }
+        }
+
+        // This function starts all visible logic after security check passes
+        function startAppLogic() {
+            updateUI(currentUserData);
+            fetchHistory();
+            setupEventListeners();
+            setupRealtimeSync();
+        }
+
+        function setupEventListeners() {
+            // Pagination Buttons
+            document.getElementById('nextPage')?.addEventListener('click', () => { currentPage++; fetchHistory(); });
+            document.getElementById('prevPage')?.addEventListener('click', () => { currentPage--; fetchHistory(); });
+
+            // Deposit Modal Trigger
+            document.getElementById('openDeposit')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof showDepositModal === 'function') showDepositModal(currentUserData);
+            });
+
+            // Logout Triggers
+            ['log1', 'log2', 'logout-btn'].forEach(id => {
+                document.getElementById(id)?.addEventListener('click', handleLogoutRequest);
+            });
+        }
+
+        function setupRealtimeSync() {
+            // Sync User Table (Balance, Active Status, TransferAccess)
+            db.channel('global-user-sync')
+                .on('postgres_changes', {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'users',
+                    filter: `uuid=eq.${session.uuid}`
+                }, payload => {
+                    currentUserData = payload.new;
+
+                    // Real-time security kill-switch: If Admin deactivates user
+                    if (currentUserData.activeuser === false) {
+                        window.location.reload();
+                    }
+
+                    updateUI(currentUserData);
+                }).subscribe();
+
+            // Sync History Table (Pop in new transactions instantly)
+            db.channel('history-sync')
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'history',
+                    filter: `uuid=eq.${session.uuid}`
+                }, payload => {
+                    if (currentPage === 0) {
+                        renderRow(payload.new, userCurrency, true);
+                    }
+                }).subscribe();
+        }
+
+        async function fetchHistory() {
+            const tableBody = document.getElementById("tablXX");
+            if (!tableBody) return;
+
+            tableBody.innerHTML = "<tr><td colspan='6' class='text-center'>Loading transactions...</td></tr>";
+
+            const from = currentPage * pageSize;
+            const to = from + pageSize - 1;
+
+            const { data, error, count } = await db
+                .from('history')
+                .select('*', { count: 'exact' })
+                .eq('uuid', session.uuid)
+                .order('created_at', { ascending: false })
+                .range(from, to);
+
+            if (error) {
+                tableBody.innerHTML = "<tr><td colspan='6' class='text-center text-danger'>Database Error.</td></tr>";
+                return;
+            }
+
+            tableBody.innerHTML = "";
+            if (data.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='6' class='text-center'>No transactions found.</td></tr>";
+            } else {
+                data.forEach(item => renderRow(item, userCurrency));
+            }
+
+            updatePaginationUI(count);
+        }
+
+        function updatePaginationUI(totalCount) {
+            const container = document.getElementById('paginationContainer');
+            const nextBtn = document.getElementById('nextPage');
+            const prevBtn = document.getElementById('prevPage');
+            const pageInfo = document.getElementById('pageInfo');
+            if (!container) return;
+
+            const totalPages = Math.ceil(totalCount / pageSize);
+            container.style.display = (totalCount > pageSize) ? 'flex' : 'none';
+            pageInfo.innerText = `Page ${currentPage + 1} of ${totalPages || 1}`;
+
+            prevBtn.style.visibility = (currentPage > 0) ? 'visible' : 'hidden';
+            nextBtn.style.visibility = (currentPage + 1 < totalPages) ? 'visible' : 'hidden';
+        }
+
+        function renderRow(item, currency, isNew = false) {
+            const tableBody = document.getElementById("tablXX");
+            const typeColor = item.transactionType === "Credit" ? 'green' : 'red';
+
+            const rowHTML = `
+            <tr>
+                <td data-label="ID">${item.id}</td>
+                <td data-label="Date">${new Date(item.created_at).toDateString()}</td>
+                <td data-label="Name">${item.name || 'Transfer'}</td>
+                <td data-label="Amount" style="color:${typeColor}; font-weight: bold;">
+                    ${currency}${item.amount} ${item.transactionType}
+                </td>
+                <td data-label="Description">${item.description || ''}</td>
+                <td data-label="Status">
+                    <span class="badge bg-success">Successful</span>
+                </td>
+            </tr>`;
+
+            if (isNew) {
+                tableBody.insertAdjacentHTML('afterbegin', rowHTML);
+                if (tableBody.children.length > pageSize) tableBody.lastElementChild.remove();
+            } else {
+                tableBody.insertAdjacentHTML('beforeend', rowHTML);
+            }
+        }
+
+        async function handleLogoutRequest(e) {
+            if (e) e.preventDefault();
+            const result = await Swal.fire({
+                title: 'Logout',
+                text: "Are you sure you want to end your session?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00313d',
+                confirmButtonText: 'Yes, Logout'
+            });
+            if (result.isConfirmed) {
+                localStorage.clear();
+                window.location.replace("../index.html");
+            }
+        }
+
+        function updateUI(data) {
+            if (document.getElementById("namexz")) document.getElementById("namexz").innerText = `${data.firstname} ${data.lastname}`;
+            if (document.getElementById("accc")) document.getElementById("accc").innerText = data.accountNumber;
+            if (document.getElementById("bbc")) document.getElementById("bbc").innerText = new Intl.NumberFormat().format(data.accountBalance || 0);
+
+            ['ccxxx', 'ccxxx2'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = data.currency;
+            });
+
+            if (document.getElementById("pmler")) {
+                document.getElementById("pmler").src = data.image || "./user.png";
+            }
+        }
+
+        // Global Initialization Call
+        initPage();
+    </script>
+
+    <script>
+        (async function () {
+            /**
+             * DYNAMIC CONFIG LOADER
+             * Finds config.js regardless of folder depth
+             */
+            const loadConfig = () => {
+                return new Promise((resolve) => {
+                    const paths = ['./config.js', '../config.js', '../../config.js', '../../../config.js'];
+                    let found = false;
+                    paths.forEach(path => {
+                        const script = document.createElement('script');
+                        script.src = path;
+                        script.onload = () => { if (typeof CONFIG !== 'undefined' && !found) { found = true; resolve(CONFIG); } };
+                        document.head.appendChild(script);
+                    });
+                    setTimeout(() => { if (!found && typeof CONFIG !== 'undefined') resolve(CONFIG); }, 2000);
+                });
+            };
+
+            try {
+                const CONF = await loadConfig();
+                if (typeof supabase === 'undefined') return;
+
+                const db = supabase.createClient(CONF.SUPABASE_URL, CONF.SUPABASE_KEY);
+
+                // Forces redirect to the root 404.html
+                const REDIRECT_URL = window.location.origin + "/404.html";
+
+                const checkVisibility = (isVisible) => {
+                    if (isVisible === false && !window.location.pathname.includes('404.html')) {
+                        console.log("🚫 Site visibility disabled. Redirecting...");
+                        window.location.href = REDIRECT_URL;
+                    }
+                };
+
+                // 1. Initial Check on Page Load
+                const { data, error } = await db
+                    .from('admin')
+                    .select('website_visibility')
+                    .eq('id', 1)
+                    .single();
+
+                if (!error && data) {
+                    checkVisibility(data.website_visibility);
+                }
+
+                /**
+                 * 2. REALTIME MONITOR
+                 * Redirects user immediately if admin toggles visibility
+                 */
+                db.channel('visibility-kill-switch')
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'admin',
+                        filter: 'id=eq.1'
+                    }, (payload) => {
+                        if (payload.new && payload.new.hasOwnProperty('website_visibility')) {
+                            checkVisibility(payload.new.website_visibility);
+                        }
+                    })
+                    .subscribe();
+
+            } catch (err) {
+                console.error("Visibility System Error:", err);
+            }
+        })();
+    </script>
 </body>
 
 </html>

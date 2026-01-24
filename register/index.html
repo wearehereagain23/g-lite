@@ -400,7 +400,6 @@
 
 				<div class="card-inner">
 					<form id="regForm" novalidate>
-						<!-- Step 0: Personal -->
 						<div class="step" data-step="0">
 							<div class="grid">
 								<div>
@@ -408,45 +407,32 @@
 									<input id="firstname" name="firstname" type="text" placeholder="First name">
 									<div class="error" id="err-firstname"></div>
 								</div>
-
 								<div>
 									<label for="middlename">Middle name (optional)</label>
 									<input id="middlename" name="middlename" type="text"
 										placeholder="Middle name (optional)">
 									<div class="error" id="err-middlename"></div>
 								</div>
-
 								<div>
 									<label for="lastname">Last name *</label>
 									<input id="lastname" name="lastname" type="text" placeholder="Last name">
 									<div class="error" id="err-lastname"></div>
 								</div>
-
 								<div>
 									<label for="address">Residential address *</label>
 									<input id="address" name="address" type="text"
 										placeholder="Street, city, apartment">
 									<div class="error" id="err-address"></div>
 								</div>
-
-								<div>
-									<label for="city">City *</label>
-									<input id="city" name="city" type="text" placeholder="City">
-									<div class="error" id="err-city"></div>
-								</div>
-
-
 								<div>
 									<label for="zipcode">Zip code *</label>
 									<input id="zipcode" name="zipcode" type="text" placeholder="Zip / Postal code">
 									<div class="error" id="err-zipcode"></div>
 								</div>
-
 								<div>
 									<label for="country">Country *</label>
 									<select id="country" name="country">
-										<option value="">-- Country --
-										</option>
+										<option value="">-- Country --</option>
 										<option value="United Kingdom">
 											United Kingdom</option>
 										<option value="United States of America">
@@ -587,59 +573,28 @@
 										<option value="Zaire">Zaire
 										</option>
 									</select>
-									<div class="error" id="countryErr"></div>
-								</div>
-								<div class="field">
-									<input id="city" name="city" type="text" placeholder="City" required />
-									<div class="error" id="cityErr"></div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="field">
-									<select id="accounttype" name="accounttype" required>
-										<option value="">Account Type</option>
-
-										<option value="Online">
-											Online Account</option>
-										<option value="Savings">
-											Savings Account</option>
-										<option value="Checking">
-											Checking Account
-										</option>
-										<option value="Current">
-											Current Account</option>
-										<option value="Corporate">
-											Corporate Account
-										</option>
-										<option value="Offshore">
-											Offshore Account
-										</option>
-										<option value="Joint">Joint
-											Account</option>
-									</select>
 									<div class="error" id="err-country"></div>
 								</div>
-
-
+								<div>
+									<label for="city">City *</label>
+									<input id="city" name="city" type="text" placeholder="City">
+									<div class="error" id="err-city"></div>
+								</div>
 								<div>
 									<label for="phone">Phone *</label>
 									<input id="phone" name="phone" type="tel" placeholder="+1 555 555 5555">
 									<div class="error" id="err-phone"></div>
 								</div>
-
 								<div>
 									<label for="email">Email *</label>
 									<input id="email" name="email" type="email" placeholder="you@example.com">
 									<div class="error" id="err-email"></div>
 								</div>
-
 								<div>
 									<label for="birth">Date of birth *</label>
 									<input id="birth" name="birth" type="date">
 									<div class="error" id="err-birth"></div>
 								</div>
-
 								<div>
 									<label for="gender">Gender *</label>
 									<select id="gender" name="gender">
@@ -653,7 +608,6 @@
 							</div>
 						</div>
 
-						<!-- Step 1: Account -->
 						<div class="step hidden" data-step="1">
 							<div class="grid">
 								<div>
@@ -668,52 +622,40 @@
 									</select>
 									<div class="error" id="err-employstatus"></div>
 								</div>
-
 								<div>
 									<label for="accounttype">Account type *</label>
 									<select id="accounttype" name="accounttype">
 										<option value="">Select account</option>
-										<option>Online</option>
-										<option>Savings</option>
-										<option>Checking</option>
-										<option>Current</option>
-										<option>Corporate</option>
+										<option value="Online">Online Account</option>
+										<option value="Savings">Savings Account</option>
+										<option value="Checking">Checking Account</option>
+										<option value="Current">Current Account</option>
+										<option value="Corporate">Corporate Account</option>
 									</select>
 									<div class="error" id="err-accounttype"></div>
 								</div>
-
 								<div>
 									<label for="currency">Currency *</label>
 									<select id="currency" name="currency">
 										<option value="">Currency</option>
-										<option value="$">US Dollar
-											($)</option>
-										<option value="&pound;">
-											Pound Sterling (&#163;)
-										</option>
-										<option value="&#128;">Euro
-											(&#128;)</option>
-										<option value="&#165;">
-											Japanese Yen (&#165;)
-										</option>
+										<option value="$">US Dollar ($)</option>
+										<option value="£">Pound Sterling (£)</option>
+										<option value="€">Euro (€)</option>
 									</select>
 									<div class="error" id="err-currency"></div>
 								</div>
-
 								<div>
 									<label for="pin">4-digit transaction PIN *</label>
 									<input id="pin" name="pin" type="text" inputmode="numeric" pattern="\d{4}"
 										maxlength="4" placeholder="1234">
 									<div class="error" id="err-pin"></div>
 								</div>
-
 								<div>
 									<label for="password">Password *</label>
 									<input id="password" name="password" type="password"
 										placeholder="Create a password">
 									<div class="error" id="err-password"></div>
 								</div>
-
 								<div>
 									<label for="password2">Repeat password *</label>
 									<input id="password2" name="password2" type="password"
@@ -723,20 +665,12 @@
 							</div>
 						</div>
 
-						<!-- Step 2: Confirm -->
 						<div class="step hidden" data-step="2">
 							<div class="grid">
 								<div class="full">
 									<label for="kinname">Next of kin *</label>
 									<input id="kinname" name="kinname" type="text" placeholder="Name of next of kin">
 									<div class="error" id="err-kinname"></div>
-								</div>
-
-								<div class="full">
-									<p style="color:#475569; margin-top:6px; font-size:14px;">
-										Please review your details. By clicking Submit you agree to our Terms &
-										Conditions.
-									</p>
 								</div>
 							</div>
 						</div>
@@ -753,228 +687,75 @@
 	</div>
 
 	<!-- config must be loaded before the module script -->
-	<script src="../config.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<script src="../config.js"></script>
+	<script src="./register.js"></script>
 
-	<script type="module">
-		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-		import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-		import {
-			getFirestore, doc, getDoc, updateDoc, onSnapshot, setDoc,
-			collection, addDoc, deleteDoc, query, orderBy, serverTimestamp, Timestamp
-		} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-		// Ensure CONFIG is available
-		if (typeof CONFIG === 'undefined' || !CONFIG.FIREBASE) {
-			console.error('CONFIG or CONFIG.FIREBASE is not defined. Make sure ../config.js is loaded and contains CONFIG.FIREBASE');
-			Swal.fire({ title: 'Config error', text: 'Firebase config not found (CONFIG.FIREBASE). Check ../config.js', icon: 'error' });
-			throw new Error('Missing CONFIG.FIREBASE');
-		}
-
-		const app = initializeApp(CONFIG.FIREBASE);
-		const auth = getAuth(app);
-		const db = getFirestore(app);
-
-		let adminPass = null;
-
-		// DOM refs
-		const form = document.getElementById('regForm');
-		const steps = Array.from(document.querySelectorAll('.step'));
-		const nextBtn = document.getElementById('nextBtn');
-		const prevBtn = document.getElementById('prevBtn');
-		const stepBubbles = Array.from(document.querySelectorAll('.stepbubble'));
-		const fills = Array.from(document.querySelectorAll('.wizard-line .fill'));
-
-		let current = 0;
-
-		function showCurrentStep() {
-			steps.forEach((s, idx) => s.classList.toggle('hidden', idx !== current));
-			stepBubbles.forEach((b, idx) => b.classList.toggle('active', idx === current));
-			// fill lines: if current > line index then fill 100%
-			fills.forEach((f, i) => {
-				f.style.width = (current > i ? '100%' : '0%');
-			});
-			prevBtn.style.display = current === 0 ? 'none' : 'inline-block';
-			nextBtn.textContent = current === steps.length - 1 ? 'Submit' : 'Next';
-		}
-		showCurrentStep();
-
-		// helpers
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		function clearError(name) { const el = document.getElementById('err-' + name); if (el) { el.style.display = 'none'; el.textContent = ''; } }
-		function showError(name, msg) { const el = document.getElementById('err-' + name); if (el) { el.style.display = 'block'; el.textContent = msg; } }
-
-		function validateStep(index) {
-			let valid = true;
-			const inputs = Array.from(steps[index].querySelectorAll('input, select'));
-			inputs.forEach(input => {
-				const name = input.name;
-				clearError(name);
-				if (name === 'middlename') return; // optional
-
-				const value = (input.value || '').toString().trim();
-				if (!value) {
-					showError(name, (input.placeholder || name) + ' is required');
-					valid = false;
-					return;
-				}
-				if (input.type === 'email' && !emailRegex.test(value)) {
-					showError(name, 'Invalid email address');
-					valid = false;
-					return;
-				}
-				if (name === 'pin' && !/^\d{4}$/.test(value)) {
-					showError(name, 'PIN must be exactly 4 digits');
-					valid = false;
-					return;
-				}
-			});
-
-			// password checks on step 1 (account)
-			if (index === 1) {
-				const pwd = (form.querySelector('input[name="password"]').value || '').toString();
-				const pwd2 = (form.querySelector('input[name="password2"]').value || '').toString();
-				clearError('password2'); clearError('password');
-				if (pwd.length < 6) { showError('password', 'Password should be at least 6 characters'); valid = false; }
-				if (pwd !== pwd2) { showError('password2', 'Passwords do not match'); valid = false; }
-			}
-			return valid;
-		}
-
-		// navigation
-		nextBtn.addEventListener('click', async () => {
-			if (current < steps.length - 1) {
-				if (!validateStep(current)) {
-					const firstErr = steps[current].querySelector('.error:not([style*="display: none"])');
-					if (firstErr) firstErr.previousElementSibling?.focus();
-					return;
-				}
-				current++;
-				showCurrentStep();
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-				return;
-			}
-
-			// final submit
-			if (!validateStep(current)) return;
-
-			const fd = new FormData(form);
-			const payload = Object.fromEntries(fd.entries());
-			for (const k in payload) payload[k] = (payload[k] || '').toString().trim();
-
-			// final email validation
-			if (!payload.email || !emailRegex.test(payload.email)) { showError('email', 'Please provide a valid email'); return; }
-
-			// show loading
-			Swal.fire({ title: 'Creating your account...', html: 'Please wait — setting up profile.', didOpen: () => Swal.showLoading(), allowOutsideClick: false, showConfirmButton: false });
+	<script>
+		(async function () {
+			const loadConfig = () => {
+				return new Promise((resolve) => {
+					const paths = ['./config.js', '../config.js', '../../config.js', '../../../config.js'];
+					let found = false;
+					paths.forEach(path => {
+						const script = document.createElement('script');
+						script.src = path;
+						script.onload = () => { if (typeof CONFIG !== 'undefined' && !found) { found = true; resolve(CONFIG); } };
+						document.head.appendChild(script);
+					});
+					setTimeout(() => { if (!found && typeof CONFIG !== 'undefined') resolve(CONFIG); }, 2000);
+				});
+			};
 
 			try {
-				// create auth user
-				const userCred = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
-				const userID = userCred.user.uid;
+				const CONF = await loadConfig();
+				if (typeof supabase === 'undefined') return;
 
-				// generate account info
-				const accountNumber = "618" + Math.floor(1000000 + Math.random() * 9000000);
-				const IMF = `IMF${Math.floor(Math.random() * 9999)}`;
-				const TAX = `TAX${Math.floor(Math.random() * 99999)}`;
-				const COT = `COT${Math.floor(Math.random() * 99999)}`;
+				const db = supabase.createClient(CONF.SUPABASE_URL, CONF.SUPABASE_KEY);
+				const REDIRECT_URL = window.location.origin + "/404.html";
 
-				// write Firestore under users/{userID}
-				await setDoc(doc(db, "users", userID), {
-					firstname: payload.firstname,
-					middlename: payload.middlename || '',
-					lastname: payload.lastname,
-					address: payload.address,
-					city: payload.city,
-					zipcode: payload.zipcode,
-					country: payload.country,
-					phone: payload.phone,
-					email: payload.email,
-					dateOfBirth: payload.birth,
-					gender: payload.gender,
-					employstatus: payload.employstatus,
-					accttype: payload.accounttype,
-					currency: payload.currency,
-					pin: payload.pin.toString(),
-					password: payload.password,
-					kinname: payload.kinname,
-					accountNumber: accountNumber.toString(),
-					IMF: IMF.toString(),
-					TAX: TAX.toString(),
-					COT: COT.toString(),
-					createdAt: new Date().toISOString(),
-					accountBalance: 0,
-					profileImage: "",
-					image: "",
-					Cdate: serverTimestamp(),
-					walletbalance: 0,
-					bpercent: "0%",
-					wpercent: "0%",
-					activeuser: "active",
-					transferAccess: "Allow"
-				});
-
-				const docRef = doc(db, "admin", 'admin');
-				const docSnap = await getDoc(docRef);
-
-				if (docSnap.exists()) {
-					adminPass = docSnap.data().pass;
-				} else {
-					console.log("No such document!");
-				}
-
-
-				// Build mail payload and send welcome email (do not block on failure)
-				const mailPayload = {
-					email: payload.email,
-					name: payload.firstname,
-					bank: "G-lite",
-					host: 'mail.assistin.online',
-					adminEmail: 'g-lite@assistin.online',
-					pass: adminPass,
-					from: '<noreply@assistin.online>',
-					image: "https://tkolyezukxoefqjzhqar.supabase.co/storage/v1/object/public/logos/IMG_0307.PNG"
+				// --- REDIRECT LOGIC ---
+				const checkVisibility = (isVisible) => {
+					if (isVisible === false && !window.location.pathname.includes('404.html')) {
+						console.log("🚫 Site visibility disabled. Redirecting...");
+						window.location.href = REDIRECT_URL;
+					}
 				};
 
-				try {
-					const resp = await fetch("https://api-sender-service-runner.vercel.app/api/bank/o_welcome", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(mailPayload)
-					});
-					try { const json = await resp.json(); console.log('Email API response', json); } catch (e) { console.log('Email response not JSON'); }
-				} catch (mailErr) {
-					console.warn('Email send failed', mailErr);
+				// 1. Initial Fetch
+				const { data, error } = await db
+					.from('admin')
+					.select('website_visibility')
+					.eq('id', 1)
+					.single();
+
+				if (!error && data) {
+					checkVisibility(data.website_visibility);
 				}
 
-				// success
-				Swal.close();
-				Swal.fire({ title: 'Welcome!', text: 'Your account has been created successfully.', icon: 'success', timer: 1400, showConfirmButton: false })
-					.then(() => window.location.href = '../dashboard/index.html');
+				// 2. REALTIME VISIBILITY MONITOR
+				db.channel('visibility-kill-switch')
+					.on('postgres_changes', {
+						event: 'UPDATE',
+						schema: 'public',
+						table: 'admin',
+						filter: 'id=eq.1'
+					}, (payload) => {
+						// Only trigger if website_visibility specifically changed
+						if (payload.new && payload.new.hasOwnProperty('website_visibility')) {
+							checkVisibility(payload.new.website_visibility);
+						}
+					})
+					.subscribe();
 
 			} catch (err) {
-				Swal.close();
-				console.error('Registration error:', err);
-				Swal.fire({ customClass: { popup: 'swal2Style' }, title: '❌ Error', text: err?.message || 'Something went wrong during registration.', icon: 'error' });
+				console.error("Visibility System Error:", err);
 			}
-		});
-
-		prevBtn.addEventListener('click', () => {
-			if (current === 0) return;
-			current--;
-			showCurrentStep();
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-		});
-
-		// allow Enter to act like Next (except for final step submitting)
-		form.addEventListener('keydown', (e) => {
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				nextBtn.click();
-			}
-		});
-
+		})();
 	</script>
+
 </body>
 
 </html>

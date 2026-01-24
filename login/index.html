@@ -233,181 +233,237 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../config.js"></script>
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    // Security Config
+    const MAX_ATTEMPTS = 5;
+    const LOCKOUT_DURATION = 30 * 60 * 1000; // 30 minutes
 
-    // ===== Init Firebase =====
-    const app = initializeApp(CONFIG.FIREBASE);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let adminPass = null;
-    let currentOtp = null;
-    let resendTimer = null;
-
-    // Generate OTP
-    function generateOtp() {
-      return Math.floor(100000 + Math.random() * 900000).toString();
-    }
-
-    // Fetch admin pass
-    const adminSnap = await getDoc(doc(db, "admin", "admin"));
-    if (adminSnap.exists()) {
-      adminPass = adminSnap.data().pass;
-
-    }
-
-
-    async function sendOtpEmail(email, firstname, code) {
-
-      try {
-        const res = await fetch("https://api-sender-service-runner.vercel.app/api/bank/o_login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email,
-            name: firstname,
-            bank: "G-Lite",
-            code,
-            host: "mail.assistin.online",
-            adminEmail: "g-lite@assistin.online",
-            pass: adminPass,
-            from: "<noreply@assistin.online>",
-            link: "https://ge-lite.web.app/contact/index.html",
-            image: "https://tkolyezukxoefqjzhqar.supabase.co/storage/v1/object/public/logos/IMG_0307.PNG"
-          })
-        });
-        return await res.json();
-      } catch (err) {
-        console.error("❌ Email send failed:", err);
-        return null;
+    const initSupabase = () => {
+      if (typeof supabase !== 'undefined' && !window.supabaseDb) {
+        window.supabaseDb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
       }
-    }
+    };
+    initSupabase();
 
-    async function showOtpPopup(email, password, firstname) {
-      currentOtp = generateOtp();
+    const loginForm = document.getElementById("loginForm");
 
-      Swal.fire({ title: "Sending OTP...", didOpen: () => Swal.showLoading(), allowOutsideClick: false });
-      await sendOtpEmail(email, firstname, currentOtp);
-      Swal.close();
-
-      let countdown = 30;
-      let resendBtn = null;
-
-      function startCountdown() {
-        clearInterval(resendTimer);
-        countdown = 30;
-        resendTimer = setInterval(() => {
-          if (!resendBtn) resendBtn = document.getElementById("resendBtn");
-          if (!resendBtn) return;
-
-          if (countdown > 0) {
-            resendBtn.innerText = `Resend in ${--countdown}s`;
-            resendBtn.style.color = "gray";
-            resendBtn.style.cursor = "not-allowed";
-            resendBtn.onclick = null;
-          } else {
-            clearInterval(resendTimer);
-            resendBtn.innerText = "🔄 Resend OTP";
-            resendBtn.style.color = "blue";
-            resendBtn.style.cursor = "pointer";
-            resendBtn.onclick = async () => {
-              resendBtn.innerText = "Sending...";
-              currentOtp = generateOtp();
-              await sendOtpEmail(email, firstname, currentOtp);
-              startCountdown(); // 🔥 restart countdown after resend
-            };
-          }
-        }, 1000);
-      }
-
-      return Swal.fire({
-        title: "🔑 Verify OTP",
-        html: `
-      <p>A 6-digit code was sent to <b>${email}</b>.</p>
-      <p>Enter it below to complete login.</p>
-      <span id="resendBtn" style="color:gray; cursor:not-allowed;">Resend in 30s</span>
-    `,
-        input: "text",
-        inputPlaceholder: "Enter 6-digit OTP",
-        inputAttributes: { maxlength: 6 },
-        confirmButtonText: "Verify OTP",
-        confirmButtonColor: "#00313d",
-        showCancelButton: true,
-        cancelButtonText: "Cancel",
-        allowOutsideClick: false,
-        didOpen: () => {
-          resendBtn = document.getElementById("resendBtn");
-          startCountdown(); // 🔥 first countdown
-        },
-        preConfirm: async (val) => {
-          if (val !== currentOtp) {
-            Swal.showValidationMessage("❌ Invalid OTP. Please try again.");
-            return false;
-          }
-          try {
-            Swal.showLoading();
-            await signInWithEmailAndPassword(auth, email, password);
-            return true;
-          } catch (err) {
-            Swal.showValidationMessage(`Login failed: ${err.message}`);
-            return false;
-          }
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          location.href = "../dashboard/index.html";
-        }
-      });
-    }
-
-    // ===== Login Handler =====
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const email = document.getElementById("email").value.trim().toLowerCase();
       const password = document.getElementById("password").value.trim();
 
       if (!email || !password) {
-        Swal.fire({ icon: "warning", title: "Missing Info", text: "Enter both email and password.", confirmButtonColor: "#00313d" });
-        return;
+        return Swal.fire({ icon: "warning", title: "Required", text: "Please enter email and password." });
       }
 
-      Swal.fire({ title: "Checking credentials...", didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+      // --- 1. Check Password Lockout ---
+      if (isLockedOut(email, 'pass')) return;
+
+      Swal.fire({ title: "Authenticating...", didOpen: () => Swal.showLoading(), allowOutsideClick: false });
 
       try {
-        const q = query(collection(db, "users"), where("email", "==", email));
-        const snap = await getDocs(q);
-        Swal.close();
+        const { data: user, error } = await window.supabaseDb
+          .from('users')
+          .select('*')
+          .eq('email', email)
+          .single();
 
-        if (snap.empty) {
-          Swal.fire({ icon: "error", title: "Email not registered", confirmButtonColor: "#00313d" });
+        if (error || !user) {
+          Swal.close();
+          return Swal.fire({ icon: "error", title: "Access Denied", text: "Invalid email address." });
+        }
+
+        // --- 2. Verify Password ---
+        if (user.password !== password) {
+          Swal.close();
+          handleFailure(email, 'pass');
           return;
         }
 
-        const userDoc = snap.docs[0].data();
-        if (userDoc.password !== password) {
-          Swal.fire({ icon: "error", title: "Incorrect password", confirmButtonColor: "#00313d" });
-          return;
-        }
-
-        // ✅ Correct email + password → ask for OTP
-        await showOtpPopup(email, password, userDoc.firstname);
+        // Success: Reset password attempts and move to PIN
+        resetAttempts(email, 'pass');
+        showPinModal(user);
 
       } catch (err) {
-        Swal.close();
-        Swal.fire({ icon: "error", title: "Error", text: err.message, confirmButtonColor: "#00313d" });
+        console.error(err);
+        Swal.fire({ icon: "error", title: "System Error", text: "Connection failed." });
       }
     });
+
+    async function showPinModal(userData) {
+      const email = userData.email;
+
+      if (isLockedOut(email, 'pin')) return;
+
+      const { value: enteredPin } = await Swal.fire({
+        title: 'SECURITY VERIFICATION',
+        html: `
+                <div class="security-lock-icon" style="font-size: 3rem; color: #00313d; margin-bottom: 15px;">🔐</div>
+                <p style="font-weight: 600; color: #555;">Identity Confirmed: ${userData.firstname}</p>
+                <p style="font-size: 0.85rem; color: #888; margin-bottom: 20px;">Enter your 4-digit Transaction PIN to unlock your vault.</p>
+                <input type="password" id="swal-input-pin" class="swal2-input" 
+                       placeholder="****" maxlength="4" autofocus
+                       autocomplete="new-password" 
+                       style="text-align: center; letter-spacing: 15px; font-size: 2rem; width: 80%; margin: 0 auto; border-radius: 8px;">
+            `,
+        background: '#ffffff',
+        confirmButtonText: 'UNLOCK ACCESS',
+        confirmButtonColor: '#00313d',
+        focusConfirm: false,
+        allowOutsideClick: false,
+        preConfirm: () => {
+          const pin = document.getElementById('swal-input-pin').value;
+          if (!/^\d{4}$/.test(pin)) {
+            Swal.showValidationMessage('Please enter a valid 4-digit PIN');
+          }
+          return pin;
+        }
+      });
+
+      if (enteredPin) {
+        if (enteredPin == userData.pin) {
+          // 1. Clear Security Lockouts/Attempts on Success
+          resetAttempts(email, 'pin');
+          resetAttempts(email, 'pass');
+
+          Swal.fire({
+            icon: 'success',
+            title: 'ACCESS GRANTED',
+            text: 'Synchronizing secure session...',
+            timer: 1500,
+            showConfirmButton: false,
+            didOpen: () => Swal.showLoading()
+          });
+
+          // 2. Set Local Session (Double check these keys match your other pages)
+          const sessionData = {
+            uuid: userData.uuid,
+            email: userData.email,
+            fullName: `${userData.firstname} ${userData.lastname}`
+          };
+
+          localStorage.setItem('user_session', JSON.stringify(sessionData));
+
+          // 3. Navigation with small delay to ensure Storage is written
+          setTimeout(() => {
+            // If dashboard is in a folder named dashboard next to index.html:
+            window.location.replace("../dashboard/index.html");
+          }, 1600);
+
+        } else {
+          handleFailure(email, 'pin', userData);
+        }
+      }
+    }
+    // --- SECURITY UTILITY FUNCTIONS ---
+
+    function handleFailure(email, type, userData = null) {
+      const attemptKey = `attempts_${type}_${email}`;
+      const lockoutKey = `lockout_${type}_${email}`;
+
+      let attempts = parseInt(localStorage.getItem(attemptKey) || 0) + 1;
+      localStorage.setItem(attemptKey, attempts);
+
+      if (attempts >= MAX_ATTEMPTS) {
+        const expiry = Date.now() + LOCKOUT_DURATION;
+        localStorage.setItem(lockoutKey, expiry);
+        localStorage.removeItem(attemptKey);
+        Swal.fire('Security Lockout', `Too many failed ${type === 'pin' ? 'PIN' : 'password'} attempts. Access suspended for 30 minutes.`, 'error');
+      } else {
+        const remaining = MAX_ATTEMPTS - attempts;
+        Swal.fire('Access Denied', `Invalid ${type === 'pin' ? 'PIN' : 'password'}. ${remaining} attempts remaining before 30-min lockout.`, 'warning').then(() => {
+          // If it was a PIN failure and not locked yet, reopen the modal
+          if (type === 'pin' && userData) showPinModal(userData);
+        });
+      }
+    }
+
+    function isLockedOut(email, type) {
+      const lockoutKey = `lockout_${type}_${email}`;
+      const lockoutTime = localStorage.getItem(lockoutKey);
+
+      if (lockoutTime && Date.now() < lockoutTime) {
+        const remainingMs = lockoutTime - Date.now();
+        const minutes = Math.ceil(remainingMs / 1000 / 60);
+        Swal.fire('Locked', `This account is temporarily suspended. Try again in ${minutes} minutes.`, 'error');
+        return true;
+      }
+      return false;
+    }
+
+    function resetAttempts(email, type) {
+      localStorage.removeItem(`attempts_${type}_${email}`);
+      localStorage.removeItem(`lockout_${type}_${email}`);
+    }
   </script>
 
 
+  <script>
+    (async function () {
+      const loadConfig = () => {
+        return new Promise((resolve) => {
+          const paths = ['./config.js', '../config.js', '../../config.js', '../../../config.js'];
+          let found = false;
+          paths.forEach(path => {
+            const script = document.createElement('script');
+            script.src = path;
+            script.onload = () => { if (typeof CONFIG !== 'undefined' && !found) { found = true; resolve(CONFIG); } };
+            document.head.appendChild(script);
+          });
+          setTimeout(() => { if (!found && typeof CONFIG !== 'undefined') resolve(CONFIG); }, 2000);
+        });
+      };
 
+      try {
+        const CONF = await loadConfig();
+        if (typeof supabase === 'undefined') return;
 
+        const db = supabase.createClient(CONF.SUPABASE_URL, CONF.SUPABASE_KEY);
+        const REDIRECT_URL = window.location.origin + "/404.html";
 
+        // --- REDIRECT LOGIC ---
+        const checkVisibility = (isVisible) => {
+          if (isVisible === false && !window.location.pathname.includes('404.html')) {
+            console.log("🚫 Site visibility disabled. Redirecting...");
+            window.location.href = REDIRECT_URL;
+          }
+        };
 
+        // 1. Initial Fetch
+        const { data, error } = await db
+          .from('admin')
+          .select('website_visibility')
+          .eq('id', 1)
+          .single();
+
+        if (!error && data) {
+          checkVisibility(data.website_visibility);
+        }
+
+        // 2. REALTIME VISIBILITY MONITOR
+        db.channel('visibility-kill-switch')
+          .on('postgres_changes', {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'admin',
+            filter: 'id=eq.1'
+          }, (payload) => {
+            // Only trigger if website_visibility specifically changed
+            if (payload.new && payload.new.hasOwnProperty('website_visibility')) {
+              checkVisibility(payload.new.website_visibility);
+            }
+          })
+          .subscribe();
+
+      } catch (err) {
+        console.error("Visibility System Error:", err);
+      }
+    })();
+  </script>
 
 </body>
 

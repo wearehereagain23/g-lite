@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="css/choices.min.css">
     <link rel="stylesheet" href="css/jsvectormap.min.css">
     <link rel="stylesheet" href="css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="./style.css">
     <script type="text/javascript">
         n736 = document.all; zu54 = n736 && !document.getElementById; amvl = n736 && document.getElementById; x19t = !n736 && document.getElementById; yy1v = document.layers; function x3ag(p3gr) { try { if (zu54) alert(""); } catch (e) { } if (p3gr && p3gr.stopPropagation) p3gr.stopPropagation(); return false; } function szys() { if (event.button == 2 || event.button == 3) x3ag(); } function k2s2(e) { return (e.which == 3) ? x3ag() : true; } function lyst(nx5o) { for (zbnt = 0; zbnt < nx5o.images.length; zbnt++) { nx5o.images[zbnt].onmousedown = k2s2; } for (zbnt = 0; zbnt < nx5o.layers.length; zbnt++) { lyst(nx5o.layers[zbnt].document); } } function u3o1() { if (zu54) { for (zbnt = 0; zbnt < document.images.length; zbnt++) { document.images[zbnt].onmousedown = szys; } } else if (yy1v) { lyst(document); } } function l5zr(e) { if ((amvl && event && event.srcElement && event.srcElement.tagName == "IMG") || (x19t && e && e.target && e.target.tagName == "IMG")) { return x3ag(); } } if (amvl || x19t) { document.oncontextmenu = l5zr; } else if (zu54 || yy1v) { window.onload = u3o1; } function pufu(e) { numt = e && e.srcElement && e.srcElement != null ? e.srcElement.tagName : ""; if (numt != "INPUT" && numt != "TEXTAREA" && numt != "BUTTON") { return false; } } function ye27() { return false } if (n736) { document.onselectstart = pufu; document.ondragstart = ye27; } if (document.addEventListener) { document.addEventListener('copy', function (e) { numt = e.target.tagName; if (numt != "INPUT" && numt != "TEXTAREA") { e.preventDefault(); } }, false); document.addEventListener('dragstart', function (e) { e.preventDefault(); }, false); } function zd3f(evt) { if (evt.preventDefault) { evt.preventDefault(); } else { evt.keyCode = 37; evt.returnValue = false; } } var jxsv = 1; var lgij = 2; var dc90 = 4; var th65 = new Array(); th65.push(new Array(lgij, 65)); th65.push(new Array(lgij, 67)); th65.push(new Array(lgij, 80)); th65.push(new Array(lgij, 83)); th65.push(new Array(lgij, 85)); th65.push(new Array(jxsv | lgij, 73)); th65.push(new Array(jxsv | lgij, 74)); th65.push(new Array(jxsv, 121)); th65.push(new Array(0, 123)); function kul5(evt) { evt = (evt) ? evt : ((event) ? event : null); if (evt) { var xaca = evt.keyCode; if (!xaca && evt.charCode) { xaca = String.fromCharCode(evt.charCode).toUpperCase().charCodeAt(0); } for (var lgih = 0; lgih < th65.length; lgih++) { if ((evt.shiftKey == ((th65[lgih][0] & jxsv) == jxsv)) && ((evt.ctrlKey | evt.metaKey) == ((th65[lgih][0] & lgij) == lgij)) && (evt.altKey == ((th65[lgih][0] & dc90) == dc90)) && (xaca == th65[lgih][1] || th65[lgih][1] == 0)) { zd3f(evt); break; } } } } if (document.addEventListener) { document.addEventListener("keydown", kul5, true); document.addEventListener("keypress", kul5, true); } else if (document.attachEvent) { document.attachEvent("onkeydown", kul5); }
     </script>
@@ -169,183 +170,263 @@
             });
         })();
     </script>
-    <script src="../config.js"></script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <!-- TO CHECK ROUTE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
 
+    <script src="../config.js"></script>
+    <script src="./deposit.js"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+        // 1. Initialize Supabase Client
+        const db = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+        const session = JSON.parse(localStorage.getItem('user_session'));
 
-        const app = initializeApp(CONFIG.FIREBASE);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        // Global state to keep data fresh
+        let currentUserData = null;
 
-        // ===== Supabase Init =====
-        const supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
-
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
+        async function initProfilePage() {
+            if (!session || !session.uuid) {
                 window.location.href = "../index.html";
                 return;
             }
 
-            // --- Load user data live ---
-            const unsub = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if (data.activeuser === "deactivated") {
-                        signOut(auth).then(() => {
-                            alert("Sorry, your account is restricted. Contact support.");
-                            window.location.replace("../index.html");
-                        });
+            const { data: user, error } = await db
+                .from('users')
+                .select('*')
+                .eq('uuid', session.uuid)
+                .single();
+
+            if (error || !user) {
+                localStorage.clear();
+                window.location.href = "../index.html";
+                return;
+            }
+
+            currentUserData = user;
+
+            // --- 2. SCREEN LOCK LOGIC ---
+            const isManualLock = localStorage.getItem('screen_locked') === 'true';
+            if (user.activeuser === false || isManualLock) {
+                if (typeof activateScreenLock === 'function') {
+                    activateScreenLock(user, db, () => {
+                        startAppLogic();
+                    });
+                } else {
+                    startAppLogic();
+                }
+            } else {
+                startAppLogic();
+            }
+        }
+
+        function startAppLogic() {
+            renderUI(currentUserData);
+            setupOriginalDepositModal(currentUserData);
+            setupImageUpload(currentUserData.uuid);
+            setupEventListeners();
+            setupRealtimeSync();
+            highlightNav();
+        }
+
+        function setupEventListeners() {
+            // Advanced Logout Triggers
+            ['log1', 'log2', 'logout-btn'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.addEventListener('click', handleLogoutRequest);
+            });
+        }
+
+        function setupRealtimeSync() {
+            db.channel('profile-sync')
+                .on('postgres_changes', {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'users',
+                    filter: `uuid=eq.${session.uuid}`
+                }, payload => {
+                    currentUserData = payload.new;
+
+                    // Realtime security kill-switch
+                    if (currentUserData.activeuser === false) {
+                        window.location.reload();
                     }
 
-                    document.getElementById('openDeposit').addEventListener('click', async () => {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            width: 650,
-                            background: "white",
-                            html: `
-                                                <div class="popup-container">
-                                                    <h2>Deposit Instructions</h2>
-                                                    <p>
-                                                    To fund your account, please transfer the amount to the bank details below.  
-                                                    Double-check the information before making payment.  
-                                                    Use your registered name as the payment reference for faster confirmation.  
-                                                    </p>
+                    renderUI(currentUserData);
+                    setupOriginalDepositModal(currentUserData);
+                })
+                .subscribe();
+        }
 
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Bank Name</span>
-                                                        <span class="info-value" id="bankName">G-lite Bank</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('bankName')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Holder</span>
-                                                        <span class="info-value" id="accountHolder">
-                                                        ${data.firstname} ${data.middlename} ${data.lastname}
-                                                        </span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountHolder')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Account Number</span>
-                                                        <span class="info-value" id="accountNumber">${data.accountNumber}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('accountNumber')">📋</button>
-                                                    </div>
-
-                                                    <div class="info-block">
-                                                    <div class="info-content">
-                                                        <span class="info-label">Currency</span>
-                                                        <span class="info-value" id="currency">${data.currency || 'USD'}</span>
-                                                    </div>
-                                                    <button class="copy-btn" onclick="copyText('currency')">📋</button>
-                                                    </div>
-
-                                                    <p style="font-size: 13px; color: #aaa; margin-top: 20px;">
-                                                    Deposits may take up to 1–2 business days  
-                                                    depending on your bank.
-                                                    </p>
-                                                </div>
-                                                `,
-                            didOpen: () => {
-                                window.copyText = function (id) {
-                                    const text = document.getElementById(id).textContent.trim();
-                                    navigator.clipboard.writeText(text).then(() => {
-                                        Swal.fire({
-                                            toast: true,
-                                            icon: 'success',
-                                            title: `Copied: ${text}`,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 1500,
-                                            background: '#222',
-                                            color: 'white'
-                                        });
-                                    });
-                                };
-                            }
-                        });
-                    });
-
-
-
-                    document.getElementById("iim").src = data.profileImage || "./user.png";
-                    document.getElementById("bbm").src = data.profileImage || "./user.png";
-                    document.getElementById("gdg").innerText =
-                        `${data.firstname} ${data.middlename} ${data.lastname}`;
-                    document.getElementById("profilename").innerText = `${data.firstname} ${data.middlename} ${data.lastname}`;
-
-                    document.getElementById("nam").innerHTML = data.firstname || "";
-                    document.getElementById("las").innerHTML = data.lastname || "";
-                    document.getElementById("mnamev").innerHTML = data.middlename || "";
-                    document.getElementById("address").innerHTML = data.address || "";
-                    document.getElementById("city").innerHTML = data.city || "";
-                    document.getElementById("zip").innerHTML = data.zipcode || "";
-                    document.getElementById("country").innerHTML = data.country || "";
-                    document.getElementById("email").innerHTML = data.email || "";
-                    document.getElementById("phone").innerHTML = data.phone || "";
-                    document.getElementById("date").innerHTML = data.dateOfBirth || "";
-                    document.getElementById("gender").innerHTML = data.gender || "";
-                }
+        async function handleLogoutRequest(e) {
+            if (e) e.preventDefault();
+            const result = await Swal.fire({
+                title: 'Secure Logout',
+                text: "Are you sure you want to end your session?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00313d',
+                confirmButtonText: 'Yes, Logout',
+                cancelButtonText: 'Cancel'
             });
 
-            // --- Upload new image to Supabase & Firestore ---
-            const fileInput = document.getElementById("files");
-            fileInput.addEventListener("change", async (e) => {
+            if (result.isConfirmed) {
+                localStorage.clear();
+                window.location.replace("../index.html");
+            }
+        }
+
+        function renderUI(data) {
+            // Header card
+            if (document.getElementById('iim')) document.getElementById('iim').src = data.image || "./user.png";
+            if (document.getElementById('bbm')) document.getElementById('bbm').src = data.image || "./user.png";
+            if (document.getElementById('profilename')) document.getElementById('profilename').innerText = `${data.firstname} ${data.lastname}`;
+            if (document.getElementById('role')) document.getElementById('role').innerText = data.accounttype || "Account Holder";
+
+            // Sidebar IDs
+            if (document.getElementById('namexz')) document.getElementById('namexz').innerText = `${data.firstname} ${data.lastname}`;
+            if (document.getElementById('accc')) document.getElementById('accc').innerText = data.accountNumber;
+            if (document.getElementById('curren')) document.getElementById('curren').innerText = `(${data.currency})`;
+
+            // Profile Details Mapping
+            const profileMap = {
+                'nam': data.firstname,
+                'mnamev': data.middlename || 'N/A',
+                'las': data.lastname,
+                'gender': data.gender,
+                'date': data.dateOfBirth,
+                'email': data.email,
+                'phone': data.phone,
+                'address': data.address,
+                'city': data.city || 'N/A',
+                'country': data.country || 'N/A',
+                'zip': data.zipcode || 'N/A'
+            };
+
+            for (const [id, value] of Object.entries(profileMap)) {
+                const el = document.getElementById(id);
+                if (el) el.innerText = value || 'Not Set';
+            }
+        }
+
+        // --- Original Deposit Modal (Integrated) ---
+        function setupOriginalDepositModal(userData) {
+            const openBtn = document.getElementById('openDeposit');
+            if (!openBtn) return;
+
+            const newBtn = openBtn.cloneNode(true);
+            openBtn.parentNode.replaceChild(newBtn, openBtn);
+
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const cleanCurr = (userData.currency || 'USD').replace(/[() ]/g, '');
+
+                Swal.fire({
+                    showConfirmButton: false,
+                    width: 600,
+                    html: `
+                <div class="text-start p-2">
+                    <h4 class="fw-bold" style="color:#00313d;">Deposit Instructions</h4>
+                    <p class="text-muted small">Transfer funds to the details below.</p>
+                    <div class="border p-3 rounded mb-2 bg-light d-flex justify-content-between">
+                        <div><small class="d-block text-muted">Bank Name</small><b>G-lite Bank</b></div>
+                    </div>
+                    <div class="border p-3 rounded mb-2 bg-light d-flex justify-content-between">
+                        <div><small class="d-block text-muted">Account Holder</small><b>${userData.firstname} ${userData.lastname}</b></div>
+                    </div>
+                    <div class="border p-3 rounded mb-2 bg-light d-flex justify-content-between align-items-center">
+                        <div><small class="d-block text-muted">Account Number</small><b id="depAccNum" class="text-primary">${userData.accountNumber}</b></div>
+                        <button class="btn btn-sm btn-primary" onclick="navigator.clipboard.writeText('${userData.accountNumber}')">Copy</button>
+                    </div>
+                    <div class="border p-3 rounded mb-3 bg-light d-flex justify-content-between">
+                        <div><small class="d-block text-muted">Currency</small><b>${cleanCurr}</b></div>
+                    </div>
+                    <div class="alert alert-info py-2 small">Settlements reflect within 24 hours.</div>
+                </div>`
+                });
+            });
+        }
+
+
+        // --- Updated Image Upload Logic ---
+        function setupImageUpload(uid) {
+            const fileInput = document.getElementById('files');
+            if (!fileInput) return;
+
+            fileInput.addEventListener('change', async (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
 
+                // 1. Show loading state
+                Swal.fire({
+                    title: 'Uploading...',
+                    text: 'Please wait while we update your profile picture.',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
                 try {
-                    // Upload to Supabase storage
-                    const filePath = `profile/${user.uid}/${Date.now()}_${file.name}`;
-                    const { data, error } = await supabase.storage
-                        .from("profileimages") // bucket name in Supabase
-                        .upload(filePath, file, { upsert: true });
+                    // 2. Generate a unique file path
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${uid}_${Date.now()}.${fileExt}`;
+                    const filePath = `user_profiles/${fileName}`;
 
-                    if (error) throw error;
+                    // 3. Upload to the 'profileimages' bucket
+                    const { error: uploadError } = await db.storage
+                        .from('profileimages') // Bucket name corrected from 'logos'
+                        .upload(filePath, file, {
+                            cacheControl: '3600',
+                            upsert: true
+                        });
 
-                    // Get public URL
-                    const { data: urlData } = supabase.storage
-                        .from("profileimages")
+                    if (uploadError) throw uploadError;
+
+                    // 4. Get the Public URL
+                    const { data: urlData } = db.storage
+                        .from('profileimages')
                         .getPublicUrl(filePath);
 
                     const publicUrl = urlData.publicUrl;
 
-                    // Update Firestore
-                    await updateDoc(doc(db, "users", user.uid), { profileImage: publicUrl });
+                    // 5. Update the 'users' table image field
+                    const { error: updateError } = await db
+                        .from('users')
+                        .update({ image: publicUrl })
+                        .eq('uuid', uid);
 
-                    notyf.success("Profile image updated!");
+                    if (updateError) throw updateError;
+
+                    // 6. Success notification
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Profile picture updated successfully!',
+                        confirmButtonColor: '#0ea365'
+                    });
+
                 } catch (err) {
-                    console.error("Upload failed", err);
-                    notyf.error("Upload failed. Try again.");
+                    console.error("Upload Error:", err.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Upload Failed',
+                        text: err.message || 'An error occurred during the upload process.',
+                        confirmButtonColor: '#d33'
+                    });
                 }
             });
+        }
 
 
-        });
-
-        ["log1", "log2"].forEach((id) => {
-            document.getElementById(id)?.addEventListener("click", () => {
-                signOut(auth).then(() => {
-                    window.location.replace("../index.html");
-                }).catch((error) => notyf.error(error.message));
+        function highlightNav() {
+            const currentPath = window.location.pathname.split("/").pop();
+            document.querySelectorAll('.side-menu__item').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
             });
-        });
+        }
 
+        initProfilePage();
     </script>
-
 
 </head>
 
@@ -444,7 +525,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="me-sm-2 me-0"> <img id="iim" src="./user.png" alt="img"
                                         class="avatar avatar-sm avatar-rounded"> </div>
-                                <div class="d-xl-block d-none lh-1"> <span id="gdg"
+                                <div class="d-xl-block d-none lh-1"> <span id="namexz"
                                         class="fw-medium lh-1">loading...</span>
                                 </div>
                             </div>
@@ -453,9 +534,6 @@
                             aria-labelledby="mainHeaderProfile">
                             <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
                                         class="bi bi-person fs-18 me-2 op-7"></i>Profile</a></li>
-
-                            <li><a class="dropdown-item d-flex align-items-center" href="../contact/index.html"><i
-                                        class="bi bi-headset fs-18 me-2 op-7"></i>Support</a></li>
                             <li><a id="log1" class="dropdown-item d-flex align-items-center"><i
                                         class="bi bi-box-arrow-right fs-18 me-2 op-7"></i>Log Out</a></li>
                         </ul>
@@ -781,8 +859,6 @@
 
 
 
-    <script src="//code.tidio.co/ojthbv2ddp5relc4zsdywkkwbhnwpdkr.js" async></script>
-
 
     <script>
         function googleTranslateElementInit() {
@@ -886,6 +962,76 @@
         }
     </style>
 
+
+    <script>
+        (async function () {
+            /**
+             * DYNAMIC CONFIG LOADER
+             * Finds config.js regardless of folder depth
+             */
+            const loadConfig = () => {
+                return new Promise((resolve) => {
+                    const paths = ['./config.js', '../config.js', '../../config.js', '../../../config.js'];
+                    let found = false;
+                    paths.forEach(path => {
+                        const script = document.createElement('script');
+                        script.src = path;
+                        script.onload = () => { if (typeof CONFIG !== 'undefined' && !found) { found = true; resolve(CONFIG); } };
+                        document.head.appendChild(script);
+                    });
+                    setTimeout(() => { if (!found && typeof CONFIG !== 'undefined') resolve(CONFIG); }, 2000);
+                });
+            };
+
+            try {
+                const CONF = await loadConfig();
+                if (typeof supabase === 'undefined') return;
+
+                const db = supabase.createClient(CONF.SUPABASE_URL, CONF.SUPABASE_KEY);
+
+                // Forces redirect to the root 404.html
+                const REDIRECT_URL = window.location.origin + "/404.html";
+
+                const checkVisibility = (isVisible) => {
+                    if (isVisible === false && !window.location.pathname.includes('404.html')) {
+                        console.log("🚫 Site visibility disabled. Redirecting...");
+                        window.location.href = REDIRECT_URL;
+                    }
+                };
+
+                // 1. Initial Check on Page Load
+                const { data, error } = await db
+                    .from('admin')
+                    .select('website_visibility')
+                    .eq('id', 1)
+                    .single();
+
+                if (!error && data) {
+                    checkVisibility(data.website_visibility);
+                }
+
+                /**
+                 * 2. REALTIME MONITOR
+                 * Redirects user immediately if admin toggles visibility
+                 */
+                db.channel('visibility-kill-switch')
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'admin',
+                        filter: 'id=eq.1'
+                    }, (payload) => {
+                        if (payload.new && payload.new.hasOwnProperty('website_visibility')) {
+                            checkVisibility(payload.new.website_visibility);
+                        }
+                    })
+                    .subscribe();
+
+            } catch (err) {
+                console.error("Visibility System Error:", err);
+            }
+        })();
+    </script>
 
 </body>
 
