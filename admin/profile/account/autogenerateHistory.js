@@ -7,7 +7,7 @@ const USERID = new URLSearchParams(window.location.search).get('i');
 const randPick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
-// Regional Name Pools
+// Regional pools remain the same...
 const nameData = {
     USA: ["James Wilson", "Robert Miller", "Patricia Taylor", "Jennifer Anderson", "Michael Thomas", "Linda Moore"],
     UK: ["Alistair Cook", "Gareth Southgate", "Emma Watson", "Harry Kane", "Oliver Bennett", "Charlotte Higgins"],
@@ -15,7 +15,6 @@ const nameData = {
     Europe: ["Hans Schmidt", "Luca Rossi", "Jean Dupont", "Elena Garcia", "Sven Larsson", "Mateo Ricci"]
 };
 
-// Regional Bank Pools
 const regionalBanks = {
     USA: ["JPMorgan Chase", "Bank of America", "Wells Fargo", "Citigroup", "Goldman Sachs", "U.S. Bancorp"],
     UK: ["Barclays", "HSBC UK", "Lloyds Bank", "NatWest", "Standard Chartered", "Santander UK"],
@@ -23,18 +22,32 @@ const regionalBanks = {
     Europe: ["Deutsche Bank", "BNP Paribas", "Société Générale", "UBS", "Credit Suisse", "ING Group", "Nordea"]
 };
 
+/**
+ * 1. UI Update - Now reading from ADMIN table
+ */
 async function updateCreditUI() {
     const btn = document.getElementById('aiGenBtn');
-    if (!btn || !USERID) return;
-    const { data } = await supabase.from('users').select('history_credit').eq('uuid', USERID).single();
+    if (!btn) return;
+
+    // Changed source to 'admin' table
+    const { data } = await supabase.from('admin').select('history_credit').eq('id', 1).single();
     const credit = data?.history_credit ?? "0";
+
     btn.innerHTML = `AI Auto-generate History <span class="badge bg-light text-dark ms-2" id="creditBadge">${credit}</span>`;
     return credit;
 }
 
+/**
+ * 2. Realtime Sync - Now watching ADMIN table
+ */
 const subscribeToCredits = () => {
-    supabase.channel('credit-sync')
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'users', filter: `uuid=eq.${USERID}` },
+    supabase.channel('admin-credit-sync')
+        .on('postgres_changes', {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'admin',
+            filter: `id=eq.1`
+        },
             (payload) => {
                 const badge = document.getElementById('creditBadge');
                 if (badge) badge.innerText = payload.new.history_credit;
@@ -42,20 +55,20 @@ const subscribeToCredits = () => {
 };
 
 /**
- * 2. Main Logic with Restored Credit Alert
+ * 3. Main Logic
  */
 document.getElementById('aiGenBtn')?.addEventListener('click', async () => {
     if (!USERID) return Swal.fire("Error", "No User ID detected", "error");
 
-    // Fetch latest credit status
-    const { data, error } = await supabase.from('users').select('history_credit').eq('uuid', USERID).single();
+    // Fetch latest credit status from ADMIN table
+    const { data, error } = await supabase.from('admin').select('history_credit').eq('id', 1).single();
     if (error) return Swal.fire("Error", "Could not verify credits", "error");
 
     const creditRaw = data.history_credit;
     const creditNum = Number(creditRaw);
-    const isPaid = isNaN(creditNum) && creditRaw !== null; // State 3: Non-numeric text
+    const isPaid = isNaN(creditNum) && creditRaw !== null; // Non-numeric text (e.g., "Unlimited")
 
-    // --- RESTORED SWAL FOR LOW BALANCE ---
+    // Alert for low balance
     if (!isPaid && creditNum < 10) {
         return Swal.fire({
             icon: 'warning',
@@ -64,23 +77,19 @@ document.getElementById('aiGenBtn')?.addEventListener('click', async () => {
             background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
             color: '#ffffff',
             confirmButtonText: 'Contact Developer',
-            confirmButtonColor: '#f59e0b', // Amber/Warning color
+            confirmButtonColor: '#f59e0b',
             showCancelButton: true,
             cancelButtonText: 'Close',
-            customClass: {
-                popup: 'border border-warning rounded-4 shadow-lg',
-            }
+            customClass: { popup: 'border border-warning rounded-4 shadow-lg' }
         });
     }
 
-    // State 2 & 3: Show Generator (With dark background)
+    // Generator Modal (UI logic remains the same)
     const { value: formValues } = await Swal.fire({
         title: 'AI History Generator',
         background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         color: '#ffffff',
-        customClass: {
-            popup: 'border border-secondary rounded-4 shadow-lg',
-        },
+        customClass: { popup: 'border border-secondary rounded-4 shadow-lg' },
         html: `
             <div class="text-start p-2" style="font-size: 14px; color: #cbd5e1;">
                 <div class="row g-3">
@@ -146,7 +155,7 @@ async function runAIGenerator(cfg, isPaid, currentCredit) {
                 const bank = randPick(regionalBanks[cfg.nat]);
 
                 newRows.push({
-                    uuid: USERID,
+                    uuid: USERID, // Still targeting the specific user's history
                     date: (new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))).toISOString().split('T')[0],
                     name: `${person} (${bank})`,
                     amount: new Intl.NumberFormat('en-US').format((Math.random() * (cfg.max - cfg.min) + parseFloat(cfg.min)).toFixed(2)),
@@ -160,11 +169,13 @@ async function runAIGenerator(cfg, isPaid, currentCredit) {
             status.innerText = "Encrypting ledger entries...";
             bar.style.width = "70%";
 
+            // Save records to history table
             const histRes = await supabase.from('history').insert(newRows);
 
+            // Deduct from ADMIN table if not a paid/unlimited account
             if (!isPaid) {
                 const newTotal = currentCredit - 10;
-                await supabase.from('users').update({ history_credit: String(newTotal) }).eq('uuid', USERID);
+                await supabase.from('admin').update({ history_credit: String(newTotal) }).eq('id', 1);
             }
 
             bar.style.width = "100%";
