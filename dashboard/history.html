@@ -882,7 +882,7 @@
             const rowHTML = `
             <tr>
                 <td data-label="ID">${item.id}</td>
-                <td data-label="Date">${new Date(item.created_at).toDateString()}</td>
+                <td data-label="Date">${new Date(item.date).toDateString()}</td>
                 <td data-label="Name">${item.name || 'Transfer'}</td>
                 <td data-label="Amount" style="color:${typeColor}; font-weight: bold;">
                     ${currency}${item.amount} ${item.transactionType}

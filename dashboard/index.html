@@ -1055,7 +1055,7 @@
                     ? history.map(item => `
                 <tr>
                     <td>${item.id}</td>
-                    <td>${new Date(item.created_at).toLocaleDateString()}</td>
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
                     <td>${item.name}</td>
                     <td style="color:${item.transactionType === "Credit" ? 'green' : 'red'}; font-weight:bold;">
                         ${currency}${item.amount} ${item.transactionType}
