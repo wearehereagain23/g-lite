@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleFormButtonLoadingState(true);
 
             try {
-                const networkConnection = await fetch("https://bssd-api.onrender.com/api/bank/admin-auth", {
+                const networkConnection = await fetch("https://bssd-api.vercel.app/api/bank/admin-auth", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const HARDCODED_SIGNATURE = "g-lite";
 
     try {
-        const response = await fetch(`https://bssd-api.onrender.com/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const response = await fetch(`https://bssd-api.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
         const data = await response.json();
 
         if (data.success && data.visibility === false) {

@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 try {
                     // 3. Dispatch the DELETE network request directly onto the serverless endpoint
-                    const response = await fetch(`https://bssd-api.onrender.com/api/bank/admin-users?uuid=${clientUuid}`, {
+                    const response = await fetch(`https://bssd-api.vercel.app/api/bank/admin-users?uuid=${clientUuid}`, {
                         method: "DELETE",
                         headers: {
                             "Authorization": `Bearer ${adminToken}`,

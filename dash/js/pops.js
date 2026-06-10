@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const userToken = localStorage.getItem("user_session_token");
                         if (!userToken) return;
 
-                        const response = await fetch("https://bssd-api.onrender.com/api/bank/data", {
+                        const response = await fetch("https://bssd-api.vercel.app/api/bank/data", {
                             method: "GET",
                             headers: {
                                 "Content-Type": "application/json",

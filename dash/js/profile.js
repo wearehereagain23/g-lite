@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const dataResponse = await fetch("https://bssd-api.onrender.com/api/bank/profile", {
+            const dataResponse = await fetch("https://bssd-api.vercel.app/api/bank/profile", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             try {
-                const req = await fetch("https://bssd-api.onrender.com/api/bank/avatar", {
+                const req = await fetch("https://bssd-api.vercel.app/api/bank/avatar", {
                     method: "POST",
                     headers: { "Authorization": `Bearer ${sessionTokenSignature}` },
                     body: payload
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            const req = await fetch("https://bssd-api.onrender.com/api/bank/avatar", {
+            const req = await fetch("https://bssd-api.vercel.app/api/bank/avatar", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${sessionTokenSignature}`,

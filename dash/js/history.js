@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // STEP 1: Sync User Profile Metrics for the header metadata cards
-            const accountFetch = await fetch("https://bssd-api.onrender.com/api/bank/data", {
+            const accountFetch = await fetch("https://bssd-api.vercel.app/api/bank/data", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // STEP 2: Fetch Live Transaction History Array
-            const historyFetch = await fetch("https://bssd-api.onrender.com/api/bank/history", {
+            const historyFetch = await fetch("https://bssd-api.vercel.app/api/bank/history", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

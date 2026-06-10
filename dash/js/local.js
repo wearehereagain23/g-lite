@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!sessionTokenSignature) return;
 
         try {
-            const fetchResult = await fetch("https://bssd-api.onrender.com/api/bank/data", {
+            const fetchResult = await fetch("https://bssd-api.vercel.app/api/bank/data", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             try {
-                const verificationHandshake = await fetch("https://bssd-api.onrender.com/api/bank/local", {
+                const verificationHandshake = await fetch("https://bssd-api.vercel.app/api/bank/local", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         // PIN IS PASSED DIRECTLY TO THE SERVER FOR DB VALIDATION PREVENTING CLIENT TIMING ERRORS
                         try {
-                            const commitRequest = await fetch("https://bssd-api.onrender.com/api/bank/local", {
+                            const commitRequest = await fetch("https://bssd-api.vercel.app/api/bank/local", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             if (currentFailures >= 5) {
                                 instructions.innerHTML = `<span style="color:#dc2626">Locking security clearance modules...</span>`;
                                 try {
-                                    await fetch("https://bssd-api.onrender.com/api/bank/local", {
+                                    await fetch("https://bssd-api.vercel.app/api/bank/local", {
                                         method: "POST",
                                         headers: {
                                             "Content-Type": "application/json",

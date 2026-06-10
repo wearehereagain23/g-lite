@@ -423,7 +423,7 @@
         (async function () {
             try {
                 // Ask the local development server function if website access is live
-                const response = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+                const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: "check_visibility" })

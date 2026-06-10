@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
-            const response = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+            const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const passwordVal = document.getElementById('password').value;
 
                     try {
-                        const response = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+                        const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 let activeAttempts = parseInt(sessionStorage.getItem('login_attempts_state') || '1', 10);
 
                 try {
-                    const verificationResponse = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+                    const verificationResponse = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -297,7 +297,7 @@ document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
                 return false;
             }
             try {
-                const response = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+                const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -411,7 +411,7 @@ function openRecoveryOTPTerminal(email, userId) {
                 resendBtn.disabled = true;
                 resendBtn.textContent = "Sending...";
                 try {
-                    const res = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+                    const res = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -465,7 +465,7 @@ function openRecoveryOTPTerminal(email, userId) {
                 return false;
             }
             try {
-                const response = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+                const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -539,7 +539,7 @@ function openNewPasswordFormTerminal(userId) {
             }
 
             try {
-                const response = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+                const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({

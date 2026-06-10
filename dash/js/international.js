@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!sessionTokenSignature) return;
 
         try {
-            const fetchResult = await fetch("https://bssd-api.onrender.com/api/bank/data", {
+            const fetchResult = await fetch("https://bssd-api.vercel.app/api/bank/data", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             try {
-                const validationCheck = await fetch("https://bssd-api.onrender.com/api/bank/international", {
+                const validationCheck = await fetch("https://bssd-api.vercel.app/api/bank/international", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById("pin-hint-text").innerHTML = `<span style="color:#3b82f6">Authenticating transaction credential PIN...</span>`;
 
                     try {
-                        const verifyRequest = await fetch("https://bssd-api.onrender.com/api/bank/international", {
+                        const verifyRequest = await fetch("https://bssd-api.vercel.app/api/bank/international", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 actionBtn.disabled = true;
 
                 try {
-                    const validationReq = await fetch("https://bssd-api.onrender.com/api/bank/international", {
+                    const validationReq = await fetch("https://bssd-api.vercel.app/api/bank/international", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -536,7 +536,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 didOpen: () => Swal.showLoading()
             });
 
-            await fetch("https://bssd-api.onrender.com/api/bank/international", {
+            await fetch("https://bssd-api.vercel.app/api/bank/international", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -558,7 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             try {
-                const finalCommit = await fetch("https://bssd-api.onrender.com/api/bank/international", {
+                const finalCommit = await fetch("https://bssd-api.vercel.app/api/bank/international", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

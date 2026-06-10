@@ -72,7 +72,7 @@ function triggerNativeFileUploaderSequence(account) {
 
 async function executeAvatarNetworkAction(account, fileObject, streamActionType) {
     const adminToken = localStorage.getItem("admin_session_token");
-    const targetUrl = "https://bssd-api.onrender.com/api/bank/avatar";
+    const targetUrl = "https://bssd-api.vercel.app/api/bank/avatar";
 
     const headers = {
         "Authorization": `Bearer ${adminToken}`,
@@ -118,7 +118,7 @@ async function executeAvatarNetworkAction(account, fileObject, streamActionType)
             // ==========================================================================
             // DATABASE SYNC LINK: PERSIST PATH DIRECTLY TO USER COLUMN MATRIX
             // ==========================================================================
-            const dbSyncResponse = await fetch(`https://bssd-api.onrender.com/api/bank/admin-users?id=${account.id}`, {
+            const dbSyncResponse = await fetch(`https://bssd-api.vercel.app/api/bank/admin-users?id=${account.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

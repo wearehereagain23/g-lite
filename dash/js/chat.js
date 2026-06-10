@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!userSessionToken) return;
 
         try {
-            const response = await fetch(`https://bssd-api.onrender.com/api/bank/admin-chat`, {
+            const response = await fetch(`https://bssd-api.vercel.app/api/bank/admin-chat`, {
                 method: "GET",
                 headers: { "Authorization": `Bearer ${userSessionToken}` }
             });
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         inputField.value = '';
 
         try {
-            const response = await fetch("https://bssd-api.onrender.com/api/bank/admin-chat", {
+            const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formPayload.append("avatar", fileObj);
 
             try {
-                const response = await fetch("https://bssd-api.onrender.com/api/bank/avatar", {
+                const response = await fetch("https://bssd-api.vercel.app/api/bank/avatar", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${userSessionToken}`,
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 URL.revokeObjectURL(localOptimisticObjectURL);
 
-                const finalResponse = await fetch("https://bssd-api.onrender.com/api/bank/admin-chat", {
+                const finalResponse = await fetch("https://bssd-api.vercel.app/api/bank/admin-chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

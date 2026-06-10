@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
-            const response = await fetch("https://bssd-api.onrender.com/api/bank/auth", {
+            const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

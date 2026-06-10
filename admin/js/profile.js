@@ -132,7 +132,7 @@ async function executeProfileDatabaseMutation(userId, formElement, updatedPayloa
     if (spinner) spinner.style.display = "flex";
 
     try {
-        const response = await fetch(`https://bssd-api.onrender.com/api/bank/admin-users?id=${userId}`, {
+        const response = await fetch(`https://bssd-api.vercel.app/api/bank/admin-users?id=${userId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
