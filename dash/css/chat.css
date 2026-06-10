@@ -1,0 +1,262 @@
+/* ==========================================================================
+   PRODUCTION ENGINE ISOLATED CHAT DRAWER SYSTEM (chat.css)
+   ========================================================================== */
+
+#secure-chat-drawer,
+.chat-workspace-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 380px !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    background-color: #0d1322 !important;
+    background: var(--bg-card, #0d1322) !important;
+    border-left: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.5) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    z-index: 2000 !important;
+    overflow: hidden !important;
+
+    /* Smooth hardware-accelerated slide animation */
+    transform: translateX(110%) !important;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Open drawer state drivers */
+#secure-chat-drawer.active,
+#secure-chat-drawer.open,
+.chat-workspace-drawer.active,
+.chat-workspace-drawer.open {
+    transform: translateX(0) !important;
+    display: flex !important;
+}
+
+/* ==========================================================================
+   OVERLAY ENGINE LOGIC: IMMUTABLE BASE ENGINE STATE (BYPASSES OVERRIDES)
+   ========================================================================== */
+/* ==========================================================================
+   CLEAN BACKDROP OVERLAY — DRIVEN EXPLICITLY BY JAVASCRIPT
+   ========================================================================== */
+#global-chat-blur-overlay,
+.chat-backdrop-blur-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 1999 !important;
+    background: rgba(6, 9, 19, 0.45) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+
+    /* Initially fully un-rendered and interactive-dead */
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Activated State — Forces instant engine instantiation over standard styles */
+#global-chat-blur-overlay.active,
+#global-chat-blur-overlay.open,
+#global-chat-blur-overlay.is-active,
+.chat-backdrop-blur-overlay.active,
+.chat-backdrop-blur-overlay.open,
+.chat-backdrop-blur-overlay.is-active {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    background: rgba(6, 9, 19, 0.45) !important;
+
+    /* Apply filter dynamically only when the active target classes exist */
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+
+/* Header structural layout frame */
+.chat-drawer-header {
+    height: 80px !important;
+    min-height: 80px !important;
+    padding: 0 1.5rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+    background: var(--bg-main, #060913) !important;
+    flex-shrink: 0 !important;
+}
+
+.chat-title-meta {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+}
+
+.live-agent-status-indicator {
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    background: #10b981 !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+.chat-title-meta h4 {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--text-title, #f8fafc) !important;
+    margin: 0 !important;
+}
+
+.chat-title-meta p {
+    font-size: 0.7rem !important;
+    color: var(--text-muted, #475569) !important;
+    margin: 0 !important;
+}
+
+#close-chat-drawer,
+.chat-drawer-close-btn {
+    border: none !important;
+    background: transparent !important;
+    color: var(--text-muted, #475569) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Message Stream container layer */
+.chat-message-display-stream {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    padding: 1.5rem !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+    background: rgba(6, 9, 19, 0.4) !important;
+}
+
+.msg-bubble {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+    max-width: 80% !important;
+}
+
+.msg-bubble p {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0.85rem 1.1rem !important;
+    border-radius: 16px !important;
+}
+
+.msg-timestamp {
+    font-size: 0.65rem !important;
+    color: var(--text-muted, #475569) !important;
+}
+
+.msg-bubble.incoming {
+    align-self: flex-start !important;
+}
+
+.msg-bubble.incoming p {
+    background: var(--bg-surface, #141c2f) !important;
+    color: var(--text-title, #f8fafc) !important;
+    border-bottom-left-radius: 4px !important;
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+}
+
+.msg-bubble.outgoing {
+    align-self: flex-end !important;
+}
+
+.msg-bubble.outgoing p {
+    background: #21eaed !important;
+    color: #ffffff !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+/* ==========================================================================
+   FOOTER INPUT MATRIX DEFINITIONS
+   ========================================================================== */
+.chat-footer-input-matrix {
+    height: 80px !important;
+    min-height: 80px !important;
+    padding: 0 1.5rem !important;
+    border-top: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+    background: var(--bg-main, #060913) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+.chat-file-picker-btn {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    border-radius: 12px !important;
+    background: var(--bg-surface, #141c2f) !important;
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+    color: var(--text-body, #cbd5e1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+}
+
+input[type="text"].chat-text-input-field {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    border-radius: 12px !important;
+    background: var(--bg-surface, #141c2f) !important;
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+    padding: 0 1rem !important;
+    font-size: 0.85rem !important;
+    color: var(--text-title, #f8fafc) !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+input[type="text"].chat-text-input-field:focus {
+    border-color: #21eaed !important;
+    background: var(--bg-card, #0d1322) !important;
+}
+
+.chat-msg-send-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    border-radius: 12px !important;
+    background: #21eaed !important;
+    color: #ffffff !important;
+    border: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+}
+
+.chat-msg-send-btn:hover {
+    box-shadow: 0 4px 12px rgba(204, 30, 44, 0.4) !important;
+}
+
+.chat-footer-input-matrix svg {
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0 !important;
+}

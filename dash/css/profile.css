@@ -1,0 +1,397 @@
+/* ==========================================================================
+   G-Lite WIRE PLATFORM ARCHITECTURE - PROFILE MODULE CSS
+   ========================================================================= */
+
+.profile-layout-matrix {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+    width: 100%;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+.profile-panel-card,
+.limits-status-card {
+    background: var(--bg-card, #0d1322);
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06));
+    border-radius: 16px;
+    padding: 2rem;
+    box-sizing: border-box;
+    transition: background-color 0.25s, border-color 0.25s;
+}
+
+.panel-meta-header h3 {
+    font-size: 1.25rem;
+    color: var(--text-title, #f8fafc);
+    margin: 0 0 0.35rem 0;
+}
+
+.panel-meta-header p {
+    font-size: 0.8rem;
+    color: var(--text-muted, #475569);
+    margin: 0 0 1.75rem 0;
+}
+
+/* Profile Picture View Frame Properties */
+.profile-avatar-uploader-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-line, rgba(255, 255, 255, 0.04));
+}
+
+.avatar-preview-container {
+    position: relative;
+    width: 90px;
+    height: 90px;
+}
+
+.avatar-preview-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--bg-surface, #141c2f);
+    box-shadow: 0 0 0 2px var(--border-line, rgba(255, 255, 255, 0.1));
+    transition: border-color 0.25s;
+}
+
+.avatar-uploader-meta h5 {
+    font-size: 1rem;
+    color: var(--text-title, #f8fafc);
+    margin: 0 0 0.25rem 0;
+}
+
+.avatar-uploader-meta p {
+    font-size: 0.75rem;
+    color: var(--text-muted, #475569);
+    margin: 0;
+}
+
+/* Grid Matrix Layout Rules */
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.input-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-form-group label {
+    font-size: 0.8rem;
+    color: var(--text-body, #cbd5e1);
+    font-weight: 500;
+}
+
+/* Bulletproof Flex Inline Input Layout Alignment Framework */
+.input-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 46px !important;
+    background: var(--bg-surface, #141c2f) !important;
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+    border-radius: 10px !important;
+    padding: 0 1rem !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.input-wrapper.disabled-locked {
+    background: var(--bg-card-hover, rgba(20, 28, 47, 0.35)) !important;
+    border-color: var(--border-line, rgba(255, 255, 255, 0.03)) !important;
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+.input-wrapper input {
+    flex: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 0 0 0.75rem !important;
+    color: var(--text-body, #cbd5e1) !important;
+    font-size: 0.9rem !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+.input-wrapper input:disabled {
+    cursor: not-allowed;
+    color: var(--text-body, #cbd5e1) !important;
+}
+
+.input-wrapper i,
+.input-wrapper svg {
+    color: var(--text-muted, #475569) !important;
+    width: 18px !important;
+    height: 18px !important;
+    display: inline-flex !important;
+    align-items: center;
+}
+
+/* Redirection Element Link Presentation Controllers (Dynamic High Contrast Fix) */
+.profile-save-btn.settings-redirect-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 48px;
+    background: var(--bg-surface, #141c2f);
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.12));
+    border-radius: 10px;
+    color: var(--text-title, #f8fafc);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0 2rem;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.profile-save-btn.settings-redirect-btn:hover {
+    background: var(--text-title, #f8fafc);
+    color: var(--bg-card, #0d1322);
+    border-color: var(--text-title, #f8fafc);
+}
+
+/* ==========================================================================
+   ADVANCED ACCOUNT NODE STATUS CONSOLE DESIGN SYSTEM MODULES
+   ========================================================================= */
+
+.account-vault-display-block {
+    background: var(--bg-surface, linear-gradient(135deg, #141c2f 0%, #101726 100%));
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.04));
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.01);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-sizing: border-box;
+    transition: background-color 0.25s, border-color 0.25s;
+}
+
+.vault-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.vault-mini-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted, #475569);
+}
+
+.node-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    padding: 0.25rem 0.65rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.pulse-core-dot {
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+}
+
+.running-pulse .pulse-core-dot::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #10b981;
+    border-radius: 50%;
+    animation: beaconPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes beaconPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(3.5);
+        opacity: 0;
+    }
+}
+
+.vault-balance-row {
+    display: flex;
+    align-items: baseline;
+    color: var(--text-title, #f8fafc);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+    margin-bottom: 1.5rem;
+}
+
+.vault-balance-row .currency-token {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-right: 0.2rem;
+    color: var(--text-body, #cbd5e1);
+}
+
+.vault-balance-row .balance-integral {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.vault-balance-row .balance-fractional {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-muted, #475569);
+}
+
+.vault-data-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    border-top: 1px dashed var(--border-line, rgba(255, 255, 255, 0.05));
+    padding-top: 1.25rem;
+}
+
+.matrix-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.matrix-cell .cell-lbl {
+    font-size: 0.7rem;
+    color: var(--text-muted, #475569);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+.matrix-cell .cell-val {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-title, #f8fafc);
+    margin: 0;
+}
+
+.text-gradient-blue {
+    color: #3b82f6 !important;
+}
+
+/* Verification Lists System Components */
+.verification-status-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border-top: 1px solid var(--border-line, rgba(255, 255, 255, 0.04));
+    padding-top: 1.5rem;
+}
+
+.verification-status-list li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.status-marker.success-node i,
+.status-marker.success-node svg {
+    color: #10b981 !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.status-meta h6 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-title, #f8fafc);
+    margin: 0 0 0.2rem 0;
+}
+
+.status-meta p {
+    font-size: 0.75rem;
+    color: var(--text-muted, #475569);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   EXPLICIT LIGHT-MODE HIGH-CONTRAST INJECTION MODULE
+   ========================================================================= */
+[data-theme="light"] {
+    --border-line: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .input-wrapper.disabled-locked {
+    background: rgba(0, 0, 0, 0.04) !important;
+    opacity: 0.85;
+}
+
+[data-theme="light"] .profile-save-btn.settings-redirect-btn {
+    background: var(--bg-surface, #f8fafc);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .profile-save-btn.settings-redirect-btn:hover {
+    background: var(--text-title, #0f172a);
+    color: var(--bg-card, #ffffff);
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUT MATRIX MEDIA ADJUSTMENTS
+   ========================================================================= */
+@media (max-width: 1024px) {
+    .profile-layout-matrix {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .profile-form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .profile-avatar-uploader-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .profile-panel-card,
+    .limits-status-card {
+        padding: 1.25rem;
+    }
+
+    .profile-save-btn.settings-redirect-btn {
+        width: 100%;
+    }
+}

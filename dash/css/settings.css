@@ -1,0 +1,204 @@
+/* ==========================================================================
+   G-Lite GLOBAL CONFIGURATION LAYER INTERFACES - SETTINGS CSS
+   ========================================================================= */
+
+.settings-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.settings-panel-card {
+    background: var(--bg-card, #0d1322);
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06));
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Premium Split Element Form Headers Design System */
+.settings-panel-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.header-icon-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-icon-badge.red-accent {
+    background: rgba(204, 30, 44, 0.1);
+    color: #21eaed;
+}
+
+.header-icon-badge.blue-accent {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.header-icon-badge.green-accent {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.header-icon-badge i,
+.header-icon-badge svg {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.settings-panel-header h3 {
+    font-size: 1.1rem;
+    color: var(--text-title, #f8fafc);
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+}
+
+.settings-panel-header p {
+    font-size: 0.78rem;
+    color: var(--text-muted, #475569);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Core Settings Input Group & Aligned Flex-Wrapper Elements */
+.settings-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+}
+
+.settings-input-group label {
+    font-size: 0.78rem;
+    color: var(--text-body, #cbd5e1);
+    font-weight: 500;
+}
+
+.settings-field-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 44px !important;
+    background: var(--bg-surface, #141c2f) !important;
+    border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
+    border-radius: 10px !important;
+    padding: 0 0.85rem !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s;
+}
+
+.settings-field-wrapper:focus-within:not(.locked-readonly) {
+    border-color: var(--text-title, #cbd5e1) !important;
+}
+
+.settings-field-wrapper.locked-readonly {
+    background: rgba(20, 28, 47, 0.4) !important;
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Overriding text colors removed to fully respect the style.css execution engine cascades */
+.settings-field-wrapper input {
+    flex: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 0 0 0.65rem !important;
+    font-size: 0.88rem !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+.settings-field-wrapper input:disabled {
+    cursor: not-allowed;
+}
+
+.settings-field-wrapper i,
+.settings-field-wrapper svg {
+    color: var(--text-muted, #475569) !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Custom Differentiated Structural Action Buttons Framework */
+.settings-action-btn {
+    width: 100%;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: filter 0.2s, background-color 0.2s;
+}
+
+.settings-action-btn i,
+.settings-action-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+}
+
+.settings-action-btn.button-red {
+    background: #21eaed;
+}
+
+.settings-action-btn.button-red:hover {
+    background: #b51a26;
+}
+
+.settings-action-btn.button-blue {
+    background: #3b82f6;
+}
+
+.settings-action-btn.button-blue:hover {
+    background: #2563eb;
+}
+
+.settings-action-btn.button-green {
+    background: #10b981;
+}
+
+.settings-action-btn.button-green:hover {
+    background: #059669;
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUT SYSTEMS ENGINEERING
+   ========================================================================= */
+@media (max-width: 1200px) {
+    .settings-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .settings-grid-container {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .settings-panel-card {
+        padding: 1.25rem;
+    }
+}

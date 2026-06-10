@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-lite Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pops.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/history.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <nav class="navigation desktop-navigation desktop-only">
+            <div class="nav-brand-container">
+                <div class="logo">
+                    <i data-lucide="cpu" class="logo-icon-anim"></i>
+                    <span class="logo-text">G-Lite<span class="brand-dot">.</span></span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li class="active"><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li><a href="local.html"><i data-lucide="building"></i><span>Local Transfer</span></a></li>
+                <li><a href="international.html"><i data-lucide="globe"></i><span>International</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+                <li><a href="settings.html"><i data-lucide="settings"></i><span>Settings</span></a></li>
+            </ul>
+
+            <div class="nav-desktop-footer">
+                <button class="logout-action-btn"><i data-lucide="log-out"></i><span>Logout</span></button>
+            </div>
+        </nav>
+
+        <nav class="navigation mobile-navigation mobile-only">
+            <ul class="nav-links">
+                <li class="active"><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li id="mobile-transfer-trigger"><a class="global-transfer-trigger" href="#"><i
+                            data-lucide="arrow-left-right"></i><span>Transfer</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="welcome-block">
+                    <span class="system-status-tag">System Live</span>
+                    <h1>Console Overview</h1>
+                </div>
+
+                <div class="header-controls">
+                    <button class="control-circle-btn" id="theme-toggle" title="Switch Theme">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button class="control-circle-btn chat-notification-badge" id="chat-center-trigger" data-count="3">
+                        <i data-lucide="message-square"></i>
+                    </button>
+                    <a href="profile.html" class="user-avatar-portal-btn" title="View Profile Assets">
+                        <img src="./user.png" id="header-avatar-preview" alt="User Profile Image">
+                    </a>
+                </div>
+            </header>
+
+            <div class="master-layout-flow">
+
+                <div class="hero-split-matrix">
+                    <section class="account-deck">
+                        <span class="section-title">Primary Ledger Asset</span>
+                        <div class="onebank-style-card">
+                            <div class="card-left-content">
+                                <div class="balance-row">
+                                    <h2 class="main-balance">$0</h2>
+                                    <button class="balance-dropdown-btn"><i data-lucide="chevron-down"></i></button>
+                                </div>
+                                <p class="account-number">loading...</p>
+
+                                <div class="card-holder-meta">
+                                    <p class="account-type-tag">loading...</p>
+                                    <p class="holder-display-name">loading...</p>
+                                </div>
+                            </div>
+
+                            <div class="card-right-graphics">
+                                <div class="abstract-curve-1"></div>
+                                <div class="abstract-curve-2"></div>
+                                <button class="eye-toggle-btn"><i data-lucide="eye-off"></i></button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="quick-routing-panel-wrapper">
+                        <span class="section-title">Quick Services</span>
+                        <div class="unified-routing-box-panel">
+                            <div class="routing-internal-grid-container">
+
+                                <a href="#" class="quick-link-item global-deposit-trigger">
+                                    <div class="ql-icon-circle src-deposit">
+                                        <i data-lucide="arrow-down-to-line"></i>
+                                    </div>
+                                    <span>Deposit</span>
+                                </a>
+
+                                <a href="#" class="quick-link-item global-transfer-trigger">
+                                    <div class="ql-icon-circle src-transfer">
+                                        <i data-lucide="arrow-right-left"></i>
+                                    </div>
+                                    <span>Transfer</span>
+                                </a>
+
+                                <a href="history.html" class="quick-link-item">
+                                    <div class="ql-icon-circle src-history">
+                                        <i data-lucide="history"></i>
+                                    </div>
+                                    <span>History</span>
+                                </a>
+
+                                <a href="profile.html" class="quick-link-item">
+                                    <div class="ql-icon-circle src-profile">
+                                        <i data-lucide="user-cog"></i>
+                                    </div>
+                                    <span>Profile</span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="analytics-row-section">
+                    <h3 class="section-title">Personal Identity Attributes</h3>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="an-icon-box blue-zone"><i data-lucide="user"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Holder</span>
+                                <h4 class="an-val truncate-text">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box green-zone"><i data-lucide="hash"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Number</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box orange-zone"><i data-lucide="file-text"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Type</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box purple-zone"><i data-lucide="map-pin"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Country</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="offers-section">
+                    <h3 class="section-title">Special Offers</h3>
+                    <div class="offers-scroll-wrapper">
+                        <div class="offer-banner-card offer-bg-blue">
+                            <div class="offer-text-block">
+                                <h4>Always On Overdraft</h4>
+                                <p>Low on cash? Not a problem</p>
+                                <button class="offer-action-btn">Get Overdraft</button>
+                            </div>
+                            <div class="offer-graphic-art">
+                                <div class="cash-badge">$</div>
+                            </div>
+                        </div>
+                        <div class="offer-banner-card offer-bg-purple">
+                            <div class="offer-text-block">
+                                <h4>Fixed Yield Vaults</h4>
+                                <p>Lock assets up to 14.5% APY</p>
+                                <button class="offer-action-btn">Initialize Lock</button>
+                            </div>
+                            <div class="offer-graphic-art">
+                                <div class="cash-badge">★</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card ledger-section">
+                    <div class="ledger-header-wrapper">
+                        <div class="ledger-header">
+                            <h3>Transaction History</h3>
+                            <p class="subtitle">Cryptographically audited clearing logs</p>
+                        </div>
+                        <a href="history.html" class="history-view-all-btn">
+                            <span>View All</span>
+                            <i data-lucide="arrow-up-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="table-container-unlocked desktop-only">
+                        <table class="advanced-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5"
+                                        style="text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.9rem;">
+                                        Synchronizing active ledger entries...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mobile-history-block-container mobile-only">
+                        <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem;">
+                            Synchronizing data traces...
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="chat-backdrop-blur-overlay" id="global-chat-blur-overlay"></div>
+
+    <div class="chat-workspace-drawer" id="secure-chat-drawer">
+        <div class="chat-drawer-header">
+            <div class="chat-title-meta">
+                <div class="live-agent-status-indicator"></div>
+                <div>
+                    <h4>G-Lite Encrypted Concierge</h4>
+                    <p>Session token verified</p>
+                </div>
+            </div>
+            <button class="chat-drawer-close-btn" id="close-chat-drawer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="chat-message-display-stream">
+            <div class="msg-bubble incoming">
+                <p>Hello, how can we assist your capital operations today?</p>
+                <span class="msg-timestamp">17:15</span>
+            </div>
+        </div>
+
+        <div class="chat-footer-input-matrix">
+            <label class="chat-file-picker-btn">
+                <input type="file" id="chat-hidden-file-input" style="display:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                    </path>
+                </svg>
+            </label>
+            <input type="text" class="chat-text-input-field" placeholder="Write operational query...">
+            <button class="chat-msg-send-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+
+    <script src="js/index.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/pops.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+
+</html>

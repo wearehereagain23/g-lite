@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-Lite - System Settings</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pops.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <nav class="navigation desktop-navigation desktop-only">
+            <div class="nav-brand-container">
+                <div class="logo">
+                    <i data-lucide="cpu" class="logo-icon-anim"></i>
+                    <span class="logo-text">G-Lite<span class="brand-dot">.</span></span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li><a href="local.html"><i data-lucide="building"></i><span>Local Transfer</span></a></li>
+                <li><a href="international.html"><i data-lucide="globe"></i><span>International</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+                <li class="active"><a href="settings.html"><i data-lucide="settings"></i><span>Settings</span></a></li>
+            </ul>
+
+            <div class="nav-desktop-footer">
+                <button class="logout-action-btn"><i data-lucide="log-out"></i><span>Logout</span></button>
+            </div>
+        </nav>
+
+        <nav class="navigation mobile-navigation mobile-only">
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li id="mobile-transfer-trigger"><a class="global-transfer-trigger" href="#"><i
+                            data-lucide="arrow-left-right"></i><span>Transfer</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li class="active"><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="welcome-block">
+                    <span class="system-status-tag">Security Console</span>
+                    <h1>System Settings</h1>
+                </div>
+
+                <div class="header-controls">
+                    <button class="control-circle-btn" id="theme-toggle" title="Switch Theme">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button class="control-circle-btn chat-notification-badge" id="chat-center-trigger" data-count="3">
+                        <i data-lucide="message-square"></i>
+                    </button>
+                    <a href="profile.html" class="user-avatar-portal-btn" title="View Profile Assets">
+                        <img src="./user.png" id="header-avatar-preview" alt="User Profile Image">
+                    </a>
+                </div>
+            </header>
+
+            <div class="master-layout-flow">
+
+                <div class="settings-grid-container">
+
+                    <div class="settings-panel-card">
+                        <div class="settings-panel-header">
+                            <div class="header-icon-badge red-accent"><i data-lucide="key-round"></i></div>
+                            <div>
+                                <h3>Update Account Password</h3>
+                                <p>Modify your platform account authentication keyphrase variables regularly.</p>
+                            </div>
+                        </div>
+
+                        <form id="settings-password-form">
+                            <div class="settings-input-group">
+                                <label>Current Verification Password</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="lock"></i>
+                                    <input type="password" id="pass-current" placeholder="••••••••••••" required>
+                                </div>
+                            </div>
+
+                            <div class="settings-input-group">
+                                <label>New Password String</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="shield-alert"></i>
+                                    <input type="password" id="pass-new" placeholder="Min 8 characters" required>
+                                </div>
+                            </div>
+
+                            <div class="settings-input-group">
+                                <label>Confirm New Password</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="shield-check"></i>
+                                    <input type="password" id="pass-confirm" placeholder="Match new password" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="settings-action-btn button-red">
+                                <i data-lucide="refresh-cw"></i>
+                                <span>Commit Password Key</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="settings-panel-card">
+                        <div class="settings-panel-header">
+                            <div class="header-icon-badge blue-accent"><i data-lucide="hash"></i></div>
+                            <div>
+                                <h3>Operational Transfer PIN</h3>
+                                <p>Manage the four-digit token hash required to clear outbound liquid transfers.</p>
+                            </div>
+                        </div>
+
+                        <form id="settings-pin-form">
+                            <div class="settings-input-group">
+                                <label>Current 4-Digit Security PIN</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="shield"></i>
+                                    <input type="password" id="pin-current" maxlength="4" placeholder="••••"
+                                        pattern="[0-9]{4}" inputmode="numeric" required>
+                                </div>
+                            </div>
+
+                            <div class="settings-input-group">
+                                <label>New 4-Digit Security PIN</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="fingerprint"></i>
+                                    <input type="password" id="pin-new" maxlength="4" placeholder="••••"
+                                        pattern="[0-9]{4}" inputmode="numeric" required>
+                                </div>
+                            </div>
+
+                            <div class="settings-input-group">
+                                <label>Confirm New PIN Entry</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="check"></i>
+                                    <input type="password" id="pin-confirm" maxlength="4" placeholder="••••"
+                                        pattern="[0-9]{4}" inputmode="numeric" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="settings-action-btn button-blue">
+                                <i data-lucide="lock"></i>
+                                <span>Update Vault PIN</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="settings-panel-card">
+                        <div class="settings-panel-header">
+                            <div class="header-icon-badge green-accent"><i data-lucide="mail"></i></div>
+                            <div>
+                                <h3>Primary Notification Email</h3>
+                                <p>Update destination parameters for ledger alert packets and login tokens.</p>
+                            </div>
+                        </div>
+
+                        <form id="settings-email-form">
+                            <div class="settings-input-group">
+                                <label>Current Assigned Mail Node</label>
+                                <div class="settings-field-wrapper locked-readonly">
+                                    <i data-lucide="mail"></i>
+                                    <input type="email" value="erhaboretiosa@gmail.com" readonly disabled>
+                                </div>
+                            </div>
+
+                            <div class="settings-input-group">
+                                <label>New Target Destination Email</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="contact-2"></i>
+                                    <input type="email" id="email-new" placeholder="username@domain.com" required>
+                                </div>
+                            </div>
+
+                            <div class="settings-input-group">
+                                <label>Confirm Transaction PIN Authorization</label>
+                                <div class="settings-field-wrapper">
+                                    <i data-lucide="check-square"></i>
+                                    <input type="password" id="email-auth-pin" maxlength="4" placeholder="••••"
+                                        inputmode="numeric" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="settings-action-btn button-green">
+                                <i data-lucide="save"></i>
+                                <span>Migrate Mail Node</span>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="chat-backdrop-blur-overlay" id="global-chat-blur-overlay"></div>
+    <div class="chat-workspace-drawer" id="secure-chat-drawer">
+        <div class="chat-drawer-header">
+            <div class="chat-title-meta">
+                <div class="live-agent-status-indicator"></div>
+                <div>
+                    <h4>G-Lite Encrypted Concierge</h4>
+                    <p>Session token verified</p>
+                </div>
+            </div>
+            <button class="chat-drawer-close-btn" id="close-chat-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="chat-message-display-stream">
+            <div class="msg-bubble incoming">
+                <p>Hello, how can we assist your capital operations today?</p>
+                <span class="msg-timestamp">17:15</span>
+            </div>
+        </div>
+        <div class="chat-footer-input-matrix">
+            <label class="chat-file-picker-btn">
+                <input type="file" id="chat-hidden-file-input" style="display:none;">
+                <i data-lucide="paperclip"></i>
+            </label>
+            <input type="text" class="chat-text-input-field" placeholder="Write operational query...">
+            <button class="chat-msg-send-btn"><i data-lucide="send"></i></button>
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/pops.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+
+</html>

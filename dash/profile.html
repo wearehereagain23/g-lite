@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-Lite - User Profile</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pops.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <nav class="navigation desktop-navigation desktop-only">
+            <div class="nav-brand-container">
+                <div class="logo">
+                    <i data-lucide="cpu" class="logo-icon-anim"></i>
+                    <span class="logo-text">G-Lite<span class="brand-dot">.</span></span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li><a href="local.html"><i data-lucide="building"></i><span>Local Transfer</span></a></li>
+                <li><a href="international.html"><i data-lucide="globe"></i><span>International</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li class="active"><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+                <li><a href="settings.html"><i data-lucide="settings"></i><span>Settings</span></a></li>
+            </ul>
+
+            <div class="nav-desktop-footer">
+                <button class="logout-action-btn"><i data-lucide="log-out"></i><span>Logout</span></button>
+            </div>
+        </nav>
+
+        <nav class="navigation mobile-navigation mobile-only">
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li id="mobile-transfer-trigger"><a class="global-transfer-trigger" href="#"><i
+                            data-lucide="arrow-left-right"></i><span>Transfer</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li class="active"><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="welcome-block">
+                    <span class="system-status-tag">System Live</span>
+                    <h1>Console Overview</h1>
+                </div>
+
+                <div class="header-controls">
+                    <button class="control-circle-btn" id="theme-toggle" title="Switch Theme">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button class="control-circle-btn chat-notification-badge" id="chat-center-trigger" data-count="3">
+                        <i data-lucide="message-square"></i>
+                    </button>
+                    <a href="profile.html" class="user-avatar-portal-btn" title="View Profile Assets">
+                        <img src="./user.png" alt="User Profile Image" class="header-avatar-node"
+                            id="header-avatar-preview">
+                    </a>
+                </div>
+            </header>
+
+            <div class="master-layout-flow">
+
+                <section class="analytics-row-section">
+                    <h3 class="section-title">Personal Identity Attributes</h3>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="an-icon-box blue-zone"><i data-lucide="user"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Holder</span>
+                                <h4 class="an-val truncate-text" id="meta-holder-name">Loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box green-zone"><i data-lucide="hash"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Number</span>
+                                <h4 class="an-val" id="meta-account-number">Loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box orange-zone"><i data-lucide="file-text"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Type</span>
+                                <h4 class="an-val" id="meta-account-type">Loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box purple-zone"><i data-lucide="map-pin"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Country</span>
+                                <h4 class="an-val" id="meta-country">Loading...</h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="profile-layout-matrix">
+                    <div class="profile-details-column">
+                        <div class="profile-panel-card">
+                            <div class="panel-meta-header">
+                                <h3>Account Information</h3>
+                                <p>Identity parameters are globally locked. Visit database settings to authorize
+                                    modification sequences.</p>
+                            </div>
+
+                            <div class="profile-avatar-uploader-row" id="trigger-avatar-management"
+                                style="cursor: pointer;">
+                                <div class="avatar-preview-container">
+                                    <img id="profile-display-avatar" src="./user.png" alt="User Profile Image">
+                                </div>
+                                <div class="avatar-uploader-meta">
+                                    <h5>Profile Picture Asset</h5>
+                                    <p style="color: #3b82f6; text-decoration: underline;">Click to update or remove
+                                        image asset token.</p>
+                                </div>
+                            </div>
+
+                            <input type="file" id="secure-hidden-file-element" accept="image/png, image/jpeg, image/jpg"
+                                style="display: none;">
+
+                            <div class="profile-form-grid">
+                                <div class="input-form-group">
+                                    <label>Full Legal Name</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="user"></i>
+                                        <input type="text" id="field-legal-name" readonly disabled value="Loading...">
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Account Number Identifier</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="hash"></i>
+                                        <input type="text" id="field-account-number" readonly disabled
+                                            value="Loading...">
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Email Address</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="mail"></i>
+                                        <input type="email" id="field-email" readonly disabled value="Loading...">
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Phone Number</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="phone"></i>
+                                        <input type="tel" id="field-phone" readonly disabled value="Loading...">
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>City / Region</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="map"></i>
+                                        <input type="text" id="field-city-region" readonly disabled value="Loading...">
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Country Domain</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="globe"></i>
+                                        <input type="text" id="field-country" readonly disabled value="Loading...">
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Residential Address</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="home"></i>
+                                        <input type="text" id="field-address" readonly disabled value="Loading...">
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Next of Kin Name</label>
+                                    <div class="input-wrapper disabled-locked">
+                                        <i data-lucide="users"></i>
+                                        <input type="text" id="field-kinname" readonly disabled value="Loading...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="settings.html" class="profile-save-btn settings-redirect-btn">
+                                <i data-lucide="sliders"></i>
+                                <span>Open Console Settings</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="profile-metrics-column">
+                        <div class="limits-status-card">
+                            <div class="panel-meta-header">
+                                <h3>Account Node Status</h3>
+                                <p>Real-time security matrix parameters and core clearing network diagnostics.</p>
+                            </div>
+
+                            <div class="account-vault-display-block">
+                                <div class="vault-header-row">
+                                    <span class="vault-mini-label">TOTAL LIQUID VOLUME</span>
+                                    <span class="node-status-badge" id="user-active-status-pill">
+                                        <span class="pulse-core-dot"></span>
+                                        <span id="status-text-node">LOADING...</span>
+                                    </span>
+                                </div>
+
+                                <div class="vault-balance-row">
+                                    <span class="currency-token" id="vault-currency-symbol">$</span>
+                                    <span class="balance-integral" id="vault-main-balance">0</span>
+                                    <span class="balance-fractional" id="vault-fractional-balance">.00</span>
+                                </div>
+
+                                <div class="vault-data-matrix">
+                                    <div class="matrix-cell">
+                                        <span class="cell-lbl">Ledger Tier</span>
+                                        <h5 class="cell-val text-gradient-blue" id="vault-tier-label">Loading...</h5>
+                                    </div>
+                                    <div class="matrix-cell">
+                                        <span class="cell-lbl">Clearing Rate</span>
+                                        <h5 class="cell-val">Instant Node</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ul class="verification-status-list">
+                                <li>
+                                    <div class="status-marker success-node"><i data-lucide="shield-check"></i></div>
+                                    <div class="status-meta">
+                                        <h6>Hardware Security Token Bound</h6>
+                                        <p>Authorized access verified via dedicated crypto-handshake modules.</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="status-marker success-node"><i data-lucide="activity"></i></div>
+                                    <div class="status-meta">
+                                        <h6>Network Operational Integrity</h6>
+                                        <p>Session tokens routed cleanly through secure localized API frames.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="chat-backdrop-blur-overlay" id="global-chat-blur-overlay"></div>
+    <div class="chat-workspace-drawer" id="secure-chat-drawer">
+        <div class="chat-drawer-header">
+            <div class="chat-title-meta">
+                <div class="live-agent-status-indicator"></div>
+                <div>
+                    <h4>G-Lite Encrypted Concierge</h4>
+                    <p>Session token verified</p>
+                </div>
+            </div>
+            <button class="chat-drawer-close-btn" id="close-chat-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="chat-message-display-stream">
+            <div class="msg-bubble incoming">
+                <p>Hello, how can we assist your capital operations today?</p>
+                <span class="msg-timestamp">17:15</span>
+            </div>
+        </div>
+        <div class="chat-footer-input-matrix">
+            <label class="chat-file-picker-btn">
+                <input type="file" id="chat-hidden-file-input" style="display:none;">
+                <i data-lucide="paperclip"></i>
+            </label>
+            <input type="text" class="chat-text-input-field" placeholder="Write operational query...">
+            <button class="chat-msg-send-btn"><i data-lucide="send"></i></button>
+        </div>
+    </div>
+    <script src="js/theme.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/pops.js"></script>
+    <script src="js/chat.js"></script>
+
+</body>
+
+</html>

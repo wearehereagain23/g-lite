@@ -1,0 +1,333 @@
+/* --- Core Baseline Variable Mapping Matrix --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    margin: 0;
+    background: #f4f7fb;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Container Page Layout Elements --- */
+.page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+}
+
+.card {
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.12);
+    background: #fff;
+}
+
+/* --- Left Sidebar Feature Array Presentation Panel --- */
+.panel {
+    padding: 40px 34px;
+    background: linear-gradient(135deg, #0ea365, #0b9a60);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-align: center;
+}
+
+.brand {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 14px 24px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 10px;
+}
+
+.brand img {
+    width: 160px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.panel h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.panel p {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    opacity: 0.9;
+    max-width: 320px;
+    margin: 0;
+}
+
+.features {
+    margin-top: 15px;
+    width: 100%;
+    padding: 0;
+    max-width: 280px;
+}
+
+.features li {
+    margin: 12px 0;
+    list-style: none;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.88rem;
+    text-align: left;
+    font-weight: 500;
+}
+
+.features li i {
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+/* --- Content Input Section Elements --- */
+.form-area {
+    padding: 40px 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.title h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #475569;
+}
+
+.signin-redirect {
+    font-size: 13px;
+    color: #64748b;
+    padding-top: 6px;
+}
+
+.signin-redirect a {
+    color: #0ea365;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signin-redirect a:hover {
+    text-decoration: underline;
+}
+
+/* --- Navigation Multi-Step Wizard Progress Elements --- */
+.wizard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    user-select: none;
+    flex-wrap: wrap;
+}
+
+.stepbubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #64748b;
+    background: #e2e8f0;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.stepbubble.active {
+    background: linear-gradient(135deg, #0ea365, #059669);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(14, 163, 101, 0.2);
+}
+
+.steplabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.wizard-line {
+    height: 4px;
+    background: #e2e8f0;
+    flex: 1;
+    border-radius: 99px;
+    overflow: hidden;
+    min-width: 30px;
+}
+
+.wizard-line .fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #0ea365, #059669);
+    transition: width .35s ease;
+}
+
+/* --- Interactive Entry Form Fields Design Elements --- */
+.card-inner {
+    background: #fff;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 14px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    color: #0f172a;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+input,
+select {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    color: #0f172a;
+    transition: box-shadow .15s, border-color .15s;
+    box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+    border-color: #0ea365;
+    box-shadow: 0 0 0 3px rgba(14, 163, 101, 0.12);
+}
+
+.error {
+    margin-top: 6px;
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 500;
+    display: none;
+}
+
+/* --- Form Flow Directional Control Architecture --- */
+.nav {
+    margin-top: 28px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn {
+    height: 44px;
+    padding: 0 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn.secondary {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+}
+
+.btn.secondary:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.btn.primary {
+    background: linear-gradient(90deg, #0ea365, #059669);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(14, 163, 101, 0.2);
+}
+
+.btn.primary:hover {
+    opacity: 0.95;
+    box-shadow: 0 6px 20px rgba(14, 163, 101, 0.3);
+}
+
+/* --- Mobile Presentation Adaptive View Breakpoints --- */
+@media (max-width: 960px) {
+    .card {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+    }
+
+    .panel {
+        padding: 30px 24px;
+    }
+
+    .form-area {
+        padding: 30px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .title {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .signin-redirect {
+        padding-top: 0;
+    }
+}

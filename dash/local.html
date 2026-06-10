@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-Lite - Local Transfer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pops.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <!-- LINK TO YOUR DEDICATED CSS -->
+    <link rel="stylesheet" href="css/local.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <!-- DESKTOP NAVIGATION -->
+        <nav class="navigation desktop-navigation desktop-only">
+            <div class="nav-brand-container">
+                <div class="logo">
+                    <i data-lucide="cpu" class="logo-icon-anim"></i>
+                    <span class="logo-text">G-Lite<span class="brand-dot">.</span></span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li class="active"><a href="local.html"><i data-lucide="building"></i><span>Local Transfer</span></a>
+                </li>
+                <li><a href="international.html"><i data-lucide="globe"></i><span>International</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+                <li><a href="settings.html"><i data-lucide="settings"></i><span>Settings</span></a></li>
+            </ul>
+
+            <div class="nav-desktop-footer">
+                <button class="logout-action-btn"><i data-lucide="log-out"></i><span>Logout</span></button>
+            </div>
+        </nav>
+
+        <!-- MOBILE NAVIGATION -->
+        <nav class="navigation mobile-navigation mobile-only">
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li id="mobile-transfer-trigger" class="active"><a href="local.html"><i
+                            data-lucide="arrow-left-right"></i><span>Transfer</span></a></li>
+                <li><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- MAIN INTERFACE DISPLAY WORKSPACE -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="welcome-block">
+                    <span class="system-status-tag">System Live</span>
+                    <h1>Console Overview</h1>
+                </div>
+
+                <div class="header-controls">
+                    <button class="control-circle-btn" id="theme-toggle" title="Switch Theme">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button class="control-circle-btn chat-notification-badge" id="chat-center-trigger" data-count="3">
+                        <i data-lucide="message-square"></i>
+                    </button>
+                    <a href="profile.html" class="user-avatar-portal-btn" title="View Profile Assets">
+                        <img src="./user.png" id="header-avatar-preview" alt="User Profile Image">
+                    </a>
+                </div>
+            </header>
+
+            <div class="master-layout-flow">
+
+                <!-- 1. PERSONAL IDENTITY ATTRIBUTES (ANCHORED AT TOP) -->
+                <section class="analytics-row-section">
+                    <h3 class="section-title">Personal Identity Attributes</h3>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="an-icon-box blue-zone"><i data-lucide="user"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Holder</span>
+                                <h4 class="an-val truncate-text">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box green-zone"><i data-lucide="hash"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Number</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box orange-zone"><i data-lucide="file-text"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Type</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box purple-zone"><i data-lucide="map-pin"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Country</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. FLEXIBLE TRANSACTION MATRIX WORKSPACE -->
+                <div class="local-transaction-matrix">
+
+                    <!-- Left: Transfer Form Container -->
+                    <div class="form-workspace-column">
+                        <div class="local-form-card">
+                            <div class="card-meta-header">
+                                <h3>Intra-Bank Local Transfer</h3>
+                                <p>Execute rapid real-time ledger distributions across inner network nodes.</p>
+                            </div>
+
+                            <form id="local-transfer-form">
+                                <div class="input-form-group">
+                                    <label>Recipient Account Number</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" placeholder="e.g. 618*******" required>
+                                        <i data-lucide="hash"></i>
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Transaction Amount</label>
+                                    <div class="input-wrapper">
+                                        <input type="number" step="0.01" placeholder="0.00" required>
+                                        <span class="currency-prefix">$</span>
+                                    </div>
+                                </div>
+
+                                <div class="input-form-group">
+                                    <label>Payment Memo / Description</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" placeholder="Optional transaction notes...">
+                                        <i data-lucide="file-text"></i>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="action-submit-btn">
+                                    <i data-lucide="check-circle"></i>
+                                    <span>Confirm Operational Transfer</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right: Profile Card (Exactly your requested structure, fully styled) -->
+                    <div class="profile-card-column">
+                        <div class="profile-preview-card text-center">
+                            <div class="profile-card-body">
+                                <!-- Profile Picture -->
+                                <img id="pmler2" src="./user.png" alt="Profile" class="profile-avatar mb-3">
+
+                                <!-- User Info -->
+                                <h5 class="user-fullname mb-1" id="namexz">loading...</h5>
+                                <p class="text-muted mb-3">Account No: <span class="fw-semibold"
+                                        id="accc">loading...</span></p>
+
+                                <!-- Balance -->
+                                <div class="balance-display-block mb-3">
+                                    <h6 class="text-muted-label">Available Balance</h6>
+                                    <h4 class="balance-value text-success">
+                                        <span id="ccxxx2">$</span><span id="bbc">loading...</span>
+                                    </h4>
+                                </div>
+
+                                <!-- View Profile -->
+                                <a href="profile.html" class="btn-view-profile-link mt-3">
+                                    View Full Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- End Matrix -->
+
+            </div>
+        </main>
+    </div>
+
+    <!-- GLOBAL CHAT ELEMENTS MATRIX COMPONENTS -->
+    <div class="chat-backdrop-blur-overlay" id="global-chat-blur-overlay"></div>
+    <div class="chat-workspace-drawer" id="secure-chat-drawer">
+        <div class="chat-drawer-header">
+            <div class="chat-title-meta">
+                <div class="live-agent-status-indicator"></div>
+                <div>
+                    <h4>G-Lite Encrypted Concierge</h4>
+                    <p>Session token verified</p>
+                </div>
+            </div>
+            <button class="chat-drawer-close-btn" id="close-chat-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="chat-message-display-stream">
+            <div class="msg-bubble incoming">
+                <p>Hello, how can we assist your capital operations today?</p>
+                <span class="msg-timestamp">17:15</span>
+            </div>
+        </div>
+        <div class="chat-footer-input-matrix">
+            <label class="chat-file-picker-btn">
+                <input type="file" id="chat-hidden-file-input" style="display:none;">
+                <i data-lucide="paperclip"></i>
+            </label>
+            <input type="text" class="chat-text-input-field" placeholder="Write operational query...">
+            <button class="chat-msg-send-btn"><i data-lucide="send"></i></button>
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/pops.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/local.js"></script>
+</body>
+
+</html>

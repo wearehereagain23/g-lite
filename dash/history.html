@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-Lite - Transaction History</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pops.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/history.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Embedded architectural positioning for pagination buttons layout */
+        .ledger-pagination-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-line, rgba(255, 255, 255, 0.06));
+        }
+
+        .pagination-btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .pagination-action-trigger {
+            background: var(--bg-surface, #141c2f);
+            color: var(--text-normal, #cbd5e1);
+            border: 1px solid var(--border-line, rgba(255, 255, 255, 0.08));
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-action-trigger:hover:not(:disabled) {
+            background: #1e293b;
+            color: #f8fafc;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .pagination-action-trigger:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination-numerical-lbl {
+            font-size: 0.85rem;
+            color: var(--text-muted, #64748b);
+            font-weight: 500;
+        }
+
+        @media(max-width: 480px) {
+            .ledger-pagination-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .pagination-btn-group {
+                width: 100%;
+            }
+
+            .pagination-action-trigger {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <nav class="navigation desktop-navigation desktop-only">
+            <div class="nav-brand-container">
+                <div class="logo">
+                    <i data-lucide="cpu" class="logo-icon-anim"></i>
+                    <span class="logo-text">G-Lite<span class="brand-dot">.</span></span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li><a href="local.html"><i data-lucide="building"></i><span>Local Transfer</span></a></li>
+                <li><a href="international.html"><i data-lucide="globe"></i><span>International</span></a></li>
+                <li class="active"><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+                <li><a href="settings.html"><i data-lucide="settings"></i><span>Settings</span></a></li>
+            </ul>
+
+            <div class="nav-desktop-footer">
+                <button class="logout-action-btn"><i data-lucide="log-out"></i><span>Logout</span></button>
+            </div>
+        </nav>
+
+        <nav class="navigation mobile-navigation mobile-only">
+            <ul class="nav-links">
+                <li><a href="index.html"><i data-lucide="home"></i><span>Home</span></a></li>
+                <li><a href="#" class="global-deposit-trigger"><i data-lucide="wallet"></i><span>Deposit</span></a></li>
+                <li id="mobile-transfer-trigger"><a class="global-transfer-trigger" href="#"><i
+                            data-lucide="arrow-left-right"></i><span>Transfer</span></a></li>
+                <li class="active"><a href="history.html"><i data-lucide="history"></i><span>History</span></a></li>
+                <li><a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="welcome-block">
+                    <span class="system-status-tag">System Live</span>
+                    <h1>Console Overview</h1>
+                </div>
+
+                <div class="header-controls">
+                    <button class="control-circle-btn" id="theme-toggle" title="Switch Theme">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button class="control-circle-btn chat-notification-badge" id="chat-center-trigger" data-count="3">
+                        <i data-lucide="message-square"></i>
+                    </button>
+                    <a href="profile.html" class="user-avatar-portal-btn" title="View Profile Assets">
+                        <img src="./user.png" id="header-avatar-preview" alt="User Profile Image">
+                    </a>
+                </div>
+            </header>
+
+            <div class="master-layout-flow">
+
+                <section class="analytics-row-section">
+                    <h3 class="section-title">Personal Identity Attributes</h3>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="an-icon-box blue-zone"><i data-lucide="user"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Holder</span>
+                                <h4 class="an-val truncate-text">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box green-zone"><i data-lucide="hash"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Number</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box orange-zone"><i data-lucide="file-text"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Account Type</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="an-icon-box purple-zone"><i data-lucide="map-pin"></i></div>
+                            <div class="an-meta">
+                                <span class="an-label">Country</span>
+                                <h4 class="an-val">loading...</h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="history-ledger-section">
+                    <div class="ledger-header-meta">
+                        <div class="meta-title-left">
+                            <h3>Ledger Log Audit Stream</h3>
+                            <p>Real-time listing of incoming distributions and outgoing cross-border transfers.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive-desktop-wrapper">
+                        <table class="history-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Reference ID</th>
+                                    <th>Description & Notes</th>
+                                    <th>Date & Timestamp</th>
+                                    <th>Status Flag</th>
+                                    <th>Amount</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="desktop-history-rows">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mobile-history-cards-viewport" id="mobile-history-cards">
+                    </div>
+
+                    <div class="ledger-pagination-container">
+                        <span class="pagination-numerical-lbl" id="ledger-page-indicator">Page 1 of 1</span>
+                        <div class="pagination-btn-group">
+                            <button class="pagination-action-trigger" id="ledger-prev-btn" disabled>
+                                <i data-lucide="chevron-left" style="width:14px;height:14px;"></i>
+                                <span>Previous</span>
+                            </button>
+                            <button class="pagination-action-trigger" id="ledger-next-btn" disabled>
+                                <span>Next</span>
+                                <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="chat-backdrop-blur-overlay" id="global-chat-blur-overlay"></div>
+    <div class="chat-workspace-drawer" id="secure-chat-drawer">
+        <div class="chat-drawer-header">
+            <div class="chat-title-meta">
+                <div class="live-agent-status-indicator"></div>
+                <div>
+                    <h4>G-Lite Encrypted Concierge</h4>
+                    <p>Session token verified</p>
+                </div>
+            </div>
+            <button class="chat-drawer-close-btn" id="close-chat-drawer"><i data-lucide="x"></i></button>
+        </div>
+        <div class="chat-message-display-stream">
+            <div class="msg-bubble incoming">
+                <p>Hello, how can we assist your capital operations today?</p>
+                <span class="msg-timestamp">17:15</span>
+            </div>
+        </div>
+        <div class="chat-footer-input-matrix">
+            <label class="chat-file-picker-btn">
+                <input type="file" id="chat-hidden-file-input" style="display:none;">
+                <i data-lucide="paperclip"></i>
+            </label>
+            <input type="text" class="chat-text-input-field" placeholder="Write operational query...">
+            <button class="chat-msg-send-btn"><i data-lucide="send"></i></button>
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/pops.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/history.js"></script>
+</body>
+
+</html>
