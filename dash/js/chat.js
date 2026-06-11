@@ -21,57 +21,110 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOCAL_CACHE_KEY = 'g_lite_chat_stream_data_array';
 
     // ==========================================
-    // INSTANT LOCAL CACHE HYDRATION & RENDERING
+    // STABILIZED DOM RENDERING ENGINE (INCREMENTAL)
     // ==========================================
 
     /**
-     * Loops through an array of message objects and builds the unified DOM structure.
+     * Builds the string element for a single chat message row.
+     */
+    function buildMessageBubbleHTML(msg) {
+        const isUser = msg.sender_role === "user" || msg.sender_role !== "admin";
+        const alignmentClass = isUser ? "outgoing" : "incoming";
+
+        let additionalModifierClass = "";
+        if (msg.isSending) additionalModifierClass = " msg-bubble-is-sending";
+        if (msg.isFailed) additionalModifierClass = " msg-bubble-execution-failed";
+
+        let mediaContentHTML = "";
+        if (msg.attachment_url) {
+            mediaContentHTML = `<img src="${msg.attachment_url}" style="max-width:100%; border-radius:6px; margin-bottom:4px; display:block;" alt="Media Object">`;
+        }
+
+        let statusIndicatorMessage = "";
+        if (msg.isSending) statusIndicatorMessage = ` <small class="text-sending-indicator" style="opacity:0.7;">⏱️ Sending...</small>`;
+        if (msg.isFailed) statusIndicatorMessage = ` <small class="text-failed-indicator" style="color:#ef4444;">🔴 Failed to Sync</small>`;
+
+        const timeString = msg.created_at ? new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : "--:--";
+
+        return `
+            ${mediaContentHTML}
+            <p>${escapeHTML(msg.message_body || '')}</p>
+            <span class="msg-timestamp">${timeString}${statusIndicatorMessage}</span>
+        `;
+    }
+
+    /**
+     * Synchronizes message states incrementally with the live DOM tree to destroy flickering completely.
      */
     function renderChatFeedFromDataArray(messagesArray, forceScrollToBottom = false) {
         if (!streamContainer) return;
 
+        // Determine if the user is looking at their history above before rendering changes
         const wasAtBottom = streamContainer.scrollHeight - streamContainer.scrollTop <= streamContainer.clientHeight + 90;
-        let builtHTML = "";
 
-        if (messagesArray.length === 0) {
-            builtHTML = `
-                <div class="msg-bubble incoming">
+        // Clear default footprint if data has arrived
+        if (messagesArray.length > 0) {
+            const defaultGreeting = streamContainer.querySelector('[data-system-default="true"]');
+            if (defaultGreeting) defaultGreeting.remove();
+        }
+
+        if (messagesArray.length === 0 && streamContainer.children.length === 0) {
+            streamContainer.innerHTML = `
+                <div class="msg-bubble incoming" data-system-default="true">
                     <p>Hello, how can we assist your capital operations today?</p>
                     <span class="msg-timestamp">System Desk</span>
                 </div>`;
-        } else {
-            messagesArray.forEach(msg => {
-                const isUser = msg.sender_role === "user" || msg.sender_role !== "admin";
-                const alignmentClass = isUser ? "outgoing" : "incoming";
-
-                let additionalModifierClass = "";
-                if (msg.isSending) additionalModifierClass = " msg-bubble-is-sending";
-                if (msg.isFailed) additionalModifierClass = " msg-bubble-execution-failed";
-
-                let mediaContentHTML = "";
-                if (msg.attachment_url) {
-                    mediaContentHTML = `<img src="${msg.attachment_url}" style="max-width:100%; border-radius:6px; margin-bottom:4px; display:block;" alt="Media Object">`;
-                }
-
-                let statusIndicatorMessage = "";
-                if (msg.isSending) statusIndicatorMessage = ` <small class="text-sending-indicator" style="opacity:0.7;">⏱️ Sending...</small>`;
-                if (msg.isFailed) statusIndicatorMessage = ` <small class="text-failed-indicator" style="color:#ef4444;">🔴 Failed to Sync</small>`;
-
-                const timeString = msg.created_at ? new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : "--:--";
-
-                builtHTML += `
-                    <div class="msg-bubble ${alignmentClass}${additionalModifierClass}" ${msg.id ? `data-msg-node-id="${msg.id}"` : ''}>
-                        ${mediaContentHTML}
-                        <p>${escapeHTML(msg.message_body || '')}</p>
-                        <span class="msg-timestamp">${timeString}${statusIndicatorMessage}</span>
-                    </div>
-                `;
-            });
+            return;
         }
 
-        streamContainer.innerHTML = builtHTML;
+        messagesArray.forEach(msg => {
+            const messageId = msg.id ? msg.id.toString() : '';
+            // Locate existing node by unique key identifiers
+            let exactExistingNode = null;
+            if (messageId) {
+                exactExistingNode = streamContainer.querySelector(`[data-msg-node-id="${messageId}"]`);
+            }
 
-        if (forceScrollToBottom || wasAtBottom || drawer.classList.contains('open')) {
+            if (exactExistingNode) {
+                // If it exists, update changing fields inside without completely redrawing the root node block
+                const isStatusChanged = msg.isSending !== exactExistingNode.classList.contains('msg-bubble-is-sending') ||
+                    msg.isFailed !== exactExistingNode.classList.contains('msg-bubble-execution-failed');
+
+                if (isStatusChanged || messageId.startsWith('temp_msg_')) {
+                    const isUser = msg.sender_role === "user" || msg.sender_role !== "admin";
+                    const alignmentClass = isUser ? "outgoing" : "incoming";
+
+                    exactExistingNode.className = `msg-bubble ${alignmentClass}${msg.isSending ? ' msg-bubble-is-sending' : ''}${msg.isFailed ? ' msg-bubble-execution-failed' : ''}`;
+                    exactExistingNode.innerHTML = buildMessageBubbleHTML(msg);
+                }
+            } else {
+                // Completely fresh incoming/outgoing record -- append fluidly onto terminal container matrix base
+                const isUser = msg.sender_role === "user" || msg.sender_role !== "admin";
+                const alignmentClass = isUser ? "outgoing" : "incoming";
+                const newBubbleElement = document.createElement('div');
+
+                newBubbleElement.className = `msg-bubble ${alignmentClass}${msg.isSending ? ' msg-bubble-is-sending' : ''}${msg.isFailed ? ' msg-bubble-execution-failed' : ''}`;
+                if (messageId) {
+                    newBubbleElement.setAttribute('data-msg-node-id', messageId);
+                }
+
+                newBubbleElement.innerHTML = buildMessageBubbleHTML(msg);
+                streamContainer.appendChild(newBubbleElement);
+            }
+        });
+
+        // Delete any obsolete local placeholders that don't match data configurations anymore
+        const presentNodes = streamContainer.querySelectorAll('[data-msg-node-id]');
+        presentNodes.forEach(node => {
+            const nodeId = node.getAttribute('data-msg-node-id');
+            const existsInPayload = messagesArray.some(m => m.id && m.id.toString() === nodeId);
+            if (!existsInPayload && !nodeId.startsWith('temp_msg_')) {
+                node.remove();
+            }
+        });
+
+        // Trigger dynamic scrolling offsets without hijacking customer control planes
+        if (forceScrollToBottom || (wasAtBottom && !forceScrollToBottom)) {
             streamContainer.scrollTop = streamContainer.scrollHeight;
         }
     }
@@ -85,9 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 console.warn("⚠️ Chat array local cache parse error:", err);
             }
-        } else {
+        } else if (streamContainer && streamContainer.children.length === 0) {
             streamContainer.innerHTML = `
-                <div class="msg-bubble incoming">
+                <div class="msg-bubble incoming" data-system-default="true">
                     <p>Hello, how can we assist your capital operations today?</p>
                     <span class="msg-timestamp">System Desk</span>
                 </div>`;
@@ -175,25 +228,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const freshIncomingChats = data.chats || [];
 
-            // Read what we currently have in memory to check for items in transit
+            // Read current local cache to manage items in flight safely
             const localCacheString = localStorage.getItem(LOCAL_CACHE_KEY);
             let activeUIArrayInstance = [];
             if (localCacheString) {
                 try { activeUIArrayInstance = JSON.parse(localCacheString); } catch (e) { }
             }
 
-            // 🚀 STABILITY FIX: Extract items that are pending or failed locally
             const inFlightMessages = activeUIArrayInstance.filter(m => m.isSending === true || m.isFailed === true);
 
-            // Filter out any duplicate messages from server if they managed to land early
+            // Filter out tracking traces that already finished uploading securely
             const filteredInFlight = inFlightMessages.filter(localMsg =>
                 !freshIncomingChats.some(serverMsg => serverMsg.id === localMsg.id)
             );
 
-            // Save only clean database messages to cache base
+            // Commit structured remote payloads down to browser storage cache references
             localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(freshIncomingChats));
 
-            // Append the in-flight messages dynamically to the UI view list so they don't blink out
             const fullyUnifiedStreamMatrix = freshIncomingChats.concat(filteredInFlight);
             renderChatFeedFromDataArray(fullyUnifiedStreamMatrix, false);
 
@@ -218,8 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try { historicalCachedArray = JSON.parse(localCacheString); } catch (e) { }
         }
 
-        // Strip previous unsent/failed placeholders from the state tracking list to avoid pile-ups
-        historicalCachedArray = historicalCachedArray.filter(m => !m.id.toString().startsWith('temp_msg_'));
+        // Clean out dangling local references cleanly
+        historicalCachedArray = historicalCachedArray.filter(m => m.id && !m.id.toString().startsWith('temp_msg_'));
 
         const optimisticFakeRow = {
             id: targetTempId,
@@ -286,7 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error("Server storage drop.");
             const data = await response.json();
 
-            // 🚀 STABILITY FIX: Reconcile placeholder immediately with server values inside the storage array
             if (data.success && data.message) {
                 const localCacheString = localStorage.getItem(LOCAL_CACHE_KEY);
                 if (localCacheString) {
@@ -295,6 +345,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         const matchIndex = messagesList.findIndex(m => m.id === temporaryMessageId);
 
                         if (matchIndex !== -1) {
+                            // Erase placeholder reference and replace target element seamlessly with clean database fields
+                            const oldBubbleNode = streamContainer.querySelector(`[data-msg-node-id="${temporaryMessageId}"]`);
+                            if (oldBubbleNode && data.message.id) {
+                                oldBubbleNode.setAttribute('data-msg-node-id', data.message.id.toString());
+                            }
+
                             messagesList[matchIndex] = data.message;
                             messagesList[matchIndex].isSending = false;
                             messagesList[matchIndex].isFailed = false;
@@ -315,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-
     if (fileInput) {
         fileInput.addEventListener('change', async (e) => {
             if (e.target.files.length === 0) return;
@@ -323,10 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const userSessionToken = localStorage.getItem("user_session_token");
             if (!userSessionToken) return;
 
-            // Optional: Pull user's UUID from local storage if your app caches it, or leave empty 
-            // since the token payload handles it securely on backend.
             const userUuid = localStorage.getItem("user_uuid") || "";
-
             const fileObj = e.target.files[0];
             const localOptimisticObjectURL = URL.createObjectURL(fileObj);
             const temporaryMessageId = `temp_msg_${Date.now()}`;
@@ -342,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         "Authorization": `Bearer ${userSessionToken}`,
                         "X-Action": "chat",
-                        "X-User-UUID": userUuid // Explicitly flags the conversation room scope
+                        "X-User-UUID": userUuid
                     },
                     body: formPayload
                 });
@@ -374,6 +426,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             const matchIndex = messagesList.findIndex(m => m.id === temporaryMessageId);
 
                             if (matchIndex !== -1) {
+                                const oldBubbleNode = streamContainer.querySelector(`[data-msg-node-id="${temporaryMessageId}"]`);
+                                if (oldBubbleNode && finalData.message.id) {
+                                    oldBubbleNode.setAttribute('data-msg-node-id', finalData.message.id.toString());
+                                }
+
                                 messagesList[matchIndex] = finalData.message;
                                 messagesList[matchIndex].isSending = false;
                                 messagesList[matchIndex].isFailed = false;
@@ -394,7 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
 
     if (sendBtn) sendBtn.addEventListener('click', processMessageDispatch);
     if (inputField) {
