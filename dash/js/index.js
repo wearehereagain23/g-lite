@@ -6,6 +6,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (e) { console.warn("Lucide icon generation skipped:", e); }
     }
 
+    // Dynamic Visual Viewport Synchronization Layer
+    if (window.visualViewport) {
+        const chatDrawer = document.getElementById('secure-chat-drawer');
+
+        window.visualViewport.addEventListener('resize', () => {
+            if (chatDrawer && chatDrawer.classList.contains('active') || chatDrawer.classList.contains('open')) {
+                // Keep the visible space locked exactly to the window's open pixels
+                const openVisualHeight = window.visualViewport.height;
+                chatDrawer.style.setProperty('height', `${openVisualHeight}px`, 'important');
+            }
+        });
+    }
+
     // ==========================================
     // ACCOUNT STATUS COUPLING & DATA INITIALIZATION
     // ==========================================

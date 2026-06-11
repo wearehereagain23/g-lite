@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById('loginForm');
 
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <div style="margin-top: 15px; text-align: center; font-size: 14px; width: 100%;">
-            <span id="cooldown-text" style="color: #64748b;">Resend OTP available in: <strong id="countdown-timer" style="color: #0ea365;">50</strong>s</span>
+            <span id="cooldown-text" style="color: #64748b;">Resend OTP available in: <strong id="countdown-timer" style="color: #0ea365;">20</strong>s</span>
             <button type="button" id="resend-otp-btn" style="display: none; margin: 0 auto; padding: 8px 16px; font-size: 13px; font-weight: 600; color: #fff; background: #0ea365; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s;">Resend OTP via Mail</button>
         </div>
     </div>
@@ -111,10 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const cooldownText = popup.querySelector('#cooldown-text');
                 const resendBtn = popup.querySelector('#resend-otp-btn');
 
-                // Initialize 50-second Loop Count Down Framework
-                let timeLeft = 50;
+                // UPDATED: Adjusted Countdown Framework to 20 seconds
+                let timeLeft = 20;
                 const startTimer = () => {
-                    timeLeft = 50;
+                    timeLeft = 20;
                     resendBtn.style.display = "none";
                     cooldownText.style.display = "inline";
                     countdownTimer.textContent = timeLeft;
@@ -324,12 +323,13 @@ document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
 });
 
 /**
- * Custom Sandboxed Virtual PIN Pad for Recovery Verification with 50s Countdown Timer
+ * Custom Sandboxed Virtual PIN Pad for Recovery Verification with 20s Countdown Timer
  */
 function openRecoveryOTPTerminal(email, userId) {
     let enteredOTP = "";
     let countdownInterval = null;
-    let secondsLeft = 50;
+    // UPDATED: Adjusted internal verification variable tracker to 20 seconds
+    let secondsLeft = 20;
 
     const terminalTemplateHtml = `
     <div style="margin: 15px 0; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; width: 100%;">
@@ -347,7 +347,7 @@ function openRecoveryOTPTerminal(email, userId) {
         </div>
 
         <div style="margin-bottom: 20px; font-size: 13px; text-align: center;">
-            <span id="otp-timer-text" style="color: #64748b;">Resend code available in <strong style="color: #0ea365;">50s</strong></span>
+            <span id="otp-timer-text" style="color: #64748b;">Resend code available in <strong style="color: #0ea365;">20s</strong></span>
             <button type="button" id="resend-otp-btn" disabled style="display: none; background: none; border: none; color: #059669; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: underline; padding: 0; outline: none;">Resend Code</button>
         </div>
 
@@ -385,8 +385,9 @@ function openRecoveryOTPTerminal(email, userId) {
             const timerText = popup.querySelector('#otp-timer-text');
             const resendBtn = popup.querySelector('#resend-otp-btn');
 
+            // UPDATED: Set up recovery loop countdown to 20 seconds
             const startCountdown = () => {
-                secondsLeft = 50;
+                secondsLeft = 20;
                 resendBtn.style.display = "none";
                 resendBtn.disabled = true;
                 timerText.style.display = "inline";
