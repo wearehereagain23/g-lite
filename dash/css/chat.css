@@ -131,15 +131,33 @@
 
 /* Message Stream container layer */
 .chat-message-display-stream {
-    flex: 1 1 0% !important;
+    flex: 1 1 auto !important;
     min-height: 0 !important;
     padding: 1.5rem !important;
-    overflow-y: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 1.25rem !important;
+
+    /* CRITICAL WEBKIT RENDERING FIX: Drop display: flex to prevent layout computation collisions */
+    display: block !important;
+    overflow-y: scroll !important;
+    /* Force native tracking track rails */
+    overflow-x: hidden !important;
+
     background: rgba(6, 9, 19, 0.4) !important;
+
+    /* iOS Momentum & Sync Settings */
     -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: auto !important;
+    overflow-anchor: none !important;
+    /* Disables browser-forced structural adjustments */
+}
+
+.chat-message-display-stream .msg-bubble {
+    margin-bottom: 1.25rem !important;
+    clear: both !important;
+    /* Keeps bubbles separated neatly into unique stacked lines */
+}
+
+.chat-message-display-stream .msg-bubble:last-of-type {
+    margin-bottom: 0 !important;
 }
 
 .msg-bubble {

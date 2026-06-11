@@ -59,8 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderChatFeedFromDataArray(messagesArray, forceScrollToBottom = false) {
         if (!streamContainer) return;
 
-        // Determine if the user is looking at their history above before rendering changes
-        const wasAtBottom = streamContainer.scrollHeight - streamContainer.scrollTop <= streamContainer.clientHeight + 90;
+        // 1. Calculate safe scroll padding thresholds before manipulating elements
+        const currentScrollTop = streamContainer.scrollTop;
+        const currentScrollHeight = streamContainer.scrollHeight;
+        const currentClientHeight = streamContainer.clientHeight;
+
+        // Determine if the user is currently locked to the bottom boundary zone
+        const wasAtBottom = currentScrollHeight - currentScrollTop <= currentClientHeight + 60;
 
         // Clear default footprint if data has arrived
         if (messagesArray.length > 0) {
@@ -77,16 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // 2. Incremental DOM synchronization loop
         messagesArray.forEach(msg => {
             const messageId = msg.id ? msg.id.toString() : '';
-            // Locate existing node by unique key identifiers
             let exactExistingNode = null;
             if (messageId) {
                 exactExistingNode = streamContainer.querySelector(`[data-msg-node-id="${messageId}"]`);
             }
 
             if (exactExistingNode) {
-                // If it exists, update changing fields inside without completely redrawing the root node block
                 const isStatusChanged = msg.isSending !== exactExistingNode.classList.contains('msg-bubble-is-sending') ||
                     msg.isFailed !== exactExistingNode.classList.contains('msg-bubble-execution-failed');
 
@@ -98,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     exactExistingNode.innerHTML = buildMessageBubbleHTML(msg);
                 }
             } else {
-                // Completely fresh incoming/outgoing record -- append fluidly onto terminal container matrix base
                 const isUser = msg.sender_role === "user" || msg.sender_role !== "admin";
                 const alignmentClass = isUser ? "outgoing" : "incoming";
                 const newBubbleElement = document.createElement('div');
@@ -113,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Delete any obsolete local placeholders that don't match data configurations anymore
+        // Delete any obsolete local placeholders cleanly
         const presentNodes = streamContainer.querySelectorAll('[data-msg-node-id]');
         presentNodes.forEach(node => {
             const nodeId = node.getAttribute('data-msg-node-id');
@@ -123,15 +126,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // iOS WEBKIT JUMPING FIX: Defer scrolling until layout cycles completely settle
+        // 3. SECURE BULLETPROOF IOS SCROLL ANCHOR LOGIC
+        // Ensure an explicit layout target element exists at the end of the container matrix
+        // 3. SECURE BULLETPROOF IOS SCROLL ANCHOR LOGIC
+        let iOSScrollAnchor = streamContainer.querySelector('#ios-scroll-anchor-node');
+        if (!iOSScrollAnchor) {
+            iOSScrollAnchor = document.createElement('div');
+            iOSScrollAnchor.id = 'ios-scroll-anchor-node';
+            iOSScrollAnchor.style.clear = 'both';
+            iOSScrollAnchor.style.height = '1px';
+            iOSScrollAnchor.style.width = '100%';
+            streamContainer.appendChild(iOSScrollAnchor);
+        } else {
+            streamContainer.appendChild(iOSScrollAnchor);
+        }
+
+        // Fire rendering offset execution blocks inside specialized hardware windows
         if (forceScrollToBottom || (wasAtBottom && !forceScrollToBottom)) {
+            // Use standard direct pixel alignment calculations instead of scrollIntoView 
+            // to bypass iOS Safari rendering restrictions completely
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    streamContainer.scrollTo({
-                        top: streamContainer.scrollHeight,
-                        behavior: 'instant' // Prevents smooth scrolling fight with momentum processing engines
-                    });
-                }, 10);
+                    streamContainer.scrollTop = streamContainer.scrollHeight + 500;
+                }, 30);
             });
         }
     }
