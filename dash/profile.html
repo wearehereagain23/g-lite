@@ -199,10 +199,19 @@
                                 </div>
                             </div>
 
-                            <a href="settings.html" class="profile-save-btn settings-redirect-btn">
-                                <i data-lucide="sliders"></i>
-                                <span>Open Console Settings</span>
-                            </a>
+                            <div class="profile-action-buttons-group"
+                                style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                                <a href="settings.html" class="profile-save-btn settings-redirect-btn"
+                                    style="flex: 1; min-width: 200px; margin: 0;">
+                                    <i data-lucide="sliders"></i>
+                                    <span>Open Console Settings</span>
+                                </a>
+                                <button class="profile-save-btn logout-action-btn"
+                                    style="flex: 1; min-width: 200px; margin: 0; background: var(--text-danger, #dc2626); border-color: var(--text-danger, #dc2626); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                    <i data-lucide="log-out"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 

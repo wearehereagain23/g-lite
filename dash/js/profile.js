@@ -281,4 +281,53 @@ document.addEventListener('DOMContentLoaded', () => {
             Swal.fire("Deletion Execution Exception", err.message, "error");
         }
     }
+
+    // ==========================================================================
+    // EXPLICIT LOGOUT ACTION EVENT ROUTING MATRIX (DESKTOP & MOBILE INTEGRATION)
+    // ==========================================================================
+    const explicitLogoutTargetNodes = document.querySelectorAll(".logout-action-btn");
+
+    explicitLogoutTargetNodes.forEach(btnElement => {
+        if (!btnElement) return;
+
+        btnElement.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Terminate Session',
+                text: "Are you sure you want to sign out of your terminal overview?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Sign Out'
+            }).then((alertResult) => {
+                if (alertResult.isConfirmed) {
+                    // Flush core storage keys completely out of active browser contexts
+                    localStorage.removeItem("user_session_token");
+                    localStorage.removeItem("g_lite_cached_account");
+                    localStorage.removeItem("g_lite_cached_ledger");
+
+                    // Specific profile metrics clear definitions
+                    localStorage.removeItem("g_lite_user_fullname");
+                    localStorage.removeItem("g_lite_user_accountnumber");
+                    localStorage.removeItem("g_lite_user_accounttype");
+                    localStorage.removeItem("g_lite_user_country");
+                    localStorage.removeItem("g_lite_user_balance");
+                    localStorage.removeItem("g_lite_user_currency");
+                    localStorage.removeItem("g_lite_user_image");
+                    localStorage.removeItem("g_lite_user_email");
+                    localStorage.removeItem("g_lite_user_phone");
+                    localStorage.removeItem("g_lite_user_city");
+                    localStorage.removeItem("g_lite_user_address");
+                    localStorage.removeItem("g_lite_user_kinname");
+                    localStorage.removeItem("g_lite_user_activeuser");
+                    localStorage.removeItem("g_lite_user_block_transection");
+
+                    // Exit cleanly back to the authentication terminal gateway
+                    window.location.href = "../login/index.html";
+                }
+            });
+        });
+    });
 });

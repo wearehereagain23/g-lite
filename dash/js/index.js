@@ -196,8 +196,9 @@ async function initializeDashboardSession() {
 
         const result = await response.json();
 
+        // Catch either un-hydrated data flags, active account drop exclusions, or revoked password stamps
         if (!response.ok || result.activeuser === false || result.success === false) {
-            const terminationMessage = result.error || "Your account has been restricted or deactivated. Please contact support.";
+            const terminationMessage = result.error || "Your active terminal access session token is invalid or expired. Re-authenticating.";
             handleEnforcedLogout(terminationMessage);
             return;
         }

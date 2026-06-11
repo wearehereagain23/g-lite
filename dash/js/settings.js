@@ -2,7 +2,7 @@
  * G-Lite - SYSTEM METRICS SECURITY CONTROL CENTER (FRONTEND DESCRIPTOR WORKER)
  */
 document.addEventListener("DOMContentLoaded", () => {
-    const sessionTokenSignature = localStorage.getItem("user_session_token");
+    let sessionTokenSignature = localStorage.getItem("user_session_token");
 
     const updatedPasswordFormNode = document.getElementById("settings-password-form");
     const updatedPinFormNode = document.getElementById("settings-pin-form");
@@ -11,10 +11,34 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchAssignedSecurityDefaults();
 
     /**
+     * Helper to invalidate cache metrics and kick users back out to validation gateways
+     */
+    function handleSessionRevocationExit(alertNoticeMessage) {
+        Swal.fire({
+            title: "Access Restricted",
+            text: alertNoticeMessage || "Session expired or revoked. Please re-authenticate.",
+            icon: "error",
+            confirmButtonText: "Acknowledge & Exit",
+            confirmButtonColor: "#dc2626",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false
+        }).then(() => {
+            localStorage.removeItem("user_session_token");
+            localStorage.removeItem("g_lite_cached_account");
+            localStorage.removeItem("g_lite_cached_ledger");
+            window.location.href = "../login/index.html";
+        });
+    }
+
+    /**
      * Pull data properties straight from database settings variables rules matrix
      */
     async function fetchAssignedSecurityDefaults() {
-        if (!sessionTokenSignature) return;
+        if (!sessionTokenSignature) {
+            window.location.href = "../login/index.html";
+            return;
+        }
 
         try {
             const connection = await fetch("https://bssd-api.vercel.app/api/bank/settings", {
@@ -26,22 +50,26 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const result = await connection.json();
 
-            if (connection.ok && result.success) {
-                const baselineFallbackImage = "./user.png";
-                const headerAvatarNode = document.getElementById("header-avatar-preview");
-
-                if (headerAvatarNode) {
-                    const activeDbImage = result.image && result.image.trim() !== "" ? result.image : null;
-                    headerAvatarNode.src = activeDbImage ? activeDbImage : baselineFallbackImage;
-                }
-
-                const fixedEmailField = document.querySelector("#settings-email-form input[readonly]");
-                if (fixedEmailField) {
-                    fixedEmailField.value = result.email || "No Email Bound";
-                }
-            } else if (result.activeuser === false) {
-                window.location.href = "../login/index.html";
+            // Catch explicit data drops, mismatched stamps, or deactivations down the network layout
+            if (!connection.ok || result.success === false || result.activeuser === false) {
+                const errorMessage = result.error || "Authentication footprint invalid or revoked.";
+                handleSessionRevocationExit(errorMessage);
+                return;
             }
+
+            const baselineFallbackImage = "./user.png";
+            const headerAvatarNode = document.getElementById("header-avatar-preview");
+
+            if (headerAvatarNode) {
+                const activeDbImage = result.image && result.image.trim() !== "" ? result.image : null;
+                headerAvatarNode.src = activeDbImage ? activeDbImage : baselineFallbackImage;
+            }
+
+            const fixedEmailField = document.querySelector("#settings-email-form input[readonly]");
+            if (fixedEmailField) {
+                fixedEmailField.value = result.email || "No Email Bound";
+            }
+
         } catch (err) {
             console.error("Failed to safely resolve active system settings view metrics profiles:", err.message);
         }
@@ -83,7 +111,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const data = await response.json();
 
+                // Aggressive check: if password execution loop errors out via stamp misalignment prior to submit
+                if (response.status === 401 || data.success === false) {
+                    handleSessionRevocationExit(data.error || "Session validation check failure.");
+                    return;
+                }
+
                 if (response.ok && data.success) {
+                    // Update frontend authorization environment with the newly issued token to prevent self-eviction
+                    if (data.token) {
+                        localStorage.setItem("user_session_token", data.token);
+                        sessionTokenSignature = data.token; // Hydrates execution variables context
+                    }
+
                     Swal.fire("Credentials Updated", data.message, "success");
                     updatedPasswordFormNode.reset();
                 } else {
@@ -126,6 +166,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const data = await response.json();
 
+                if (response.status === 401 || data.success === false) {
+                    handleSessionRevocationExit(data.error || "Session authentication expired.");
+                    return;
+                }
+
                 if (response.ok && data.success) {
                     Swal.fire("Vault Key Secure", data.message, "success");
                     updatedPinFormNode.reset();
@@ -162,6 +207,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 const data = await response.json();
+
+                if (response.status === 401 || data.success === false) {
+                    handleSessionRevocationExit(data.error || "Session authentication expired.");
+                    return;
+                }
 
                 if (response.ok && data.success) {
                     Swal.fire("Notification Channel Altered", data.message, "success");
