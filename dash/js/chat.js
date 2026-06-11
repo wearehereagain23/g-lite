@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!iOSScrollAnchor) {
             iOSScrollAnchor = document.createElement('div');
             iOSScrollAnchor.id = 'ios-scroll-anchor-node';
-            iOSScrollAnchor.style.clear = 'both';
+            iOSScrollAnchor.style.clear = 'both'; // Forces anchor line cleanly beneath floated bubbles
             iOSScrollAnchor.style.height = '1px';
             iOSScrollAnchor.style.width = '100%';
             streamContainer.appendChild(iOSScrollAnchor);
@@ -143,12 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fire rendering offset execution blocks inside specialized hardware windows
         if (forceScrollToBottom || (wasAtBottom && !forceScrollToBottom)) {
-            // Use standard direct pixel alignment calculations instead of scrollIntoView 
-            // to bypass iOS Safari rendering restrictions completely
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    streamContainer.scrollTop = streamContainer.scrollHeight + 500;
-                }, 30);
+                    // Send container top directly down to maximum limit coordinates
+                    streamContainer.scrollTop = streamContainer.scrollHeight + 1000;
+                }, 40); // 40ms layout settle window ensures absolute stability on old iOS updates
             });
         }
     }
