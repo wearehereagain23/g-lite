@@ -123,9 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Trigger dynamic scrolling offsets without hijacking customer control planes
+        // iOS WEBKIT JUMPING FIX: Defer scrolling until layout cycles completely settle
         if (forceScrollToBottom || (wasAtBottom && !forceScrollToBottom)) {
-            streamContainer.scrollTop = streamContainer.scrollHeight;
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    streamContainer.scrollTo({
+                        top: streamContainer.scrollHeight,
+                        behavior: 'instant' // Prevents smooth scrolling fight with momentum processing engines
+                    });
+                }, 10);
+            });
         }
     }
 
