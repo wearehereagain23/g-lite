@@ -79,12 +79,17 @@ export function setupSecureChatChannel(userUuid) {
             const localOptimisticObjectURL = URL.createObjectURL(targetFile);
             const temporaryMessageId = `temp_msg_${Date.now()}`;
 
-            injectOptimisticChatBubbleNode("[Image Document Asset Document]", localOptimisticObjectURL, temporaryMessageId);
+            // Clean, natural placeholder text instead of bracketed high-spam words
+            const attachmentPlaceholderText = "Shared a secure file document update.";
+
+            // Force clean textual payload layout into UI tracking view instantly
+            injectOptimisticChatBubbleNode(attachmentPlaceholderText, localOptimisticObjectURL, temporaryMessageId);
             const uploadedUrl = await clearFileAssetStorageUpload(targetFile);
 
             if (uploadedUrl) {
                 URL.revokeObjectURL(localOptimisticObjectURL);
-                await dispatchMessagePayload("[Image Document Asset Document]", uploadedUrl, temporaryMessageId);
+                // Dispatch natural transaction language directly down the API payload channel
+                await dispatchMessagePayload(attachmentPlaceholderText, uploadedUrl, temporaryMessageId);
             } else {
                 markOptimisticBubbleExecutionStateAsDropped(temporaryMessageId);
             }

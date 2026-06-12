@@ -7,6 +7,15 @@ import { initProfileImageActionsPipeline } from "./profile-image.js";
 export let masterAccountRegistryCache = [];
 export let currentlySelectedAccountObj = null;
 
+// ==========================================================================
+// CENTRALIZED SECURE SESSION SIGN-OUT PIPELINE
+// ==========================================================================
+export function handleAdministrativeSignOut() {
+    localStorage.removeItem("admin_session_token");
+    localStorage.removeItem("admin_users_directory_cache"); // Clean out on logout
+    window.location.href = "./login.html";
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     if (window.lucide) {
         window.lucide.createIcons();
@@ -14,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const adminToken = localStorage.getItem("admin_session_token");
     if (!adminToken) {
-        window.location.href = "login.html";
+        window.location.href = "./login.html";
         return;
     }
 
@@ -129,9 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (logoutActionTrigger) {
         logoutActionTrigger.addEventListener("click", () => {
-            localStorage.removeItem("admin_session_token");
-            localStorage.removeItem("admin_users_directory_cache"); // Clean out on logout
-            window.location.href = "login.html";
+            handleAdministrativeSignOut();
         });
     }
 });
@@ -149,15 +156,23 @@ export async function fetchUserDirectoryRegistry(bearerTokenString) {
             }
         });
 
+        // Detect immediate Session Auth dropouts
         if (response.status === 401) {
-            localStorage.removeItem("admin_session_token");
-            localStorage.removeItem("admin_users_directory_cache");
-            window.location.href = "login.html";
+            console.warn("⚠️ Administrative authorization dropped (401). Forcing immediate sign-out sequence.");
+            handleAdministrativeSignOut();
             return;
         }
 
         const dynamicData = await response.json();
+
+        // Handle token expiration issues hidden under 400 or 500 status response envelopes
         if (!response.ok || !dynamicData.success) {
+            const errStr = (dynamicData.error || "").toLowerCase();
+            if (errStr.includes("jwt expired") || errStr.includes("token expired") || errStr.includes("unauthorized")) {
+                console.warn("⚠️ Expired token metadata signature verified inside API payload error envelope. Cleaning memory nodes.");
+                handleAdministrativeSignOut();
+                return;
+            }
             throw new Error(dynamicData.error || "Server boundary data fetch error.");
         }
 
@@ -172,6 +187,14 @@ export async function fetchUserDirectoryRegistry(bearerTokenString) {
 
     } catch (err) {
         console.error("Critical Stream Registry Pull Failure:", err);
+
+        // Intercept standard script runtime errors or strings indicating token expiration inside the catch statement
+        const systemErrorMessage = (err.message || "").toLowerCase();
+        if (systemErrorMessage.includes("jwt expired") || systemErrorMessage.includes("token expired")) {
+            console.warn("⚠️ Intercepted session expiration state string. Executing automated environment wipe.");
+            handleAdministrativeSignOut();
+            return;
+        }
 
         // Only inject error markup layout onto the DOM screen if there is no pre-existing memory data to display
         if (!masterAccountRegistryCache || masterAccountRegistryCache.length === 0) {
@@ -207,7 +230,7 @@ function hydrateUserStreamInterface(targetAccountsList) {
         if (account.image && account.image.trim() !== "") {
             avatarHTML = `
                 <div class="card-avatar-node" style="background:transparent;">
-                    <img src="${account.image.trim()}" onerror="this.style.display='none'; this.parentElement.innerText='${initialChar}'; this.parentElement.style.background='var(--border-interactive)';" alt=\"Avatar\">
+                    <img src="${account.image.trim()}" onerror="this.style.display='none'; this.parentElement.innerText='${initialChar}'; this.parentElement.style.background='var(--border-interactive)';" alt="Avatar">
                 </div>`;
         }
 
