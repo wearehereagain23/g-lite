@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="../images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         input,
@@ -30,6 +31,7 @@
             <div class="panel">
                 <div class="brand"><img src="../logo.PNG" alt="G-lite Bank Logo"></div>
                 <h1>G-lite Bank</h1>
+                <div id="google_translate_element"> </div>
                 <p>Secure, intuitive banking — accounts, cards and transfers protected with bank-grade security.</p>
                 <ul class="features">
                     <li><i class="ri-shield-check-line"></i> Bank-grade encryption</li>
@@ -442,7 +444,43 @@
             }
         })();
     </script>
+
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en'
+            }, 'google_translate_element');
+        }
+
+    </script>
+
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </div>
+
+
+
+    <style>
+        #google_translate_element {
+            color: transparent;
+        }
+
+        #google_translate_element a {
+            display: none;
+        }
+
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+
+        body>.skiptranslate {
+            display: none;
+        }
+    </style>
+
     <script src="index.js"></script>
+
+
 </body>
 
 </html>

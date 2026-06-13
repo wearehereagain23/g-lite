@@ -23,6 +23,7 @@
     <link rel="icon" type="image/png" href="../dashboard/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" type="image/png" href="../images/favicon.png">
     <style>
         body {
             font-family: Inter, Arial, sans-serif;
@@ -94,7 +95,7 @@
         }
 
         input:focus {
-            border-color: #0ea365;
+            border-color: #21eaed;
             box-shadow: 0 0 0 3px rgba(14, 163, 101, 0.15);
         }
 
@@ -105,14 +106,14 @@
             border: none;
             font-size: 15px;
             font-weight: 600;
-            background: linear-gradient(90deg, #0ea365, #059669);
+            background: linear-gradient(90deg, #21eaed, #041036);
             color: #fff;
             cursor: pointer;
             transition: background 0.3s;
         }
 
         .btn:hover {
-            background: linear-gradient(90deg, #059669, #0ea365);
+            background: linear-gradient(90deg, #041036, #21eaed);
         }
 
         .footer-text {
@@ -122,7 +123,7 @@
         }
 
         .footer-text a {
-            color: #0ea365;
+            color: #21eaed;
             text-decoration: none;
         }
     </style>
@@ -135,6 +136,7 @@
         <div class="logo">
             <img src="../logo.PNG" alt="G-lite Logo">
         </div>
+        <div id="google_translate_element"> </div>
         <h2>Welcome back!</h2>
         <p class="subtitle">Please log in to access your account securely.</p>
 
@@ -148,7 +150,7 @@
                 <label for="password">Password</label>
                 <input id="password" name="password" type="password" placeholder="Your password" required />
             </div>
-            <a id="forgotPasswordLink" style="color: #059669; cursor: pointer;" href="#"><small>Forgot
+            <a id="forgotPasswordLink" style="color: #041036; cursor: pointer;" href="#"><small>Forgot
                     password</small></a>
             <button type="submit" class="btn">Login</button>
         </form>
@@ -157,6 +159,39 @@
             Don’t have an account? <a href="../register/index.html">Sign up</a>
         </p>
     </div>
+
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en'
+            }, 'google_translate_element');
+        }
+
+    </script>
+
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </div>
+
+
+
+    <style>
+        #google_translate_element {
+            color: transparent;
+        }
+
+        #google_translate_element a {
+            display: none;
+        }
+
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+
+        body>.skiptranslate {
+            display: none;
+        }
+    </style>
 
 
     <script src="index.js"></script>

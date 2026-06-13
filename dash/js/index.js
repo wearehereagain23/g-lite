@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             structuralHtmlElement.setAttribute("data-theme", targetSwitchedTheme);
             localStorage.setItem("G-Lite-ui-theme", targetSwitchedTheme);
-            console.log("🟢 [THEME ENGINE EVENT LOG]: Successfully switched system mode to -> " + targetSwitchedTheme.toUpperCase());
 
         } catch (runtimeExecutionError) {
             console.error("❌ Critical Theme Engine Context Context Switch Failure:", runtimeExecutionError);
@@ -227,7 +226,6 @@ async function initializeDashboardSession() {
  */
 
 async function fetchAndHydrateHomeLedger() {
-    console.log("🔄 Starting fresh live fetch from backend ledger...");
 
     try {
         const token = localStorage.getItem("user_session_token");
@@ -241,7 +239,6 @@ async function fetchAndHydrateHomeLedger() {
         });
 
         const result = await response.json();
-        console.log("📦 Raw history response received from server endpoint:", result);
 
         if (!result.success || !result.data) {
             console.warn("⚠️ Backend returned an unsuccessful ledger data sync response.");

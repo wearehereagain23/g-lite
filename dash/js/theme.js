@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("G-Lite-ui-theme", calculatedNextMode);
             localStorage.setItem("g_lite_theme", calculatedNextMode);
 
-            console.log("🟢 [THEME WORKER]: Interface state flipped cleanly to -> " + calculatedNextMode.toUpperCase());
         });
     }
 });

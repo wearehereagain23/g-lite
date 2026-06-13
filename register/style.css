@@ -38,7 +38,7 @@ body {
 /* --- Left Sidebar Feature Array Presentation Panel --- */
 .panel {
     padding: 40px 34px;
-    background: linear-gradient(135deg, #0ea365, #0b9a60);
+    background: linear-gradient(135deg, #041036, #21eaed);
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -136,7 +136,7 @@ body {
 }
 
 .signin-redirect a {
-    color: #0ea365;
+    color: #041036;
     text-decoration: none;
     font-weight: 600;
 }
@@ -171,7 +171,7 @@ body {
 }
 
 .stepbubble.active {
-    background: linear-gradient(135deg, #0ea365, #059669);
+    background: linear-gradient(135deg, #041036, #21eaed);
     color: #fff;
     box-shadow: 0 4px 10px rgba(14, 163, 101, 0.2);
 }
@@ -194,7 +194,7 @@ body {
 .wizard-line .fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #0ea365, #059669);
+    background: linear-gradient(90deg, #041036, #21eaed);
     transition: width .35s ease;
 }
 
@@ -244,7 +244,7 @@ select {
 
 input:focus,
 select:focus {
-    border-color: #0ea365;
+    border-color: #041036;
     box-shadow: 0 0 0 3px rgba(14, 163, 101, 0.12);
 }
 
@@ -291,7 +291,7 @@ select:focus {
 }
 
 .btn.primary {
-    background: linear-gradient(90deg, #0ea365, #059669);
+    background: linear-gradient(90deg, #041036, #21eaed);
     color: #fff;
     box-shadow: 0 4px 14px rgba(14, 163, 101, 0.2);
 }
