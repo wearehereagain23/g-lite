@@ -32,6 +32,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     const chatHeaderNavigationTrigger = document.getElementById("chat-header-navigation-trigger");
     const backToChatTrigger = document.getElementById("back-to-chat-trigger");
 
+    const adminSettingsTrigger = document.getElementById("admin-settings-trigger");
+
+    if (adminSettingsTrigger) {
+        adminSettingsTrigger.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            // Extract the active target user UUID if one is currently selected
+            const targetedUuid = currentlySelectedAccountObj ? currentlySelectedAccountObj.uuid : null;
+
+            if (!targetedUuid) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Select an Account Context",
+                    text: "Please select an active user profile from your registry stream directory before executing the AI transaction generator pipeline.",
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                    color: "#ffffff",
+                    confirmButtonColor: "#3b82f6"
+                });
+                return;
+            }
+
+            // Dynamically import the execution controller function from ai-history.js
+            const { triggerAiHistoryGenerationPanel } = await import("./ai-history.js");
+            triggerAiHistoryGenerationPanel(targetedUuid);
+        });
+    }
+
     // ==========================================================================
     // STALE-WHILE-REVALIDATE INITIALIZATION PIPELINE
     // ==========================================================================
@@ -152,7 +179,9 @@ export async function fetchUserDirectoryRegistry(bearerTokenString) {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${bearerTokenString}`,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                // ADD THIS LINE HERE:
+                "x-setting-target": "g-lite"
             }
         });
 

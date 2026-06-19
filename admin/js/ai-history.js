@@ -26,10 +26,24 @@ export async function synchronizeTerminalCreditUI() {
     const adminToken = localStorage.getItem("admin_session_token");
     if (!adminToken) return;
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeUuid = urlParams.get("uuid");
+
+    // FIXED: Construct clean request payload headers dynamically to prevent 400 validation loops
+    const requestHeaders = {
+        "Authorization": `Bearer ${adminToken}`,
+        "X-Setting-Target": "g-lite" // Explicitly send baseline target profile context
+    };
+
+    // Only append the user tracking parameter if a user is actively selected on the dashboard panel
+    if (activeUuid && activeUuid.trim() !== "") {
+        requestHeaders["X-User-UUID"] = activeUuid;
+    }
+
     try {
         const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-ai-history", {
             method: "GET",
-            headers: { "Authorization": `Bearer ${adminToken}` }
+            headers: requestHeaders
         });
 
         const data = await response.json();
@@ -57,7 +71,10 @@ export async function triggerAiHistoryGenerationPanel(activeTargetUserUuid) {
     try {
         const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-ai-history", {
             method: "GET",
-            headers: { "Authorization": `Bearer ${adminToken}` }
+            headers: {
+                "Authorization": `Bearer ${adminToken}`,
+                "X-User-UUID": activeTargetUserUuid
+            }
         });
 
         const data = await response.json();
@@ -192,7 +209,7 @@ async function triggerSyntheticLedgerBulkInsertion(cfg, userUuid) {
                     name: `${targetNameIdentityString} (${targetBankIdentityString})`,
                     amount: generatedRandomAmount,
                     transactionType: pullRandomElementFromArray(["Credit", "Debit"]),
-                    description: "",
+                    description: "AI Generated Settlement Record Note",
                     signature: "g-lite",
                     status: "Successful"
                 });
@@ -223,16 +240,12 @@ async function triggerSyntheticLedgerBulkInsertion(cfg, userUuid) {
                 if (!response.ok) throw new Error(data.error);
                 if (!data.success) throw new Error(data.error);
 
-                // ==========================================================================
-                // OPTIMISTIC UPDATE: MERGE FRESHLY SYNTHESIZED ROWS INTO THE LOCAL HISTORY CACHE
-                // ==========================================================================
                 const historyCacheKey = `admin_history_ledger_${userUuid}`;
                 const historicalCachedRows = localStorage.getItem(historyCacheKey);
 
                 if (historicalCachedRows) {
                     try {
                         let parsedHistory = JSON.parse(historicalCachedRows);
-                        // Prepend the new AI rows to the top of the existing transaction records
                         let updatedHistoryArray = [...dynamicSynthesizedRowsArray, ...parsedHistory];
                         localStorage.setItem(historyCacheKey, JSON.stringify(updatedHistoryArray));
                     } catch (e) {
@@ -253,9 +266,7 @@ async function triggerSyntheticLedgerBulkInsertion(cfg, userUuid) {
                     color: "#ffffff"
                 });
 
-                // REPAINT UI IMMEDIATELY: Hot-reloads the data container ledger instantly in real-time
                 await bindSystemLedgerHistoryStream(userUuid);
-                // Silently update top header credit balance telemetry info without full reboots
                 synchronizeTerminalCreditUI();
 
             } catch (error) {
