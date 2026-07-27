@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G-Lite Core - Management Control Module</title>
+    <title>Onflex Core - Management Control Module</title>
     <link rel="stylesheet" href="css/list.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -58,29 +58,51 @@
             <div class="unselected-viewport-fallback" id="fallback-view-pane">
                 <div class="fallback-graphic-card">
                     <div class="fallback-icon-ring"><i data-lucide="message-square"></i></div>
-                    <h2>G-Lite Secure Core Terminal Messenger</h2>
+                    <h2>Onflex Secure Core Terminal Messenger</h2>
                     <p>Select an operational workspace context profile to initiate real-time conversations or mutate
                         core database records.</p>
                 </div>
             </div>
 
             <div class="active-record-workspace display-none" id="workspace-chat-pane">
-                <div class="workspace-header">
-                    <button class="mobile-nav-back-btn back-to-list-trigger" title="Back to User List">
-                        <i data-lucide="arrow-left"></i>
-                    </button>
+                <!-- Inside workspace-chat-pane -> workspace-header -->
+                <div class="workspace-header"
+                    style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <button class="mobile-nav-back-btn back-to-list-trigger" title="Back to User List"
+                            style="background: none; border: none; color: #fff; cursor: pointer;">
+                            <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                        </button>
 
-                    <div class="active-user-meta-summary chat-header-interactive" id="chat-header-navigation-trigger"
-                        title="View profile info">
-                        <div class="active-avatar-circle chat-header-avatar" id="chat-avatar-target">U</div>
-                        <div class="meta-title-stack">
-                            <h3 id="chat-title-fullname">Loading Client Console...</h3>
-                            <p id="chat-subtitle-status">Online - Tap to view info</p>
+                        <div class="active-user-meta-summary chat-header-interactive"
+                            id="chat-header-navigation-trigger" title="View profile info"
+                            style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <div class="active-avatar-circle chat-header-avatar" id="chat-avatar-target">U</div>
+                            <div class="meta-title-stack">
+                                <h3 id="chat-title-fullname" style="margin: 0; font-size: 15px;">Loading Client
+                                    Console...</h3>
+                                <p id="chat-subtitle-status" style="margin: 0; font-size: 12px; color: #94a3b8;">Online
+                                    - Tap to view info</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="header-action-utilities">
-                        <button class="utility-action-btn"><i data-lucide="more-vertical"></i></button>
+                    <!-- Header Utilities: Flex Row with explicit dimensions -->
+                    <div class="header-action-utilities" style="display: flex; align-items: center; gap: 12px;">
+                        <button class="utility-action-btn" id="chat-header-notification-btn"
+                            title="Push Notification Alert"
+                            style="background: transparent; border: none; color: #94a3b8; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 6px;">
+                            <i data-lucide="bell" style="width: 20px; height: 20px; flex-shrink: 0;"></i>
+                        </button>
+                        <button class="utility-action-btn" id="chat-header-delete-all-btn"
+                            title="Purge All Chat Conversation History"
+                            style="background: transparent; border: none; color: #ef4444; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 6px;">
+                            <i data-lucide="trash-2" style="width: 20px; height: 20px; flex-shrink: 0;"></i>
+                        </button>
+                        <button class="utility-action-btn" id="chat-header-more-btn" title="More Options"
+                            style="background: transparent; border: none; color: #94a3b8; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 6px;">
+                            <i data-lucide="more-vertical" style="width: 20px; height: 20px; flex-shrink: 0;"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -143,6 +165,10 @@
                                     data-target-pane-id="user-profile-fields">
                                     <span><i data-lucide="user"></i> Master Operations Form</span>
                                 </a>
+                                <a class="nav-link" id="user-set-approvals-tab" href="#user-set-approvals"
+                                    data-target-pane-id="user-approvals-fields">
+                                    <span><i data-lucide="shield-check"></i> Approvals Management Matrix</span>
+                                </a>
                                 <a class="nav-link" id="user-set-passwort-tab" href="#user-set-passwort"
                                     data-target-pane-id="user-set-passwort">
                                     <span><i data-lucide="history"></i> Settlement History Matrix</span>
@@ -173,11 +199,23 @@
                                             <form id="profileForm" class="spa-form-grid">
 
                                                 <div class="form-group-item"
-                                                    style="grid-column: 1 / -1; background: #1c2830; padding: 12px; border-radius: 6px; border-left: 4px solid var(--text-chat-green);">
-                                                    <label class="form-label">Primary Account Balance ($)</label>
-                                                    <input type="text" id="accountBalance" name="accountBalance"
-                                                        class="form-control"
-                                                        style="font-size: 18px; font-family: monospace; color: #fff;">
+                                                    style="grid-column: 1 / -1; background: #1c2830; padding: 12px; border-radius: 6px; border-left: 4px solid var(--text-chat-green); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                                                    <div>
+                                                        <label id="lbl_accountBalance" for="accountBalance"
+                                                            class="form-label" style="color: #4ade80;">Primary Account
+                                                            Balance</label>
+                                                        <input type="text" id="accountBalance" name="accountBalance"
+                                                            class="form-control"
+                                                            style="font-size: 18px; font-family: monospace; color: #fff;">
+                                                    </div>
+                                                    <div>
+                                                        <label id="lbl_accountTypeBalance" for="accountTypeBalance"
+                                                            class="form-label" style="color: #60a5fa;">Account Type
+                                                            Balance</label>
+                                                        <input type="text" id="accountTypeBalance"
+                                                            name="accountTypeBalance" class="form-control"
+                                                            style="font-size: 18px; font-family: monospace; color: #fff;">
+                                                    </div>
                                                 </div>
 
                                                 <div class="form-group-item">
@@ -203,7 +241,7 @@
                                                 <div class="form-group-item">
                                                     <label class="form-label">Currency Symbol (e.g. $, €, £)</label>
                                                     <input type="text" id="currency" name="currency"
-                                                        class="form-control" placeholder="$">
+                                                        class="form-control" placeholder="USD ($)">
                                                 </div>
                                                 <div class="form-group-item">
                                                     <label class="form-label">Email Address</label>
@@ -252,17 +290,29 @@
                                                     <input type="text" id="gender" name="gender" class="form-control">
                                                 </div>
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Employment Status</label>
-                                                    <input type="text" id="employstatus" name="employstatus"
+                                                    <label class="form-label">Employment Status / Occupation</label>
+                                                    <input type="text" id="employstatus" name="occupation"
                                                         class="form-control">
                                                 </div>
                                                 <div class="form-group-item">
                                                     <label class="form-label">Next of Kin Name</label>
                                                     <input type="text" id="kinname" name="kinname" class="form-control">
                                                 </div>
+
+                                                <!-- Tier & Tax Fee Controls -->
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Digital Signature String</label>
-                                                    <input type="text" id="signature" name="signature"
+                                                    <label class="form-label">Account Tier Level</label>
+                                                    <input type="text" id="tiers" name="tiers" class="form-control"
+                                                        placeholder="1">
+                                                </div>
+                                                <div class="form-group-item">
+                                                    <label class="form-label">Tax Fee Rate (%)</label>
+                                                    <input type="number" id="tax_fee" name="tax_fee" step="0.01"
+                                                        class="form-control" placeholder="3">
+                                                </div>
+                                                <div class="form-group-item">
+                                                    <label class="form-label">Fixed Date Reference</label>
+                                                    <input type="text" id="fixedDate" name="fixedDate"
                                                         class="form-control">
                                                 </div>
 
@@ -294,8 +344,17 @@
                                                         style="font-family: monospace;">
                                                 </div>
 
+                                                <!-- Security & Status Selects -->
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Block Transection</label>
+                                                    <label class="form-label">Two-Factor Authentication (2FA)</label>
+                                                    <select id="two_fa" name="2fa" class="form-control">
+                                                        <option value="false">Disabled</option>
+                                                        <option value="true">Enabled</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group-item">
+                                                    <label class="form-label">Block Transaction</label>
                                                     <select id="block_transection" name="block_transection"
                                                         class="form-control">
                                                         <option value="false">Unblocked Normal Flow</option>
@@ -333,10 +392,211 @@
                                                 <div style="grid-column: 1 / -1; margin-top: 14px;">
                                                     <button type="submit"
                                                         class="admin-execute-action-btn primary-intent-btn"
-                                                        style="width: auto; padding: 12px 30px;">Save Profile Database
-                                                        Record</button>
+                                                        style="width: auto; padding: 12px 30px;">
+                                                        Save Profile Database Record
+                                                    </button>
                                                 </div>
                                             </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane-custom" id="user-approvals-fields">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Card, KYC & Loan Verification Approval Module</h5>
+                                        </div>
+                                        <div class="card-body"
+                                            style="display: flex; flex-direction: column; gap: 20px;">
+
+                                            <!-- 1. CARD APPROVAL PANEL -->
+                                            <form id="cardApprovalForm"
+                                                style="background: #182229; padding: 16px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                                <h6
+                                                    style="color: #60a5fa; margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; font-weight: bold;">
+                                                    💳 Credit Card Request Matrix
+                                                </h6>
+                                                <div
+                                                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                                                    <div>
+                                                        <label class="form-label">Requested Brand</label>
+                                                        <select id="appr_cards" class="form-control"
+                                                            style="background: #111b21; color: #38bdf8; font-weight: bold;">
+                                                            <option value="Master">Master</option>
+                                                            <option value="Visa">Visa</option>
+                                                            <option value="Verve">Verve</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Card Approval Status</label>
+                                                        <select id="appr_cardApproval" class="form-control">
+                                                            <option value="no">no (Disabled / Initial)</option>
+                                                            <option value="pending">pending (Awaiting Decision)</option>
+                                                            <option value="approved">approved (Authorized Active)
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Assigned Card Number</label>
+                                                        <input type="text" id="appr_cardNumber" class="form-control"
+                                                            placeholder="4111222233334444"
+                                                            style="font-family: monospace;">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Expiration Date</label>
+                                                        <input type="text" id="appr_expireDate" class="form-control"
+                                                            placeholder="12/28" style="font-family: monospace;">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Card PIN</label>
+                                                        <input type="text" id="appr_card_pin" class="form-control"
+                                                            placeholder="1234" maxlength="4"
+                                                            style="font-family: monospace;">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Security CVC</label>
+                                                        <input type="text" id="appr_card_cvc" class="form-control"
+                                                            placeholder="789" maxlength="3"
+                                                            style="font-family: monospace;">
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 12px; text-align: right;">
+                                                    <button type="submit"
+                                                        class="admin-execute-action-btn primary-intent-btn">
+                                                        Update Card Status
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                            <!-- 2. KYC VERIFICATION PANEL -->
+                                            <form id="kycApprovalForm"
+                                                style="background: #182229; padding: 16px; border-radius: 8px; border-left: 4px solid #10b981;">
+                                                <h6
+                                                    style="color: #34d399; margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; font-weight: bold;">
+                                                    🛡️ KYC Verification Identity Matrix
+                                                </h6>
+                                                <div
+                                                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                                                    <div>
+                                                        <label class="form-label">KYC Verification Status</label>
+                                                        <select id="appr_kyc" class="form-control">
+                                                            <option value="no">no (Unverified)</option>
+                                                            <option value="pending">pending (Under Review)</option>
+                                                            <option value="approved">approved (Verified Account)
+                                                            </option>
+                                                            <option value="rejected">rejected (Declined Request)
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Occupation</label>
+                                                        <input type="text" id="appr_occupation" class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Marital Status</label>
+                                                        <input type="text" id="appr_marital_status"
+                                                            class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Phone Number</label>
+                                                        <input type="text" id="appr_phone" class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Zip Code</label>
+                                                        <input type="text" id="appr_zipcode" class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Address</label>
+                                                        <input type="text" id="appr_address" class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Next of Kin Name</label>
+                                                        <input type="text" id="appr_kinname" class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Next of Kin Email</label>
+                                                        <input type="email" id="appr_kin_email" class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <!-- KYC IMAGES PREVIEW MATRIX -->
+                                                <div
+                                                    style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
+                                                    <div
+                                                        style="flex: 1; min-width: 150px; background: #111b21; padding: 8px; border-radius: 6px; text-align: center;">
+                                                        <span
+                                                            style="font-size: 11px; color: #8696a0; display: block; margin-bottom: 6px;">Govt
+                                                            Photo ID</span>
+                                                        <div id="kyc_img1_wrap"><small style="color:#64748b;">None
+                                                                uploaded</small></div>
+                                                    </div>
+                                                    <div
+                                                        style="flex: 1; min-width: 150px; background: #111b21; padding: 8px; border-radius: 6px; text-align: center;">
+                                                        <span
+                                                            style="font-size: 11px; color: #8696a0; display: block; margin-bottom: 6px;">Utility
+                                                            Bill</span>
+                                                        <div id="kyc_img2_wrap"><small style="color:#64748b;">None
+                                                                uploaded</small></div>
+                                                    </div>
+                                                    <div
+                                                        style="flex: 1; min-width: 150px; background: #111b21; padding: 8px; border-radius: 6px; text-align: center;">
+                                                        <span
+                                                            style="font-size: 11px; color: #8696a0; display: block; margin-bottom: 6px;">Biometric
+                                                            Selfie</span>
+                                                        <div id="kyc_img3_wrap"><small style="color:#64748b;">None
+                                                                uploaded</small></div>
+                                                    </div>
+                                                </div>
+
+                                                <div style="text-align: right;">
+                                                    <button type="submit"
+                                                        class="admin-execute-action-btn primary-intent-btn">
+                                                        Update KYC Data & Status
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                            <!-- 3. LOAN PORTAL PANEL -->
+                                            <form id="loanApprovalForm"
+                                                style="background: #182229; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                                <h6
+                                                    style="color: #fbbf24; margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; font-weight: bold;">
+                                                    💰 Loan Allocation & Underwriting Matrix
+                                                </h6>
+                                                <div
+                                                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                                                    <div>
+                                                        <label class="form-label">Loan Approval Status</label>
+                                                        <select id="appr_loanApprovalStatus" class="form-control">
+                                                            <option value="">(Empty / Reset Form)</option>
+                                                            <option value="Pending">Pending (Under Review)</option>
+                                                            <option value="Approved">Approved (Capital Released)
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label id="lbl_appr_loanAmount" for="appr_loanAmount"
+                                                            class="form-label">Approved Loan Amount</label>
+                                                        <input type="text" id="appr_loanAmount" class="form-control"
+                                                            style="font-family: monospace; color: #4ade80;">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Loan Purpose Type</label>
+                                                        <input type="text" id="appr_loanType" class="form-control">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">Loan Duration</label>
+                                                        <input type="text" id="appr_loan_duration" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 12px; text-align: right;">
+                                                    <button type="submit"
+                                                        class="admin-execute-action-btn primary-intent-btn">
+                                                        Update Loan Status
+                                                    </button>
+                                                </div>
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -394,19 +654,31 @@
                                                         <option value="Debit">Debit Ledger</option>
                                                     </select>
                                                 </div>
+
+                                                <!-- Added Date Field Input -->
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Settlement Amount ($)</label>
+                                                    <label class="form-label">Date of Record</label>
+                                                    <input type="date" id="historyDate" class="form-control"
+                                                        style="color-scheme: dark;">
+                                                </div>
+
+                                                <div class="form-group-item">
+                                                    <label id="lbl_historyAmount" for="historyAmount"
+                                                        class="form-label">Settlement Amount</label>
                                                     <input required type="text" id="historyAmount" class="form-control"
                                                         placeholder="0.00">
                                                 </div>
+
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Target Beneficiary Entity</label>
+                                                    <label class="form-label">Target Beneficiary Name</label>
                                                     <input required type="text" id="receiverName" class="form-control">
                                                 </div>
+
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Institution Name</label>
+                                                    <label class="form-label">Bank Name</label>
                                                     <input required type="text" id="sources" class="form-control">
                                                 </div>
+
                                                 <div class="form-group-item" style="grid-column: 1 / -1;">
                                                     <label class="form-label">Alert Dispatch System Notification
                                                         Channel</label>
@@ -418,15 +690,18 @@
                                                             Alert Notification System)</option>
                                                     </select>
                                                 </div>
+
                                                 <div class="form-group-item" style="grid-column: 1 / -1;">
                                                     <label class="form-label">Narration Log Entry</label>
                                                     <input type="text" id="description" class="form-control">
                                                 </div>
+
                                                 <div style="grid-column: 1 / -1; margin-top: 12px;">
                                                     <button type="submit"
                                                         class="admin-execute-action-btn primary-intent-btn"
-                                                        style="width: auto; padding: 10px 24px;">Inject Log
-                                                        Entry</button>
+                                                        style="width: auto; padding: 10px 24px;">
+                                                        Inject Log Entry
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -487,7 +762,7 @@
                                                 <div>
                                                     <label
                                                         style="color:#94a3b8; font-size:12px; font-weight:bold;">Settlement
-                                                        Amount ($)</label>
+                                                        Amount</label>
                                                     <input type="text" id="modal-log-amount" class="form-control">
                                                 </div>
                                                 <div>
