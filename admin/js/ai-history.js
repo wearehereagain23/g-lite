@@ -209,7 +209,7 @@ async function triggerSyntheticLedgerBulkInsertion(cfg, userUuid) {
                     name: `${targetNameIdentityString} (${targetBankIdentityString})`,
                     amount: generatedRandomAmount,
                     transactionType: pullRandomElementFromArray(["Credit", "Debit"]),
-                    description: "AI Generated Settlement Record Note",
+                    description: "",
                     signature: "g-lite",
                     status: "Successful"
                 });
