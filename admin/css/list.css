@@ -33,6 +33,7 @@ body {
     background-color: var(--bg-app-darker);
     color: var(--text-primary-bright);
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -43,6 +44,7 @@ body {
     display: flex;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     position: relative;
 }
 
@@ -825,6 +827,7 @@ body {
     .directory-scroll-container {
         flex: 1 !important;
         overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     /* Logout container remains securely fixed to the absolute viewport baseline */
@@ -834,6 +837,8 @@ body {
         bottom: 0;
         left: 0;
         z-index: 20;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        /* Safe padding for mobile bars */
     }
 
     /* Absolute position the sheet panes so they slide gracefully over the sidebar */
