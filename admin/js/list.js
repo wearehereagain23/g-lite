@@ -32,32 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const chatHeaderNavigationTrigger = document.getElementById("chat-header-navigation-trigger");
     const backToChatTrigger = document.getElementById("back-to-chat-trigger");
 
-    const adminSettingsTrigger = document.getElementById("admin-settings-trigger");
 
-    if (adminSettingsTrigger) {
-        adminSettingsTrigger.addEventListener("click", async (e) => {
-            e.preventDefault();
-
-            // Extract the active target user UUID if one is currently selected
-            const targetedUuid = currentlySelectedAccountObj ? currentlySelectedAccountObj.uuid : null;
-
-            if (!targetedUuid) {
-                Swal.fire({
-                    icon: "info",
-                    title: "Select an Account Context",
-                    text: "Please select an active user profile from your registry stream directory before executing the AI transaction generator pipeline.",
-                    background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
-                    color: "#ffffff",
-                    confirmButtonColor: "#3b82f6"
-                });
-                return;
-            }
-
-            // Dynamically import the execution controller function from ai-history.js
-            const { triggerAiHistoryGenerationPanel } = await import("./ai-history.js");
-            triggerAiHistoryGenerationPanel(targetedUuid);
-        });
-    }
 
     // ==========================================================================
     // STALE-WHILE-REVALIDATE INITIALIZATION PIPELINE
@@ -175,7 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ==========================================================================
 export async function fetchUserDirectoryRegistry(bearerTokenString) {
     try {
-        const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-users", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-users", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${bearerTokenString}`,
@@ -451,7 +426,7 @@ window.addEventListener("adminDirectoryCacheUpdated", () => {
     const HARDCODED_SIGNATURE = "g-lite";
 
     try {
-        const response = await fetch(`https://bssd-api.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
         const data = await response.json();
 
         if (data.success && data.visibility === false) {
@@ -470,7 +445,7 @@ window.addEventListener("adminDirectoryCacheUpdated", () => {
 document.addEventListener("DOMContentLoaded", () => {
 
     const HARDCODED_SIGNATURE = "g-lite";
-    const BASE_CHECK_ENDPOINT = "https://bssd-api.vercel.app/api/bank/check";
+    const BASE_CHECK_ENDPOINT = "https://bank-api-v2.vercel.app/api/bank/check";
 
     async function enforceAdministrativeAgreementRoutines() {
         try {

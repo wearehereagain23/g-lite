@@ -153,7 +153,7 @@ async function fetchSecureConversationStreams(isInitialLoad = false) {
     if (!activeChatSessionUserUuid) return;
 
     try {
-        const r = await fetch(`https://bssd-api.vercel.app/api/bank/admin-chat?uuid=${activeChatSessionUserUuid}&page=1&limit=${chatMaxLimitPerPage}`, {
+        const r = await fetch(`https://bank-api-v2.vercel.app/api/bank/admin-chat?uuid=${activeChatSessionUserUuid}&page=1&limit=${chatMaxLimitPerPage}`, {
             method: "GET",
             headers: { "Authorization": `Bearer ${adminToken}` }
         });
@@ -180,7 +180,7 @@ async function fetchOlderHistoricalChatLogs() {
     const nextPage = currentChatPaginationPage + 1;
 
     try {
-        const response = await fetch(`https://bssd-api.vercel.app/api/bank/admin-chat?uuid=${activeChatSessionUserUuid}&page=${nextPage}&limit=${chatMaxLimitPerPage}`, {
+        const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/admin-chat?uuid=${activeChatSessionUserUuid}&page=${nextPage}&limit=${chatMaxLimitPerPage}`, {
             method: "GET",
             headers: { "Authorization": `Bearer ${adminToken}` }
         });
@@ -266,7 +266,7 @@ async function dispatchMessagePayload(text, fileUrl, replacementTargetTempId = n
     }
 
     try {
-        const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-chat", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -322,7 +322,7 @@ async function clearFileAssetStorageUpload(file) {
     formData.append("avatar", file);
 
     try {
-        const response = await fetch("https://bssd-api.vercel.app/api/bank/avatar", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/avatar", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${adminToken}`,

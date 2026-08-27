@@ -25,9 +25,9 @@
                     <span class="admin-identity-tag">Console Admin</span>
                 </div>
                 <div class="header-action-utilities">
-                    <button id="admin-settings-trigger" class="utility-action-btn" title="Admin Settings">
+                    <a href="settings.html" class="utility-action-btn" title="Admin Settings">
                         <i data-lucide="settings"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -98,7 +98,7 @@
                         <i data-lucide="paperclip"></i>
                     </button>
                     <div class="chat-input-text-container">
-                        <input type="text" id="chat-terminal-text-field" placeholder="Type a message...">
+                        <textarea id="chat-terminal-text-field" placeholder="Type a message..." rows="1"></textarea>
                     </div>
                     <button type="button" class="utility-action-btn chat-send-payload-btn" id="chat-send-message-btn">
                         <i data-lucide="send"></i>
@@ -341,22 +341,24 @@
                                     </div>
                                 </div>
 
+                                <!-- ========================================== -->
+                                <!-- HISTORICAL SETTLEMENT RECORDS MATRIX TAB -->
+                                <!-- ========================================== -->
                                 <div class="tab-pane-custom" id="user-set-passwort">
                                     <div class="modern-history-table-container">
                                         <div
                                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                            <h5 style="margin: 0; color: #fff;">Historical Settlement Records Matrix
-                                            </h5>
-                                            <span style="font-size: 12px; color: #64748b;">*Click any history record
-                                                line to edit, update or delete details.</span>
+                                            <h5 style="margin: 0; color: #fff;">Transaction History Records</h5>
+                                            <span style="font-size: 12px; color: #64748b;">*Click any row to edit or
+                                                delete details.</span>
                                         </div>
 
                                         <table class="modern-history-table">
                                             <thead>
                                                 <tr>
                                                     <th style="width: 25%;">Record ID</th>
-                                                    <th style="width: 45%;">Financial Settlement Volume (Amount)</th>
-                                                    <th style="width: 30%;">Processing State Status</th>
+                                                    <th style="width: 45%;">Amount</th>
+                                                    <th style="width: 30%;">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="cvcx2"></tbody>
@@ -381,52 +383,67 @@
                                         </div>
                                     </div>
 
+
+                                    <!-- INJECT NEW HISTORY RECORD FORM -->
                                     <form id="fom7" style="margin-top: 24px; margin-bottom: 16px;">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5>Inject New Audit Log Row Node</h5>
+                                                <h5>Add New Transaction Record</h5>
                                             </div>
                                             <div class="card-body spa-form-grid">
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Flow Direction</label>
+                                                    <label class="form-label">Transaction Date</label>
+                                                    <input required type="date" id="historyDate" class="form-control">
+                                                </div>
+
+                                                <div class="form-group-item">
+                                                    <label class="form-label">Transaction Type</label>
                                                     <select id="historyType" class="form-control">
-                                                        <option value="Credit">Credit Ledger</option>
-                                                        <option value="Debit">Debit Ledger</option>
+                                                        <option value="Credit">Credit (+)</option>
+                                                        <option value="Debit">Debit (-)</option>
                                                     </select>
                                                 </div>
+
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Settlement Amount ($)</label>
+                                                    <label class="form-label">Amount</label>
                                                     <input required type="text" id="historyAmount" class="form-control"
                                                         placeholder="0.00">
                                                 </div>
+
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Target Beneficiary Entity</label>
-                                                    <input required type="text" id="receiverName" class="form-control">
+                                                    <label class="form-label">Receiver Name</label>
+                                                    <input required type="text" id="receiverName" class="form-control"
+                                                        placeholder="John Doe">
                                                 </div>
+
                                                 <div class="form-group-item">
-                                                    <label class="form-label">Institution Name</label>
-                                                    <input required type="text" id="sources" class="form-control">
+                                                    <label class="form-label">Institution / Source</label>
+                                                    <input required type="text" id="sources" class="form-control"
+                                                        placeholder="Global Chase Bank">
                                                 </div>
+
                                                 <div class="form-group-item" style="grid-column: 1 / -1;">
-                                                    <label class="form-label">Alert Dispatch System Notification
-                                                        Channel</label>
+                                                    <label class="form-label">Email Alert Dispatch</label>
                                                     <select id="historyAlertDispatchMode" class="form-control"
                                                         style="border-left: 3px solid var(--text-chat-green);">
-                                                        <option value="silent" selected>Add history without alert
-                                                            (Silent Processing Loop)</option>
-                                                        <option value="dispatch">Add history with alert (Trigger Email
-                                                            Alert Notification System)</option>
+                                                        <option value="silent" selected>Add transaction silently (No
+                                                            Email Alert)</option>
+                                                        <option value="dispatch">Add transaction and send Email
+                                                            Notification</option>
                                                     </select>
                                                 </div>
+
                                                 <div class="form-group-item" style="grid-column: 1 / -1;">
-                                                    <label class="form-label">Narration Log Entry</label>
-                                                    <input type="text" id="description" class="form-control">
+                                                    <label class="form-label">Description / Note</label>
+                                                    <input type="text" id="description" class="form-control"
+                                                        placeholder="Wire Transfer Settlement Payment">
                                                 </div>
+
                                                 <div style="grid-column: 1 / -1; margin-top: 12px;">
                                                     <button type="submit"
                                                         class="admin-execute-action-btn primary-intent-btn"
-                                                        style="width: auto; padding: 10px 24px;">Inject Log
-                                                        Entry</button>
+                                                        style="width: auto; padding: 10px 24px;">Add History
+                                                        Record</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -438,9 +455,9 @@
                                             <div style="font-family: sans-serif;">
                                                 <h6
                                                     style="color: #ef4444; margin: 0 0 4px 0; font-size: 14px; font-weight: bold;">
-                                                    Ledger Delete Utilities Window</h6>
+                                                    Bulk Ledger Erasure</h6>
                                                 <p style="color: #8696a0; margin: 0; font-size: 12px;">Completely wipe
-                                                    all transaction logs tied to this client profile permanently.</p>
+                                                    all transaction history tied to this user account permanently.</p>
                                             </div>
                                             <button type="button" id="bulkClearHistoryBtn"
                                                 class="admin-execute-action-btn"
@@ -455,16 +472,19 @@
                                             <button type="button" id="aiGenBtn"
                                                 class="admin-execute-action-btn secondary-intent-btn"
                                                 style="width: 100%; background: #00a884; color: #fff; font-weight: bold; padding: 12px; border-radius: 8px; border: none; cursor: pointer;">
-                                                ⚡ Launch AI Synthetic Ledger Micro-Generator Engine
+                                                ⚡ Launch AI Synthetic History Generator
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- ========================================== -->
+                                <!-- HISTORY RECORD EDIT / PREVIEW MODAL -->
+                                <!-- ========================================== -->
                                 <div class="custom-ledger-modal-overlay" id="historyRecordEditModal">
                                     <div class="custom-ledger-modal-window">
                                         <div class="custom-ledger-modal-header">
-                                            <h4>Modify Audit Log Node Reference</h4>
+                                            <h4>Edit History Record</h4>
                                             <button type="button" class="custom-ledger-modal-close-trigger"
                                                 id="closeHistoryModalTrigger">&times;</button>
                                         </div>
@@ -474,41 +494,46 @@
                                                 style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                                                 <div>
                                                     <label
-                                                        style="color:#94a3b8; font-size:12px; font-weight:bold;">Settlement
-                                                        Timestamp Date</label>
-                                                    <input type="text" id="modal-log-date" class="form-control">
+                                                        style="color:#cbd5e1; font-size:12px; font-weight:bold; margin-bottom:4px; display:block;">Transaction
+                                                        Date</label>
+                                                    <input type="text" id="modal-log-date" class="form-control"
+                                                        style="background:#0f172a; color:#ffffff; border: 1.5px solid #334155;">
                                                 </div>
                                                 <div>
                                                     <label
-                                                        style="color:#94a3b8; font-size:12px; font-weight:bold;">Beneficiary
-                                                        Entity Name</label>
-                                                    <input type="text" id="modal-log-name" class="form-control">
+                                                        style="color:#cbd5e1; font-size:12px; font-weight:bold; margin-bottom:4px; display:block;">Receiver
+                                                        Name</label>
+                                                    <input type="text" id="modal-log-name" class="form-control"
+                                                        style="background:#0f172a; color:#ffffff; border: 1.5px solid #334155;">
                                                 </div>
                                                 <div>
                                                     <label
-                                                        style="color:#94a3b8; font-size:12px; font-weight:bold;">Settlement
-                                                        Amount ($)</label>
-                                                    <input type="text" id="modal-log-amount" class="form-control">
+                                                        style="color:#cbd5e1; font-size:12px; font-weight:bold; margin-bottom:4px; display:block;">Amount</label>
+                                                    <input type="text" id="modal-log-amount" class="form-control"
+                                                        style="background:#0f172a; color:#ffffff; border: 1.5px solid #334155;">
                                                 </div>
                                                 <div>
                                                     <label
-                                                        style="color:#94a3b8; font-size:12px; font-weight:bold;">Institution
-                                                        Signature Source</label>
-                                                    <input type="text" id="modal-log-signature" class="form-control">
+                                                        style="color:#cbd5e1; font-size:12px; font-weight:bold; margin-bottom:4px; display:block;">Institution
+                                                        / Source</label>
+                                                    <input type="text" id="modal-log-signature" class="form-control"
+                                                        style="background:#0f172a; color:#ffffff; border: 1.5px solid #334155;">
                                                 </div>
                                                 <div>
-                                                    <label style="color:#94a3b8; font-size:12px; font-weight:bold;">Flow
-                                                        Ledger Direction</label>
-                                                    <select id="modal-log-type" class="form-select">
-                                                        <option value="Credit">Credit</option>
-                                                        <option value="Debit">Debit</option>
+                                                    <label
+                                                        style="color:#cbd5e1; font-size:12px; font-weight:bold; margin-bottom:4px; display:block;">Transaction
+                                                        Type</label>
+                                                    <select id="modal-log-type" class="form-control"
+                                                        style="background:#0f172a; color:#ffffff; border: 1.5px solid #334155;">
+                                                        <option value="Credit">Credit (+)</option>
+                                                        <option value="Debit">Debit (-)</option>
                                                     </select>
                                                 </div>
                                                 <div>
                                                     <label
-                                                        style="color:#94a3b8; font-size:12px; font-weight:bold;">Transaction
-                                                        Processing Status</label>
-                                                    <select id="modal-log-status" class="form-select">
+                                                        style="color:#cbd5e1; font-size:12px; font-weight:bold; margin-bottom:4px; display:block;">Status</label>
+                                                    <select id="modal-log-status" class="form-control"
+                                                        style="background:#0f172a; color:#ffffff; border: 1.5px solid #334155;">
                                                         <option value="Successful">Successful</option>
                                                         <option value="Pending">Pending</option>
                                                         <option value="Failed">Failed</option>
@@ -516,9 +541,10 @@
                                                 </div>
                                                 <div style="grid-column: 1 / -1;">
                                                     <label
-                                                        style="color:#94a3b8; font-size:12px; font-weight:bold;">Narration
-                                                        Description Track</label>
-                                                    <input type="text" id="modal-log-description" class="form-control">
+                                                        style="color:#cbd5e1; font-size:12px; font-weight:bold; margin-bottom:4px; display:block;">Description
+                                                        / Note</label>
+                                                    <input type="text" id="modal-log-description" class="form-control"
+                                                        style="background:#0f172a; color:#ffffff; border: 1.5px solid #334155;">
                                                 </div>
                                             </div>
                                         </div>
@@ -526,10 +552,10 @@
                                             style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px; padding: 12px 24px;">
                                             <button type="button" class="admin-execute-action-btn secondary-intent-btn"
                                                 id="modal-delete-action-btn"
-                                                style="background:#ef4444; color:#fff;">Delete History</button>
+                                                style="background:#ef4444; color:#fff;">Delete Record</button>
                                             <button type="button" class="admin-execute-action-btn primary-intent-btn"
-                                                id="modal-save-action-btn"
-                                                style="background:#3b82f6; color:#fff;">Update</button>
+                                                id="modal-save-action-btn" style="background:#3b82f6; color:#fff;">Save
+                                                Changes</button>
                                         </div>
                                     </div>
                                 </div>

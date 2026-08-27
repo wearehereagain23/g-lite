@@ -185,7 +185,7 @@ async function initializeDashboardSession() {
             return;
         }
 
-        const response = await fetch("https://bssd-api.vercel.app/api/bank/data", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/data", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -230,7 +230,7 @@ async function fetchAndHydrateHomeLedger() {
     try {
         const token = localStorage.getItem("user_session_token");
 
-        const response = await fetch("https://bssd-api.vercel.app/api/bank/history", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/history", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -463,7 +463,7 @@ function capitalizeWord(string) {
     const HARDCODED_SIGNATURE = "g-lite";
 
     try {
-        const response = await fetch(`https://bssd-api.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
         const data = await response.json();
 
         if (data.success) {

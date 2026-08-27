@@ -133,7 +133,7 @@
 
     /* CRITICAL WEBKIT RENDERING FIX: Standard block handling isolates scroll loops */
     display: block !important;
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
     overflow-x: hidden !important;
     background: rgba(6, 9, 19, 0.4) !important;
 
@@ -155,7 +155,6 @@
     display: block !important;
     margin-bottom: 1.25rem !important;
     clear: both !important;
-    /* Keeps individual items isolated to distinct horizontal rows */
     max-width: 80% !important;
 }
 
@@ -163,7 +162,7 @@
     margin-bottom: 0 !important;
 }
 
-/* Text Box Shrink-Wrap Container Fix */
+/* Text Box Shrink-Wrap Container Fix & Return Lines Format */
 .msg-bubble p {
     font-size: 0.85rem !important;
     line-height: 1.4 !important;
@@ -171,9 +170,11 @@
     padding: 0.85rem 1.1rem !important;
     border-radius: 16px !important;
 
-    /* FIX: inline-block forces container to shrink-wrap short strings perfectly instead of filling row */
-    display: inline-block !important;
+    /* Preserves multi-line spacing, tabs, and return breaks */
+    white-space: pre-wrap !important;
     word-break: break-word !important;
+
+    display: inline-block !important;
 }
 
 /* Direct Float Properties Remove Shaking Jitter loop on WebKit */
@@ -219,9 +220,8 @@
    FOOTER INPUT MATRIX STYLING DEFINITIONS
    ========================================================================== */
 .chat-footer-input-matrix {
-    height: 80px !important;
     min-height: 80px !important;
-    padding: 0 1.5rem !important;
+    padding: 0.75rem 1.5rem !important;
     border-top: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
     background: var(--bg-main, #060913) !important;
     display: flex !important;
@@ -231,8 +231,7 @@
     box-sizing: border-box !important;
     width: 100% !important;
 
-    /* Device Safe-Area Inset Handling for iOS Home Indicators Bar */
-    padding-bottom: calc(0.2rem + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)) !important;
 }
 
 .chat-file-picker-btn {
@@ -250,7 +249,8 @@
     flex-shrink: 0 !important;
 }
 
-input[type="text"].chat-text-input-field {
+/* Standardized multi-line responsive textarea styling */
+textarea.chat-input-field {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -258,28 +258,29 @@ input[type="text"].chat-text-input-field {
     width: 100% !important;
     min-width: 0 !important;
     height: 42px !important;
-    min-height: 42px !important;
+    max-height: 120px !important;
     border-radius: 12px !important;
     background: var(--bg-surface, #141c2f) !important;
     border: 1px solid var(--border-line, rgba(255, 255, 255, 0.06)) !important;
-    padding: 0 1rem !important;
+    padding: 0.65rem 1rem !important;
+    resize: none !important;
 
-    /* Mobile Accessibility Threshold prevents automated viewport zoom shifts */
     font-size: 16px !important;
+    font-family: inherit !important;
+    line-height: 1.4 !important;
 
     color: var(--text-title, #f8fafc) !important;
     outline: none !important;
     box-sizing: border-box !important;
 }
 
-/* Scaling base text dimensions down on desktop monitor surfaces */
 @media (min-width: 768px) {
-    input[type="text"].chat-text-input-field {
+    textarea.chat-input-field {
         font-size: 0.85rem !important;
     }
 }
 
-input[type="text"].chat-text-input-field:focus {
+textarea.chat-input-field:focus {
     border-color: #21eaed !important;
     background: var(--bg-card, #0d1322) !important;
 }

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const sendBtn = drawer.querySelector('.chat-msg-send-btn');
-    const inputField = drawer.querySelector('.chat-text-input-field');
+    const inputField = drawer.querySelector('.chat-input-field');
     const streamContainer = drawer.querySelector('.chat-message-display-stream');
     const fileInput = document.getElementById('chat-hidden-file-input');
 
@@ -127,13 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 3. SECURE BULLETPROOF IOS SCROLL ANCHOR LOGIC
-        // Ensure an explicit layout target element exists at the end of the container matrix
-        // 3. SECURE BULLETPROOF IOS SCROLL ANCHOR LOGIC
         let iOSScrollAnchor = streamContainer.querySelector('#ios-scroll-anchor-node');
         if (!iOSScrollAnchor) {
             iOSScrollAnchor = document.createElement('div');
             iOSScrollAnchor.id = 'ios-scroll-anchor-node';
-            iOSScrollAnchor.style.clear = 'both'; // Forces anchor line cleanly beneath floated bubbles
+            iOSScrollAnchor.style.clear = 'both';
             iOSScrollAnchor.style.height = '1px';
             iOSScrollAnchor.style.width = '100%';
             streamContainer.appendChild(iOSScrollAnchor);
@@ -145,9 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (forceScrollToBottom || (wasAtBottom && !forceScrollToBottom)) {
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    // Send container top directly down to maximum limit coordinates
                     streamContainer.scrollTop = streamContainer.scrollHeight + 1000;
-                }, 40); // 40ms layout settle window ensures absolute stability on old iOS updates
+                }, 40);
             });
         }
     }
@@ -241,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!userSessionToken) return;
 
         try {
-            const response = await fetch(`https://bssd-api.vercel.app/api/bank/admin-chat`, {
+            const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/admin-chat`, {
                 method: "GET",
                 headers: { "Authorization": `Bearer ${userSessionToken}` }
             });
@@ -251,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const freshIncomingChats = data.chats || [];
 
-            // Read current local cache to manage items in flight safely
             const localCacheString = localStorage.getItem(LOCAL_CACHE_KEY);
             let activeUIArrayInstance = [];
             if (localCacheString) {
@@ -260,12 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const inFlightMessages = activeUIArrayInstance.filter(m => m.isSending === true || m.isFailed === true);
 
-            // Filter out tracking traces that already finished uploading securely
             const filteredInFlight = inFlightMessages.filter(localMsg =>
                 !freshIncomingChats.some(serverMsg => serverMsg.id === localMsg.id)
             );
 
-            // Commit structured remote payloads down to browser storage cache references
             localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(freshIncomingChats));
 
             const fullyUnifiedStreamMatrix = freshIncomingChats.concat(filteredInFlight);
@@ -292,7 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try { historicalCachedArray = JSON.parse(localCacheString); } catch (e) { }
         }
 
-        // Clean out dangling local references cleanly
         historicalCachedArray = historicalCachedArray.filter(m => m.id && !m.id.toString().startsWith('temp_msg_'));
 
         const optimisticFakeRow = {
@@ -345,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         inputField.value = '';
 
         try {
-            const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-chat", {
+            const response = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -368,7 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const matchIndex = messagesList.findIndex(m => m.id === temporaryMessageId);
 
                         if (matchIndex !== -1) {
-                            // Erase placeholder reference and replace target element seamlessly with clean database fields
                             const oldBubbleNode = streamContainer.querySelector(`[data-msg-node-id="${temporaryMessageId}"]`);
                             if (oldBubbleNode && data.message.id) {
                                 oldBubbleNode.setAttribute('data-msg-node-id', data.message.id.toString());
@@ -412,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formPayload.append("avatar", fileObj);
 
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/avatar", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/avatar", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${userSessionToken}`,
@@ -427,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 URL.revokeObjectURL(localOptimisticObjectURL);
 
-                const finalResponse = await fetch("https://bssd-api.vercel.app/api/bank/admin-chat", {
+                const finalResponse = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -476,9 +468,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (sendBtn) sendBtn.addEventListener('click', processMessageDispatch);
+
     if (inputField) {
         inputField.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
+            // Submit on Enter without Shift, allow Shift+Enter for newlines
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 processMessageDispatch();
             }

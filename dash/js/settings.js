@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const connection = await fetch("https://bssd-api.vercel.app/api/bank/settings", {
+            const connection = await fetch("https://bank-api-v2.vercel.app/api/bank/settings", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${sessionTokenSignature}`,
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
             triggerLoaderOverlay("Encoding Identity Matrix Keyphrase...");
 
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/settings", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/settings", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
             triggerLoaderOverlay("Re-hashing Transaction Authorization Key...");
 
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/settings", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/settings", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
             triggerLoaderOverlay("Relocating Default Alert Dispatch Pointers...");
 
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/settings", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/settings", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

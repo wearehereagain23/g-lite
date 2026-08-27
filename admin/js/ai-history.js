@@ -41,7 +41,7 @@ export async function synchronizeTerminalCreditUI() {
     }
 
     try {
-        const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-ai-history", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-ai-history", {
             method: "GET",
             headers: requestHeaders
         });
@@ -69,7 +69,7 @@ export async function triggerAiHistoryGenerationPanel(activeTargetUserUuid) {
     }
 
     try {
-        const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-ai-history", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-ai-history", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${adminToken}`,
@@ -227,7 +227,7 @@ async function triggerSyntheticLedgerBulkInsertion(cfg, userUuid) {
             };
 
             try {
-                const response = await fetch("https://bssd-api.vercel.app/api/bank/admin-ai-history", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-ai-history", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
