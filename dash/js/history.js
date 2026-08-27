@@ -1,310 +1,36 @@
-/**
- * G-Lite - CORE LIVE INTERACTIVE TRANSACTION HISTORY MANAGER
- * Dual Engine Output Generation (Desktop Data Table Matrix + Mobile Touch Responsive Cards Vector)
- * Added: Precise Database Status Parsing + Next/Previous Client-Side Pagination Engines
- */
-document.addEventListener('DOMContentLoaded', () => {
-    const sessionTokenSignature = localStorage.getItem("user_session_token");
-
-    const desktopContainer = document.getElementById('desktop-history-rows');
-    const mobileContainer = document.getElementById('mobile-history-cards');
-
-    // Pagination State Engine Matrix
-    let currentPage = 1;
-    const recordsPerPage = 10; // Change this integer value to set items per page
-
-    // Global collection storage for canvas download context matching
-    let loadedTransactionRecords = [];
-    let activeUserCurrencySymbol = localStorage.getItem("g_lite_user_currency") || "$";
-
-    // ==========================================
-    // INSTANT MEMORY HYDRATION LAYER (0ms RENDERING)
-    // ==========================================
-    optimisticHistoryHydration();
-    executeIdentityAndHistorySync();
-
-    /**
-     * Instantly reads profile credentials and transaction records out of localStorage cache strings
-     */
-    function optimisticHistoryHydration() {
-        // Hydrate header stats instantly
-        const cachedFullName = localStorage.getItem("g_lite_user_fullname");
-        const cachedAccountNum = localStorage.getItem("g_lite_user_accountnumber");
-        const cachedCountry = localStorage.getItem("g_lite_user_country");
-        const cachedImage = localStorage.getItem("g_lite_user_image");
-        const cachedAcctType = localStorage.getItem("g_lite_user_accttype");
-
-        const holderNodes = document.querySelectorAll(".an-val");
-        if (holderNodes.length >= 4) {
-            if (cachedFullName) holderNodes[0].innerText = cachedFullName;
-            if (cachedAccountNum) holderNodes[1].innerText = cachedAccountNum;
-            if (cachedAcctType) holderNodes[2].innerText = cachedAcctType;
-            if (cachedCountry) holderNodes[3].innerText = cachedCountry;
-        }
-
-        const headerAvatar = document.querySelector(".user-avatar-portal-btn img");
-        if (headerAvatar && cachedImage) {
-            headerAvatar.src = cachedImage;
-        }
-
-        // Hydrate historical table strings instantly
-        const rawCachedHistory = localStorage.getItem("g_lite_history_ledger_cache");
-        if (rawCachedHistory) {
-            try {
-                loadedTransactionRecords = JSON.parse(rawCachedHistory);
-                paginateAndRenderLedger();
-            } catch (e) {
-                console.error("Failed to parse history stream JSON logs:", e);
-            }
-        }
-    }
-
-    /**
-     * Pulls active profile attributes and real-time transaction ledger arrays from server nodes
-     */
-    async function executeIdentityAndHistorySync() {
-        if (!sessionTokenSignature) {
-            console.error("Authentication session token missing.");
-            return;
-        }
-
-        try {
-            // STEP 1: Sync User Profile Metrics for the header metadata cards
-            const accountFetch = await fetch("https://bank-api-v2.vercel.app/api/bank/data", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${sessionTokenSignature}`
-                }
-            });
-            const accountRes = await accountFetch.json();
-
-            if (accountRes.success) {
-                const profile = accountRes.data;
-                activeUserCurrencySymbol = profile.currency || "$";
-
-                localStorage.setItem("g_lite_user_currency", activeUserCurrencySymbol);
-                localStorage.setItem("g_lite_user_fullname", profile.fullName || `${profile.firstname || ''} ${profile.lastname || ''}`.trim() || "Account Holder");
-                localStorage.setItem("g_lite_user_accountnumber", profile.accountNumber || "");
-                localStorage.setItem("g_lite_user_accttype", profile.accountType || "Online");
-                localStorage.setItem("g_lite_user_country", profile.country || "Global Link");
-                if (profile.image) localStorage.setItem("g_lite_user_image", profile.image);
-
-                // Instantly sync textual layout changes
-                optimisticHistoryHydration();
-            }
-
-            // STEP 2: Fetch Live Transaction History Array
-            const historyFetch = await fetch("https://bank-api-v2.vercel.app/api/bank/history", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${sessionTokenSignature}`
-                }
-            });
-            const historyRes = await historyFetch.json();
-
-            if (historyRes.success) {
-                loadedTransactionRecords = historyRes.data || [];
-
-                // Write array strings directly into memory cache matrix
-                localStorage.setItem("g_lite_history_ledger_cache", JSON.stringify(loadedTransactionRecords));
-                currentPage = 1; // Reset to page 1 on active server refresh stream
-                paginateAndRenderLedger();
-            } else {
-                if (loadedTransactionRecords.length === 0) {
-                    renderEmptyPlaceholderState(historyRes.error || "Could not retrieve ledger logs.");
-                }
-            }
-
-        } catch (err) {
-            console.error("Ledger synchronization exception fault:", err);
-            if (loadedTransactionRecords.length === 0) {
-                renderEmptyPlaceholderState("Network link breakdown execution fault error.");
-            }
-        }
-    }
-
-    /**
-     * Splits global dataset records arrays matching pagination criteria window bounds
-     */
-    function paginateAndRenderLedger() {
-        if (loadedTransactionRecords.length === 0) {
-            renderEmptyPlaceholderState("No transaction records found on this ledger profile account.");
-            updatePaginationControlState(0);
-            return;
-        }
-
-        const totalPages = Math.ceil(loadedTransactionRecords.length / recordsPerPage);
-
-        // Guard boundaries
-        if (currentPage < 1) currentPage = 1;
-        if (currentPage > totalPages) currentPage = totalPages;
-
-        const indexStart = (currentPage - 1) * recordsPerPage;
-        const indexEnd = indexStart + recordsPerPage;
-        const paginatedSlice = loadedTransactionRecords.slice(indexStart, indexEnd);
-
-        renderLedgerMatrices(paginatedSlice);
-        updatePaginationControlState(totalPages);
-    }
-
-    /**
-     * Executes the rendering process loop across layouts using chunked paginated rows
-     */
-    function renderLedgerMatrices(records) {
-        if (!desktopContainer || !mobileContainer) return;
-
-        let desktopHTML = '';
-        let mobileHTML = '';
-
-        records.forEach(record => {
-            const rawAmountValue = parseFloat(record.amount || "0");
-            const isDebit = rawAmountValue < 0;
-            const amountClass = isDebit ? 'negative' : 'positive';
-            const signSymbol = !isDebit ? '+' : '';
-
-            const formattedReferenceId = record.is_optimistic ? `TXN-PENDING` : `TXN-000${record.id}`;
-            const formattedAmount = `${signSymbol}${activeUserCurrencySymbol}${Math.abs(rawAmountValue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            const baselineDateString = record.date || new Date(record.created_at || Date.now()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-
-            // 🛠️ FIXED STATUS CHECK ENGINE: Read explicitly from 'status' or fall back to 'success'
-            let calculatedStatus = 'success';
-            if (record.status) {
-                const standardizedDbStatus = String(record.status).toLowerCase().trim();
-                if (standardizedDbStatus === 'failed' || standardizedDbStatus === 'failed') calculatedStatus = 'failed';
-                else if (standardizedDbStatus === 'pending' || standardizedDbStatus === 'waiting') calculatedStatus = 'pending';
-            }
-
-            desktopHTML += `
-                <tr style="${record.is_optimistic ? 'opacity: 0.7; border-left: 2px solid #3b82f6;' : ''}">
-                    <td class="mono-id">${formattedReferenceId}</td>
-                    <td><div class="truncate-desc" title="${record.name || record.description}">${record.description || 'System Allocation Transfer'}</div></td>
-                    <td class="text-muted">${baselineDateString}</td>
-                    <td><span class="status-pill ${calculatedStatus}">${calculatedStatus}</span></td>
-                    <td><span class="tx-amount ${amountClass}">${formattedAmount}</span></td>
+document['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("dedaoLtnetnoCMOD".split("").reverse().join(""),()=>{const sessionTokenSignature=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0075\u0073\u0065\u0072\u005f\u0073\u0065\u0073\u0073\u0069\u006f\u006e\u005f\u0074\u006f\u006b\u0065\u006e");const desktopContainer=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u0064\u0065\u0073\u006b\u0074\u006f\u0070\u002d\u0068\u0069\u0073\u0074\u006f\u0072\u0079\u002d\u0072\u006f\u0077\u0073");const mobileContainer=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u006d\u006f\u0062\u0069\u006c\u0065\u002d\u0068\u0069\u0073\u0074\u006f\u0072\u0079\u002d\u0063\u0061\u0072\u0064\u0073");let currentPage=function(s,h){return s^h;}(597418,597419);const recordsPerPage=function(s,h){return s^h;}(128273,128283);let loadedTransactionRecords=[];let activeUserCurrencySymbol=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0063\u0075\u0072\u0072\u0065\u006e\u0063\u0079")||"\u0024";optimisticHistoryHydration();executeIdentityAndHistorySync();function optimisticHistoryHydration(){const _0x677e=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0066\u0075\u006c\u006c\u006e\u0061\u006d\u0065");const _0x2e9=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("rebmuntnuocca_resu_etil_g".split("").reverse().join(""));const _0x18a7cf=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0063\u006f\u0075\u006e\u0074\u0072\u0079");const _0x74c4b=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0069\u006d\u0061\u0067\u0065");const _0xd383cb=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0061\u0063\u0063\u0074\u0074\u0079\u0070\u0065");const _0xe5fccf=document['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c']("\u002e\u0061\u006e\u002d\u0076\u0061\u006c");if(_0xe5fccf['\x6c\x65\x6e\x67\x74\x68']>=(949869^949865)){if(_0x677e)_0xe5fccf[484918^484918]['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']=_0x677e;if(_0x2e9)_0xe5fccf[426476^426477]['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']=_0x2e9;if(_0xd383cb)_0xe5fccf[801037^801039]['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']=_0xd383cb;if(_0x18a7cf)_0xe5fccf[347096^347099]['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']=_0x18a7cf;}const _0xc2539c=document['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72']("\u002e\u0075\u0073\u0065\u0072\u002d\u0061\u0076\u0061\u0074\u0061\u0072\u002d\u0070\u006f\u0072\u0074\u0061\u006c\u002d\u0062\u0074\u006e\u0020\u0069\u006d\u0067");if(_0xc2539c&&_0x74c4b){_0xc2539c['\x73\x72\x63']=_0x74c4b;}const _0xd7f=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0068\u0069\u0073\u0074\u006f\u0072\u0079\u005f\u006c\u0065\u0064\u0067\u0065\u0072\u005f\u0063\u0061\u0063\u0068\u0065");if(_0xd7f){try{loadedTransactionRecords=JSON['\x70\x61\x72\x73\x65'](_0xd7f);paginateAndRenderLedger();}catch(e){console['\x65\x72\x72\x6f\x72']("\u0046\u0061\u0069\u006c\u0065\u0064\u0020\u0074\u006f\u0020\u0070\u0061\u0072\u0073\u0065\u0020\u0068\u0069\u0073\u0074\u006f\u0072\u0079\u0020\u0073\u0074\u0072\u0065\u0061\u006d\u0020\u004a\u0053\u004f\u004e\u0020\u006c\u006f\u0067\u0073\u003a",e);}}}async function executeIdentityAndHistorySync(){if(!sessionTokenSignature){console['\x65\x72\x72\x6f\x72']("\u0041\u0075\u0074\u0068\u0065\u006e\u0074\u0069\u0063\u0061\u0074\u0069\u006f\u006e\u0020\u0073\u0065\u0073\u0073\u0069\u006f\u006e\u0020\u0074\u006f\u006b\u0065\u006e\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067\u002e");return;}try{const _0xb71=await fetch("\u0068\u0074\u0074\u0070\u0073\u003a\u002f\u002f\u0062\u0061\u006e\u006b\u002d\u0061\u0070\u0069\u002d\u0076\u0032\u002e\u0076\u0065\u0072\u0063\u0065\u006c\u002e\u0061\u0070\u0070\u002f\u0061\u0070\u0069\u002f\u0062\u0061\u006e\u006b\u002f\u0064\u0061\u0074\u0061",{'\u006d\u0065\u0074\u0068\u006f\u0064':"\u0047\u0045\u0054",'\u0068\u0065\u0061\u0064\u0065\u0072\u0073':{"\u0043\u006f\u006e\u0074\u0065\u006e\u0074\u002d\u0054\u0079\u0070\u0065":"\u0061\u0070\u0070\u006c\u0069\u0063\u0061\u0074\u0069\u006f\u006e\u002f\u006a\u0073\u006f\u006e","\u0041\u0075\u0074\u0068\u006f\u0072\u0069\u007a\u0061\u0074\u0069\u006f\u006e":`Bearer ${sessionTokenSignature}`}});const _0x192aa=await _0xb71['\x6a\x73\x6f\x6e']();if(_0x192aa['\x73\x75\x63\x63\x65\x73\x73']){const _0x55f8a=_0x192aa['\x64\x61\x74\x61'];activeUserCurrencySymbol=_0x55f8a['\x63\x75\x72\x72\x65\x6e\x63\x79']||"\u0024";localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0063\u0075\u0072\u0072\u0065\u006e\u0063\u0079",activeUserCurrencySymbol);localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0066\u0075\u006c\u006c\u006e\u0061\u006d\u0065",_0x55f8a['\x66\x75\x6c\x6c\x4e\x61\x6d\x65']||`${_0x55f8a['\x66\x69\x72\x73\x74\x6e\x61\x6d\x65']||''} ${_0x55f8a['\x6c\x61\x73\x74\x6e\x61\x6d\x65']||''}`['\x74\x72\x69\x6d']()||"\u0041\u0063\u0063\u006f\u0075\u006e\u0074\u0020\u0048\u006f\u006c\u0064\u0065\u0072");localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0061\u0063\u0063\u006f\u0075\u006e\u0074\u006e\u0075\u006d\u0062\u0065\u0072",_0x55f8a['\x61\x63\x63\x6f\x75\x6e\x74\x4e\x75\x6d\x62\x65\x72']||"");localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0061\u0063\u0063\u0074\u0074\u0079\u0070\u0065",_0x55f8a['\x61\x63\x63\x6f\x75\x6e\x74\x54\x79\x70\x65']||"enilnO".split("").reverse().join(""));localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0063\u006f\u0075\u006e\u0074\u0072\u0079",_0x55f8a['\x63\x6f\x75\x6e\x74\x72\x79']||"\u0047\u006c\u006f\u0062\u0061\u006c\u0020\u004c\u0069\u006e\u006b");if(_0x55f8a['\x69\x6d\x61\x67\x65'])localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0069\u006d\u0061\u0067\u0065",_0x55f8a['\x69\x6d\x61\x67\x65']);optimisticHistoryHydration();}const _0x02adc=await fetch("\u0068\u0074\u0074\u0070\u0073\u003a\u002f\u002f\u0062\u0061\u006e\u006b\u002d\u0061\u0070\u0069\u002d\u0076\u0032\u002e\u0076\u0065\u0072\u0063\u0065\u006c\u002e\u0061\u0070\u0070\u002f\u0061\u0070\u0069\u002f\u0062\u0061\u006e\u006b\u002f\u0068\u0069\u0073\u0074\u006f\u0072\u0079",{"method":"\u0047\u0045\u0054","\u0068\u0065\u0061\u0064\u0065\u0072\u0073":{"\u0043\u006f\u006e\u0074\u0065\u006e\u0074\u002d\u0054\u0079\u0070\u0065":"\u0061\u0070\u0070\u006c\u0069\u0063\u0061\u0074\u0069\u006f\u006e\u002f\u006a\u0073\u006f\u006e","Authorization":`Bearer ${sessionTokenSignature}`}});const _0xeb7d8g=await _0x02adc['\x6a\x73\x6f\x6e']();if(_0xeb7d8g['\x73\x75\x63\x63\x65\x73\x73']){loadedTransactionRecords=_0xeb7d8g['\x64\x61\x74\x61']||[];localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0068\u0069\u0073\u0074\u006f\u0072\u0079\u005f\u006c\u0065\u0064\u0067\u0065\u0072\u005f\u0063\u0061\u0063\u0068\u0065",JSON['\x73\x74\x72\x69\x6e\x67\x69\x66\x79'](loadedTransactionRecords));currentPage=783644^783645;paginateAndRenderLedger();}else{if(loadedTransactionRecords['\x6c\x65\x6e\x67\x74\x68']===(110785^110785)){renderEmptyPlaceholderState(_0xeb7d8g['\x65\x72\x72\x6f\x72']||"\u0043\u006f\u0075\u006c\u0064\u0020\u006e\u006f\u0074\u0020\u0072\u0065\u0074\u0072\u0069\u0065\u0076\u0065\u0020\u006c\u0065\u0064\u0067\u0065\u0072\u0020\u006c\u006f\u0067\u0073\u002e");}}}catch(err){console['\x65\x72\x72\x6f\x72']("\u004c\u0065\u0064\u0067\u0065\u0072\u0020\u0073\u0079\u006e\u0063\u0068\u0072\u006f\u006e\u0069\u007a\u0061\u0074\u0069\u006f\u006e\u0020\u0065\u0078\u0063\u0065\u0070\u0074\u0069\u006f\u006e\u0020\u0066\u0061\u0075\u006c\u0074\u003a",err);if(loadedTransactionRecords['\x6c\x65\x6e\x67\x74\x68']===(117923^117923)){renderEmptyPlaceholderState(".rorre tluaf noitucexe nwodkaerb knil krowteN".split("").reverse().join(""));}}}function paginateAndRenderLedger(){if(loadedTransactionRecords['\x6c\x65\x6e\x67\x74\x68']===(709121^709121)){renderEmptyPlaceholderState("\u004e\u006f\u0020\u0074\u0072\u0061\u006e\u0073\u0061\u0063\u0074\u0069\u006f\u006e\u0020\u0072\u0065\u0063\u006f\u0072\u0064\u0073\u0020\u0066\u006f\u0075\u006e\u0064\u0020\u006f\u006e\u0020\u0074\u0068\u0069\u0073\u0020\u006c\u0065\u0064\u0067\u0065\u0072\u0020\u0070\u0072\u006f\u0066\u0069\u006c\u0065\u0020\u0061\u0063\u0063\u006f\u0075\u006e\u0074\u002e");updatePaginationControlState(167121^167121);return;}const _0x877dcd=Math['\x63\x65\x69\x6c'](loadedTransactionRecords['\x6c\x65\x6e\x67\x74\x68']/recordsPerPage);if(currentPage<(977619^977618))currentPage=730054^730055;if(currentPage>_0x877dcd)currentPage=_0x877dcd;const _0x51ee0f=function(s,h){return s*h;}(currentPage-(853007^853006),recordsPerPage);const _0x2a3=function(s,h){return s+h;}(_0x51ee0f,recordsPerPage);const _0x673=loadedTransactionRecords['\x73\x6c\x69\x63\x65'](_0x51ee0f,_0x2a3);renderLedgerMatrices(_0x673);updatePaginationControlState(_0x877dcd);}function renderLedgerMatrices(_0x0f2g,_0x0f,_0xbf19ad){if(!desktopContainer||!mobileContainer)return;_0x0f=function(){return"";}();_0xbf19ad=function(){return"";}();_0x0f2g['\x66\x6f\x72\x45\x61\x63\x68'](record=>{const _0x275aee=parseFloat(record['\x61\x6d\x6f\x75\x6e\x74']||"\u0030");const _0x8f61f=function(s,h){return s<h;}(_0x275aee,322991^322991);const _0x6cf4g=_0x8f61f?"\u006e\u0065\u0067\u0061\u0074\u0069\u0076\u0065":"\u0070\u006f\u0073\u0069\u0074\u0069\u0076\u0065";const _0xe1c42a=!_0x8f61f?"\u002b":'';const _0xfbbbd=record['\x69\x73\x5f\x6f\x70\x74\x69\x6d\x69\x73\x74\x69\x63']?`TXN-PENDING`:`TXN-000${record['\x69\x64']}`;const _0xg618gb=`${_0xe1c42a}${activeUserCurrencySymbol}${Math['\x61\x62\x73'](_0x275aee)['\x74\x6f\x4c\x6f\x63\x61\x6c\x65\x53\x74\x72\x69\x6e\x67']("\u0065\u006e\u002d\u0055\u0053",JSON['\x70\x61\x72\x73\x65']('\u007b\u000a\u0020\u0020\u0022\u006d\u0069\u006e\u0069\u006d\u0075\u006d\u0046\u0072\u0061\u0063\u0074\u0069\u006f\u006e\u0044\u0069\u0067\u0069\u0074\u0073\u0022\u003a\u0020\u0032\u002c\u000a\u0020\u0020\u0022\u006d\u0061\u0078\u0069\u006d\u0075\u006d\u0046\u0072\u0061\u0063\u0074\u0069\u006f\u006e\u0044\u0069\u0067\u0069\u0074\u0073\u0022\u003a\u0020\u0032\u000a\u007d'))}`;const _0xdd593b=record['\x64\x61\x74\x65']||new Date(record['\x63\x72\x65\x61\x74\x65\x64\x5f\x61\x74']||Date['\x6e\x6f\x77']())['\x74\x6f\x4c\x6f\x63\x61\x6c\x65\x44\x61\x74\x65\x53\x74\x72\x69\x6e\x67']("\u0065\u006e\u002d\u0055\u0053",{"\u0064\u0061\u0079":'numeric','\u006d\u006f\u006e\u0074\u0068':"\u0073\u0068\u006f\u0072\u0074",'\u0079\u0065\u0061\u0072':"\u006e\u0075\u006d\u0065\u0072\u0069\u0063"});let _0x92e="\u0073\u0075\u0063\u0063\u0065\u0073\u0073";if(record['\x73\x74\x61\x74\x75\x73']){const _0x966b=String(record['\x73\x74\x61\x74\x75\x73'])['\x74\x6f\x4c\x6f\x77\x65\x72\x43\x61\x73\x65']()['\x74\x72\x69\x6d']();if(_0x966b==="\u0066\u0061\u0069\u006c\u0065\u0064"||_0x966b==="\u0066\u0061\u0069\u006c\u0065\u0064")_0x92e=function(){return'\u0066\u0061\u0069\u006c\u0065\u0064';}();else if(_0x966b==="\u0070\u0065\u006e\u0064\u0069\u006e\u0067"||_0x966b==="\u0077\u0061\u0069\u0074\u0069\u006e\u0067")_0x92e=function(){return'\u0070\u0065\u006e\u0064\u0069\u006e\u0067';}();}_0x0f+=`
+                <tr style="${record['\x69\x73\x5f\x6f\x70\x74\x69\x6d\x69\x73\x74\x69\x63']?"\u006f\u0070\u0061\u0063\u0069\u0074\u0079\u003a\u0020\u0030\u002e\u0037\u003b\u0020\u0062\u006f\u0072\u0064\u0065\u0072\u002d\u006c\u0065\u0066\u0074\u003a\u0020\u0032\u0070\u0078\u0020\u0073\u006f\u006c\u0069\u0064\u0020\u0023\u0033\u0062\u0038\u0032\u0066\u0036\u003b":''}">
+                    <td class="mono-id">${_0xfbbbd}</td>
+                    <td><div class="truncate-desc" title="${record['\x6e\x61\x6d\x65']||record['\x64\x65\x73\x63\x72\x69\x70\x74\x69\x6f\x6e']}">${record['\x64\x65\x73\x63\x72\x69\x70\x74\x69\x6f\x6e']||"refsnarT noitacollA metsyS".split("").reverse().join("")}</div></td>
+                    <td class="text-muted">${_0xdd593b}</td>
+                    <td><span class="status-pill ${_0x92e}">${_0x92e}</span></td>
+                    <td><span class="tx-amount ${_0x6cf4g}">${_0xg618gb}</span></td>
                     <td class="text-center">
-                        <button class="btn-action-view" data-row-id="${record.id}">
+                        <button class="btn-action-view" data-row-id="${record['\x69\x64']}">
                             <i data-lucide="eye" style="width:14px;height:14px;"></i>
                             <span>View</span>
                         </button>
                     </td>
                 </tr>
-            `;
-
-            mobileHTML += `
-                <div class="m-ledger-card" style="${record.is_optimistic ? 'opacity: 0.7; border-left: 3px solid #3b82f6;' : ''}">
+            `;_0xbf19ad+=`
+                <div class="m-ledger-card" style="${record['\x69\x73\x5f\x6f\x70\x74\x69\x6d\x69\x73\x74\x69\x63']?";6f28b3# dilos xp3 :tfel-redrob ;7.0 :yticapo".split("").reverse().join(""):''}">
                     <div class="m-card-top-line">
-                        <span class="mono-id">${formattedReferenceId}</span>
-                        <span class="status-pill ${calculatedStatus}">${calculatedStatus}</span>
+                        <span class="mono-id">${_0xfbbbd}</span>
+                        <span class="status-pill ${_0x92e}">${_0x92e}</span>
                     </div>
                     <div class="m-card-mid-line">
-                        <div class="m-card-title">${record.description || 'System Allocation Transfer'}</div>
-                        <div class="m-card-date">${baselineDateString}</div>
+                        <div class="m-card-title">${record['\x64\x65\x73\x63\x72\x69\x70\x74\x69\x6f\x6e']||"\u0053\u0079\u0073\u0074\u0065\u006d\u0020\u0041\u006c\u006c\u006f\u0063\u0061\u0074\u0069\u006f\u006e\u0020\u0054\u0072\u0061\u006e\u0073\u0066\u0065\u0072"}</div>
+                        <div class="m-card-date">${_0xdd593b}</div>
                     </div>
                     <div class="m-card-bottom-line">
-                        <span class="tx-amount ${amountClass}">${formattedAmount}</span>
-                        <button class="btn-action-view" data-row-id="${record.id}">
+                        <span class="tx-amount ${_0x6cf4g}">${_0xg618gb}</span>
+                        <button class="btn-action-view" data-row-id="${record['\x69\x64']}">
                             <i data-lucide="eye" style="width:12px;height:12px;"></i>
                             <span>Details</span>
                         </button>
                     </div>
                 </div>
-            `;
-        });
-
-        desktopContainer.innerHTML = desktopHTML;
-        mobileContainer.innerHTML = mobileHTML;
-
-        if (window.lucide) lucide.createIcons();
-
-        // Attach modal triggers explicitly to the visible rows
-        document.querySelectorAll('.btn-action-view').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const selectedRowId = btn.getAttribute('data-row-id');
-                triggerDetailedAuditModal(selectedRowId);
-            });
-        });
-    }
-
-    /**
-     * Handles DOM mutation state modifications for the pagination buttons block
-     */
-    function updatePaginationControlState(totalPages) {
-        const prevBtn = document.getElementById('ledger-prev-btn');
-        const nextBtn = document.getElementById('ledger-next-btn');
-        const countIndicator = document.getElementById('ledger-page-indicator');
-
-        if (countIndicator) {
-            countIndicator.innerText = totalPages > 0 ? `Page ${currentPage} of ${totalPages}` : `Page 0 of 0`;
-        }
-
-        if (prevBtn) {
-            prevBtn.disabled = (currentPage === 1 || totalPages === 0);
-        }
-        if (nextBtn) {
-            nextBtn.disabled = (currentPage === totalPages || totalPages === 0);
-        }
-    }
-
-    // Bind Pagination Elements Handlers securely
-    const prevBtnElement = document.getElementById('ledger-prev-btn');
-    const nextBtnElement = document.getElementById('ledger-next-btn');
-
-    if (prevBtnElement) {
-        prevBtnElement.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (currentPage > 1) {
-                currentPage--;
-                paginateAndRenderLedger();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-    }
-
-    if (nextBtnElement) {
-        nextBtnElement.addEventListener('click', (e) => {
-            e.preventDefault();
-            const totalPages = Math.ceil(loadedTransactionRecords.length / recordsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                paginateAndRenderLedger();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-    }
-
-    function renderEmptyPlaceholderState(messageString) {
-        const fallbackTextLayout = `<tr><td colspan="6" style="text-align:center; padding: 40px 10px; color:#94a3b8;">${messageString}</td></tr>`;
-        if (desktopContainer) desktopContainer.innerHTML = fallbackTextLayout;
-        if (mobileContainer) mobileContainer.innerHTML = `<div style="text-align:center; padding:40px 10px; width:100%; color:#94a3b8;">${messageString}</div>`;
-    }
-
-    function triggerDetailedAuditModal(rowID) {
-        const record = loadedTransactionRecords.find(r => String(r.id) === String(rowID));
-        if (!record) return;
-
-        const rawAmountValue = parseFloat(record.amount || "0");
-        const isDebit = rawAmountValue < 0;
-        const amountClass = isDebit ? 'receipt-val negative' : 'receipt-val positive';
-        const signSymbol = !isDebit ? '+' : '';
-        const formattedAmount = `${signSymbol}${activeUserCurrencySymbol}${Math.abs(rawAmountValue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        const formattedReferenceId = record.is_optimistic ? `TXN-PENDING` : `TXN-000${record.id}`;
-        const baselineDateString = record.date || new Date(record.created_at || Date.now()).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-
-        let calculatedStatus = 'success';
-        if (record.status) {
-            const standardizedDbStatus = String(record.status).toLowerCase().trim();
-            if (standardizedDbStatus === 'failed') calculatedStatus = 'failed';
-            else if (standardizedDbStatus === 'pending') calculatedStatus = 'pending';
-        }
-
-        const calculatedTypeLabel = isDebit ? "DEBIT" : "CREDIT";
-
-        Swal.fire({
-            html: `
+            `;});desktopContainer['\x69\x6e\x6e\x65\x72\x48\x54\x4d\x4c']=_0x0f;mobileContainer['\x69\x6e\x6e\x65\x72\x48\x54\x4d\x4c']=_0xbf19ad;if(window['\x6c\x75\x63\x69\x64\x65'])lucide['\x63\x72\x65\x61\x74\x65\x49\x63\x6f\x6e\x73']();document['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c']("weiv-noitca-ntb.".split("").reverse().join(""))['\x66\x6f\x72\x45\x61\x63\x68'](btn=>{btn['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("kcilc".split("").reverse().join(""),e=>{e['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']();const _0x558a=btn['\x67\x65\x74\x41\x74\x74\x72\x69\x62\x75\x74\x65']("\u0064\u0061\u0074\u0061\u002d\u0072\u006f\u0077\u002d\u0069\u0064");triggerDetailedAuditModal(_0x558a);});});}function updatePaginationControlState(_0xf3c){const _0xb16f9c=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u006c\u0065\u0064\u0067\u0065\u0072\u002d\u0070\u0072\u0065\u0076\u002d\u0062\u0074\u006e");const _0x62734f=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u006c\u0065\u0064\u0067\u0065\u0072\u002d\u006e\u0065\u0078\u0074\u002d\u0062\u0074\u006e");const _0x56a36f=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("rotacidni-egap-regdel".split("").reverse().join(""));if(_0x56a36f){_0x56a36f['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']=_0xf3c>(406931^406931)?`Page ${currentPage} of ${_0xf3c}`:`Page 0 of 0`;}if(_0xb16f9c){_0xb16f9c['\x64\x69\x73\x61\x62\x6c\x65\x64']=currentPage===(150238^150239)||_0xf3c===(716012^716012);}if(_0x62734f){_0x62734f['\x64\x69\x73\x61\x62\x6c\x65\x64']=currentPage===_0xf3c||_0xf3c===(599595^599595);}}const prevBtnElement=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u006c\u0065\u0064\u0067\u0065\u0072\u002d\u0070\u0072\u0065\u0076\u002d\u0062\u0074\u006e");const nextBtnElement=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u006c\u0065\u0064\u0067\u0065\u0072\u002d\u006e\u0065\u0078\u0074\u002d\u0062\u0074\u006e");if(prevBtnElement){prevBtnElement['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("\u0063\u006c\u0069\u0063\u006b",e=>{e['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']();if(currentPage>(676607^676606)){currentPage--;paginateAndRenderLedger();window['\x73\x63\x72\x6f\x6c\x6c\x54\x6f']({'\u0074\u006f\u0070':0,"\u0062\u0065\u0068\u0061\u0076\u0069\u006f\u0072":'smooth'});}});}if(nextBtnElement){nextBtnElement['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("\u0063\u006c\u0069\u0063\u006b",e=>{e['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']();const totalPages=Math['\x63\x65\x69\x6c'](loadedTransactionRecords['\x6c\x65\x6e\x67\x74\x68']/recordsPerPage);if(currentPage<totalPages){currentPage++;paginateAndRenderLedger();window['\x73\x63\x72\x6f\x6c\x6c\x54\x6f']({'\u0074\u006f\u0070':0,'\u0062\u0065\u0068\u0061\u0076\u0069\u006f\u0072':"\u0073\u006d\u006f\u006f\u0074\u0068"});}});}function renderEmptyPlaceholderState(_0x3217e){const _0xf90=`<tr><td colspan="6" style="text-align:center; padding: 40px 10px; color:#94a3b8;">${_0x3217e}</td></tr>`;if(desktopContainer)desktopContainer['\x69\x6e\x6e\x65\x72\x48\x54\x4d\x4c']=_0xf90;if(mobileContainer)mobileContainer['\x69\x6e\x6e\x65\x72\x48\x54\x4d\x4c']=`<div style="text-align:center; padding:40px 10px; width:100%; color:#94a3b8;">${_0x3217e}</div>`;}function triggerDetailedAuditModal(_0x9c89d,_0xedfa8d){const _0x3ecdge=loadedTransactionRecords['\x66\x69\x6e\x64'](r=>String(r['\x69\x64'])===String(_0x9c89d));if(!_0x3ecdge)return;const _0xee1=parseFloat(_0x3ecdge['\x61\x6d\x6f\x75\x6e\x74']||"\u0030");const _0x22b60f=function(s,h){return s<h;}(_0xee1,347021^347021);const _0x79bdd=_0x22b60f?"\u0072\u0065\u0063\u0065\u0069\u0070\u0074\u002d\u0076\u0061\u006c\u0020\u006e\u0065\u0067\u0061\u0074\u0069\u0076\u0065":"\u0072\u0065\u0063\u0065\u0069\u0070\u0074\u002d\u0076\u0061\u006c\u0020\u0070\u006f\u0073\u0069\u0074\u0069\u0076\u0065";const _0xbbbe9a=!_0x22b60f?"\u002b":'';const _0xa6ga=`${_0xbbbe9a}${activeUserCurrencySymbol}${Math['\x61\x62\x73'](_0xee1)['\x74\x6f\x4c\x6f\x63\x61\x6c\x65\x53\x74\x72\x69\x6e\x67']("\u0065\u006e\u002d\u0055\u0053",JSON['\x70\x61\x72\x73\x65']('\u007b\u000a\u0020\u0020\u0022\u006d\u0069\u006e\u0069\u006d\u0075\u006d\u0046\u0072\u0061\u0063\u0074\u0069\u006f\u006e\u0044\u0069\u0067\u0069\u0074\u0073\u0022\u003a\u0020\u0032\u002c\u000a\u0020\u0020\u0022\u006d\u0061\u0078\u0069\u006d\u0075\u006d\u0046\u0072\u0061\u0063\u0074\u0069\u006f\u006e\u0044\u0069\u0067\u0069\u0074\u0073\u0022\u003a\u0020\u0032\u000a\u007d'))}`;const _0x292=_0x3ecdge['\x69\x73\x5f\x6f\x70\x74\x69\x6d\x69\x73\x74\x69\x63']?`TXN-PENDING`:`TXN-000${_0x3ecdge['\x69\x64']}`;const _0x392=_0x3ecdge['\x64\x61\x74\x65']||new Date(_0x3ecdge['\x63\x72\x65\x61\x74\x65\x64\x5f\x61\x74']||Date['\x6e\x6f\x77']())['\x74\x6f\x4c\x6f\x63\x61\x6c\x65\x44\x61\x74\x65\x53\x74\x72\x69\x6e\x67']("\u0065\u006e\u002d\u0055\u0053",{'\u0064\u0061\u0079':"\u006e\u0075\u006d\u0065\u0072\u0069\u0063","month":"\u0073\u0068\u006f\u0072\u0074",'\u0079\u0065\u0061\u0072':'numeric'});_0xedfa8d=function(){return"sseccus".split("").reverse().join("");}();if(_0x3ecdge['\x73\x74\x61\x74\x75\x73']){const _0xd47e=String(_0x3ecdge['\x73\x74\x61\x74\x75\x73'])['\x74\x6f\x4c\x6f\x77\x65\x72\x43\x61\x73\x65']()['\x74\x72\x69\x6d']();if(_0xd47e==="\u0066\u0061\u0069\u006c\u0065\u0064")_0xedfa8d=function(){return"deliaf".split("").reverse().join("");}();else if(_0xd47e==="\u0070\u0065\u006e\u0064\u0069\u006e\u0067")_0xedfa8d=function(){return'\u0070\u0065\u006e\u0064\u0069\u006e\u0067';}();}const _0x493=_0x22b60f?"\u0044\u0045\u0042\u0049\u0054":"TIDERC".split("").reverse().join("");Swal['\x66\x69\x72\x65']({'\u0068\u0074\u006d\u006c':`
                 <div class="receipt-capture-zone" id="exportable-receipt-node">
                     <div class="receipt-brand-header">
                         <h4>G-Lite BANKING</h4>
@@ -313,39 +39,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="receipt-grid-rows">
                         <div class="receipt-row">
                             <span class="receipt-lbl">Reference ID</span>
-                            <span class="receipt-val mono">${formattedReferenceId}</span>
+                            <span class="receipt-val mono">${_0x292}</span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-lbl">Log Timestamp</span>
-                            <span class="receipt-val">${baselineDateString}</span>
+                            <span class="receipt-val">${_0x392}</span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-lbl">Operational Status</span>
-                            <span class="receipt-val"><span class="status-pill ${calculatedStatus}">${calculatedStatus}</span></span>
+                            <span class="receipt-val"><span class="status-pill ${_0xedfa8d}">${_0xedfa8d}</span></span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-lbl">Ledger Activity</span>
-                            <span class="receipt-val" style="text-transform: uppercase;">${calculatedTypeLabel} Allocation</span>
+                            <span class="receipt-val" style="text-transform: uppercase;">${_0x493} Allocation</span>
                         </div>
-                        ${record.name ? `
+                        ${_0x3ecdge['\x6e\x61\x6d\x65']?`
                         <div class="receipt-row">
                             <span class="receipt-lbl">Beneficiary/Sender</span>
-                            <span class="receipt-val" style="font-weight:600;">${record.name}</span>
-                        </div>` : ''}
+                            <span class="receipt-val" style="font-weight:600;">${_0x3ecdge['\x6e\x61\x6d\x65']}</span>
+                        </div>`:''}
                         
-                        ${record.signature ? `
+                        ${_0x3ecdge['\x73\x69\x67\x6e\x61\x74\x75\x72\x65']?`
                         <div class="receipt-row">
                             <span class="receipt-lbl">Auth Signature</span>
-                            <span class="receipt-val mono" style="font-size:0.75rem; color:#94a3b8;">${record.signature}</span>
-                        </div>` : ''}
+                            <span class="receipt-val mono" style="font-size:0.75rem; color:#94a3b8;">${_0x3ecdge['\x73\x69\x67\x6e\x61\x74\x75\x72\x65']}</span>
+                        </div>`:''}
 
                         <div class="receipt-row">
                             <span class="receipt-lbl">Total Volume</span>
-                            <span class="${amountClass}" style="font-family: monospace; font-size:1rem; font-weight:700;">${formattedAmount}</span>
+                            <span class="${_0x79bdd}" style="font-family: monospace; font-size:1rem; font-weight:700;">${_0xa6ga}</span>
                         </div>
                         <div class="receipt-row" style="flex-direction: column; gap: 0.25rem; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 0.5rem;">
                             <span class="receipt-lbl">Description Memo</span>
-                            <span class="receipt-val" style="text-align: left; width: 100%; color: #cbd5e1; font-weight: normal; font-size: 0.8rem; line-height: 1.4;">${record.description || 'Transaction processed successfully.'}</span>
+                            <span class="receipt-val" style="text-align: left; width: 100%; color: #cbd5e1; font-weight: normal; font-size: 0.8rem; line-height: 1.4;">${_0x3ecdge['\x64\x65\x73\x63\x72\x69\x70\x74\x69\x6f\x6e']||"\u0054\u0072\u0061\u006e\u0073\u0061\u0063\u0074\u0069\u006f\u006e\u0020\u0070\u0072\u006f\u0063\u0065\u0073\u0073\u0065\u0064\u0020\u0073\u0075\u0063\u0063\u0065\u0073\u0073\u0066\u0075\u006c\u006c\u0079\u002e"}</span>
                         </div>
                     </div>
                 </div>
@@ -360,40 +86,4 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span>Save Image Asset</span>
                     </button>
                 </div>
-            `,
-            showConfirmButton: false,
-            customClass: { popup: 'G-Lite-swal-modal-container' },
-            didOpen: () => {
-                if (window.lucide) lucide.createIcons();
-                document.getElementById('swal-close-btn').addEventListener('click', () => Swal.close());
-                document.getElementById('swal-save-btn').addEventListener('click', () => executeReceiptImageCapture(formattedReferenceId));
-            }
-        });
-    }
-
-    function executeReceiptImageCapture(referenceID) {
-        const captureTarget = document.getElementById('exportable-receipt-node');
-        if (!captureTarget) return;
-
-        const originalBg = captureTarget.style.background;
-        captureTarget.style.background = '#0d1322';
-
-        html2canvas(captureTarget, {
-            backgroundColor: '#0d1322',
-            scale: 2,
-            logging: false,
-            useCORS: true
-        }).then(canvas => {
-            captureTarget.style.background = originalBg;
-            const imageURL = canvas.toDataURL('image/png');
-            const hiddenDownloadAnchor = document.createElement('a');
-            hiddenDownloadAnchor.href = imageURL;
-            hiddenDownloadAnchor.download = `G-Lite-RECEIPT-${referenceID}.png`;
-            document.body.appendChild(hiddenDownloadAnchor);
-            hiddenDownloadAnchor.click();
-            document.body.removeChild(hiddenDownloadAnchor);
-        }).catch(error => {
-            console.error("Canvas export execution process fault:", error);
-        });
-    }
-});
+            `,"\u0073\u0068\u006f\u0077\u0043\u006f\u006e\u0066\u0069\u0072\u006d\u0042\u0075\u0074\u0074\u006f\u006e":![],"customClass":{"popup":"\u0047\u002d\u004c\u0069\u0074\u0065\u002d\u0073\u0077\u0061\u006c\u002d\u006d\u006f\u0064\u0061\u006c\u002d\u0063\u006f\u006e\u0074\u0061\u0069\u006e\u0065\u0072"},'\u0064\u0069\u0064\u004f\u0070\u0065\u006e':()=>{if(window['\x6c\x75\x63\x69\x64\x65'])lucide['\x63\x72\x65\x61\x74\x65\x49\x63\x6f\x6e\x73']();document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u0073\u0077\u0061\u006c\u002d\u0063\u006c\u006f\u0073\u0065\u002d\u0062\u0074\u006e")['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("\u0063\u006c\u0069\u0063\u006b",()=>Swal['\x63\x6c\x6f\x73\x65']());document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u0073\u0077\u0061\u006c\u002d\u0073\u0061\u0076\u0065\u002d\u0062\u0074\u006e")['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("kcilc".split("").reverse().join(""),()=>executeReceiptImageCapture(_0x292));}});}function executeReceiptImageCapture(_0x5){const _0x37af4f=document['\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64']("\u0065\u0078\u0070\u006f\u0072\u0074\u0061\u0062\u006c\u0065\u002d\u0072\u0065\u0063\u0065\u0069\u0070\u0074\u002d\u006e\u006f\u0064\u0065");if(!_0x37af4f)return;const _0x59b4fc=_0x37af4f['\x73\x74\x79\x6c\x65']['\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64'];_0x37af4f['\x73\x74\x79\x6c\x65']['\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64']=function(){return"\u0023\u0030\u0064\u0031\u0033\u0032\u0032";}();html2canvas(_0x37af4f,{'\u0062\u0061\u0063\u006b\u0067\u0072\u006f\u0075\u006e\u0064\u0043\u006f\u006c\u006f\u0072':"\u0023\u0030\u0064\u0031\u0033\u0032\u0032",'\u0073\u0063\u0061\u006c\u0065':2,"\u006c\u006f\u0067\u0067\u0069\u006e\u0067":![],"useCORS":!![]})['\x74\x68\x65\x6e'](canvas=>{_0x37af4f['\x73\x74\x79\x6c\x65']['\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64']=_0x59b4fc;const _0xb797c=canvas['\x74\x6f\x44\x61\x74\x61\x55\x52\x4c']("\u0069\u006d\u0061\u0067\u0065\u002f\u0070\u006e\u0067");const _0x81gga=document['\x63\x72\x65\x61\x74\x65\x45\x6c\x65\x6d\x65\x6e\x74']("\u0061");_0x81gga['\x68\x72\x65\x66']=_0xb797c;_0x81gga['\x64\x6f\x77\x6e\x6c\x6f\x61\x64']=`G-Lite-RECEIPT-${_0x5}.png`;document['\x62\x6f\x64\x79']['\x61\x70\x70\x65\x6e\x64\x43\x68\x69\x6c\x64'](_0x81gga);_0x81gga['\x63\x6c\x69\x63\x6b']();document['\x62\x6f\x64\x79']['\x72\x65\x6d\x6f\x76\x65\x43\x68\x69\x6c\x64'](_0x81gga);})['\x63\x61\x74\x63\x68'](error=>{console['\x65\x72\x72\x6f\x72']("\u0043\u0061\u006e\u0076\u0061\u0073\u0020\u0065\u0078\u0070\u006f\u0072\u0074\u0020\u0065\u0078\u0065\u0063\u0075\u0074\u0069\u006f\u006e\u0020\u0070\u0072\u006f\u0063\u0065\u0073\u0073\u0020\u0066\u0061\u0075\u006c\u0074\u003a",error);});}});

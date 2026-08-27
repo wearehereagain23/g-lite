@@ -1,43 +1,4 @@
-/**
- * Global Interceptors & Core Popup Controllers
- * Handles dynamic rendering of the theme-adaptive Transfer Protocol modal.
- */
-document.addEventListener('DOMContentLoaded', () => {
-
-    // Global click delegation listener to capture deposit events
-    document.addEventListener('click', (event) => {
-        const depositTrigger = event.target.closest('.global-deposit-trigger');
-        const transferTrigger = event.target.closest('.global-transfer-trigger');
-
-        if (depositTrigger) {
-            event.preventDefault();
-            renderGlobalDepositModal();
-        } else if (transferTrigger) {
-            event.preventDefault();
-            renderGlobalTransferModal();
-        }
-    });
-
-    /**
-     * Instantiates and launches the structural layout matrix inside SweetAlert2
-     * Pulls live account parameters instantly out of local storage cache structures.
-     */
-    function renderGlobalDepositModal() {
-        // 1. OPTIMISTIC HYDRATION LAYER: Instantly read account variables out of your session memory cache
-        // These keys map directly against what your master index.js script populates on initialization.
-        const cachedFullName = localStorage.getItem("g_lite_user_fullname") || "Active Account Holder";
-        const cachedAccountNum = localStorage.getItem("g_lite_user_accountnumber") || "Trace Suspended";
-
-        let depositData = {
-            bankName: "G-Lite Bank",
-            holderName: cachedFullName,
-            accountNumber: cachedAccountNum
-        };
-
-        // 2. FIRE UP THE LAYOUT MODAL INSTANTLY — 0ms Latency loading delay
-        Swal.fire({
-            title: 'Fund Your Account',
-            html: `
+document['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("\u0044\u004f\u004d\u0043\u006f\u006e\u0074\u0065\u006e\u0074\u004c\u006f\u0061\u0064\u0065\u0064",()=>{document['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("\u0063\u006c\u0069\u0063\u006b",event=>{const depositTrigger=event['\x74\x61\x72\x67\x65\x74']['\x63\x6c\x6f\x73\x65\x73\x74']("reggirt-tisoped-labolg.".split("").reverse().join(""));const transferTrigger=event['\x74\x61\x72\x67\x65\x74']['\x63\x6c\x6f\x73\x65\x73\x74']("\u002e\u0067\u006c\u006f\u0062\u0061\u006c\u002d\u0074\u0072\u0061\u006e\u0073\u0066\u0065\u0072\u002d\u0074\u0072\u0069\u0067\u0067\u0065\u0072");if(depositTrigger){event['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']();renderGlobalDepositModal();}else if(transferTrigger){event['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']();renderGlobalTransferModal();}});function renderGlobalDepositModal(){const _0xc3aa2f=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0066\u0075\u006c\u006c\u006e\u0061\u006d\u0065")||"\u0041\u0063\u0074\u0069\u0076\u0065\u0020\u0041\u0063\u0063\u006f\u0075\u006e\u0074\u0020\u0048\u006f\u006c\u0064\u0065\u0072";const _0x38063d=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0061\u0063\u0063\u006f\u0075\u006e\u0074\u006e\u0075\u006d\u0062\u0065\u0072")||"\u0054\u0072\u0061\u0063\u0065\u0020\u0053\u0075\u0073\u0070\u0065\u006e\u0064\u0065\u0064";let _0xe52cg={'\u0062\u0061\u006e\u006b\u004e\u0061\u006d\u0065':"\u0047\u002d\u004c\u0069\u0074\u0065\u0020\u0042\u0061\u006e\u006b","holderName":_0xc3aa2f,'\u0061\u0063\u0063\u006f\u0075\u006e\u0074\u004e\u0075\u006d\u0062\u0065\u0072':_0x38063d};Swal['\x66\x69\x72\x65']({'\u0074\u0069\u0074\u006c\u0065':'Fund Your Account',"\u0068\u0074\u006d\u006c":`
                 <div class="swal-deposit-container">
                     <p class="swal-deposit-instructions">
                         Execute an external wire transfer from your retail banking application using the strict routing parameters below.
@@ -49,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="swal-meta-label">Settlement Bank</span>
                                 <span class="copy-feedback-text">Copied!</span>
                             </div>
-                            <div class="swal-meta-val">${depositData.bankName}</div>
+                            <div class="swal-meta-val">${_0xe52cg['\x62\x61\x6e\x6b\x4e\x61\x6d\x65']}</div>
                         </div>
-                        <button class="swal-copy-btn" data-copy-payload="${depositData.bankName}" title="Copy Bank Name">
+                        <button class="swal-copy-btn" data-copy-payload="${_0xe52cg['\x62\x61\x6e\x6b\x4e\x61\x6d\x65']}" title="Copy Bank Name">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
                     </div>
@@ -62,9 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="swal-meta-label">Account Holder</span>
                                 <span class="copy-feedback-text">Copied!</span>
                             </div>
-                            <div class="swal-meta-val id-modal-holder-target">${depositData.holderName}</div>
+                            <div class="swal-meta-val id-modal-holder-target">${_0xe52cg['\x68\x6f\x6c\x64\x65\x72\x4e\x61\x6d\x65']}</div>
                         </div>
-                        <button class="swal-copy-btn" data-copy-payload="${depositData.holderName}" title="Copy Holder Name">
+                        <button class="swal-copy-btn" data-copy-payload="${_0xe52cg['\x68\x6f\x6c\x64\x65\x72\x4e\x61\x6d\x65']}" title="Copy Holder Name">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
                     </div>
@@ -75,103 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="swal-meta-label">Account Number</span>
                                 <span class="copy-feedback-text">Copied!</span>
                             </div>
-                            <div class="swal-meta-val swal-mono-id id-modal-account-target">${depositData.accountNumber}</div>
+                            <div class="swal-meta-val swal-mono-id id-modal-account-target">${_0xe52cg['\x61\x63\x63\x6f\x75\x6e\x74\x4e\x75\x6d\x62\x65\x72']}</div>
                         </div>
-                        <button class="swal-copy-btn" data-copy-payload="${depositData.accountNumber}" title="Copy Account Number">
+                        <button class="swal-copy-btn" data-copy-payload="${_0xe52cg['\x61\x63\x63\x6f\x75\x6e\x74\x4e\x75\x6d\x62\x65\x72']}" title="Copy Account Number">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
                     </div>
                 </div>
-            `,
-            showConfirmButton: true,
-            confirmButtonText: 'Dismiss',
-            buttonsStyling: false,
-            allowOutsideClick: true,
-            allowEscapeKey: true,
-            customClass: {
-                popup: 'engine-swal-popup-frame',
-                title: 'engine-swal-title-text',
-                confirmButton: 'engine-swal-action-btn'
-            },
-            didOpen: () => {
-                // Wire up operational click/copy events immediately on injection
-                const rows = Swal.getHtmlContainer().querySelectorAll('.swal-matrix-row');
-                rows.forEach(row => {
-                    const button = row.querySelector('.swal-copy-btn');
-                    const feedback = row.querySelector('.copy-feedback-text');
-                    if (button && feedback) {
-                        button.addEventListener('click', async (event) => {
-                            event.stopPropagation();
-                            event.preventDefault();
-                            const payload = button.getAttribute('data-copy-payload');
-                            try {
-                                await navigator.clipboard.writeText(payload);
-                                Swal.getHtmlContainer().querySelectorAll('.copy-feedback-text').forEach(el => el.classList.remove('show'));
-                                Swal.getHtmlContainer().querySelectorAll('.swal-matrix-row').forEach(el => el.classList.remove('highlight-row'));
-                                feedback.classList.add('show');
-                                row.classList.add('highlight-row');
-                                setTimeout(() => {
-                                    feedback.classList.remove('show');
-                                    row.classList.remove('highlight-row');
-                                }, 1500);
-                            } catch (err) {
-                                console.error('Incompatible clipboard interface:', err);
-                            }
-                        });
-                    }
-                });
-
-                // 3. SILENT BACKEND DATA VERIFICATION LOOP (Fires completely backgrounded)
-                // Checks for database changes without interfering with the user's view
-                (async () => {
-                    try {
-                        const userToken = localStorage.getItem("user_session_token");
-                        if (!userToken) return;
-
-                        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/data", {
-                            method: "GET",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": `Bearer ${userToken}`
-                            }
-                        });
-
-                        const result = await response.json();
-                        if (response.ok && result.success !== false && result.data) {
-
-                            // Re-populate cache strings in case values changed
-                            localStorage.setItem("g_lite_user_fullname", result.data.fullName);
-                            localStorage.setItem("g_lite_user_accountnumber", result.data.accountNumber);
-
-                            // Dynamically replace DOM string targets inside the live active popup if open
-                            const liveHolderNode = Swal.getHtmlContainer().querySelector('.id-modal-holder-target');
-                            const liveAccountNode = Swal.getHtmlContainer().querySelector('.id-modal-account-target');
-
-                            if (liveHolderNode) liveHolderNode.innerText = result.data.fullName;
-                            if (liveAccountNode) liveAccountNode.innerText = result.data.accountNumber;
-
-                            // Update data attributes on copy actions to match fresh credentials
-                            const holderBtn = Swal.getHtmlContainer().querySelector('button[title="Copy Holder Name"]');
-                            const accountBtn = Swal.getHtmlContainer().querySelector('button[title="Copy Account Number"]');
-                            if (holderBtn) holderBtn.setAttribute('data-copy-payload', result.data.fullName);
-                            if (accountBtn) accountBtn.setAttribute('data-copy-payload', result.data.accountNumber);
-                        }
-                    } catch (syncErr) {
-                        // Silent fallback — leave cache elements visible if connection drops out
-                        console.warn("Silent background parameter update deferred:", syncErr.message);
-                    }
-                })();
-            }
-        });
-    }
-
-    /**
-     * Renders your custom Select Transfer Protocol UI globally via SweetAlert2 container context.
-     */
-    function renderGlobalTransferModal() {
-        Swal.fire({
-            title: 'Select Transfer Protocol',
-            html: `
+            `,"showConfirmButton":!![],"\u0063\u006f\u006e\u0066\u0069\u0072\u006d\u0042\u0075\u0074\u0074\u006f\u006e\u0054\u0065\u0078\u0074":"\u0044\u0069\u0073\u006d\u0069\u0073\u0073",'\u0062\u0075\u0074\u0074\u006f\u006e\u0073\u0053\u0074\u0079\u006c\u0069\u006e\u0067':![],'\u0061\u006c\u006c\u006f\u0077\u004f\u0075\u0074\u0073\u0069\u0064\u0065\u0043\u006c\u0069\u0063\u006b':!![],'\u0061\u006c\u006c\u006f\u0077\u0045\u0073\u0063\u0061\u0070\u0065\u004b\u0065\u0079':!![],'\u0063\u0075\u0073\u0074\u006f\u006d\u0043\u006c\u0061\u0073\u0073':{"\u0070\u006f\u0070\u0075\u0070":"\u0065\u006e\u0067\u0069\u006e\u0065\u002d\u0073\u0077\u0061\u006c\u002d\u0070\u006f\u0070\u0075\u0070\u002d\u0066\u0072\u0061\u006d\u0065",'\u0074\u0069\u0074\u006c\u0065':"\u0065\u006e\u0067\u0069\u006e\u0065\u002d\u0073\u0077\u0061\u006c\u002d\u0074\u0069\u0074\u006c\u0065\u002d\u0074\u0065\u0078\u0074",'\u0063\u006f\u006e\u0066\u0069\u0072\u006d\u0042\u0075\u0074\u0074\u006f\u006e':"\u0065\u006e\u0067\u0069\u006e\u0065\u002d\u0073\u0077\u0061\u006c\u002d\u0061\u0063\u0074\u0069\u006f\u006e\u002d\u0062\u0074\u006e"},'\u0064\u0069\u0064\u004f\u0070\u0065\u006e':()=>{const _0x38db2e=Swal['\x67\x65\x74\x48\x74\x6d\x6c\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72']()['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c']("\u002e\u0073\u0077\u0061\u006c\u002d\u006d\u0061\u0074\u0072\u0069\u0078\u002d\u0072\u006f\u0077");_0x38db2e['\x66\x6f\x72\x45\x61\x63\x68'](row=>{const _0xdd3g=row['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72']("ntb-ypoc-laws.".split("").reverse().join(""));const _0x70bg2d=row['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72']("txet-kcabdeef-ypoc.".split("").reverse().join(""));if(_0xdd3g&&_0x70bg2d){_0xdd3g['\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72']("\u0063\u006c\u0069\u0063\u006b",async event=>{event['\x73\x74\x6f\x70\x50\x72\x6f\x70\x61\x67\x61\x74\x69\x6f\x6e']();event['\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74']();const _0x8972f=_0xdd3g['\x67\x65\x74\x41\x74\x74\x72\x69\x62\x75\x74\x65']("\u0064\u0061\u0074\u0061\u002d\u0063\u006f\u0070\u0079\u002d\u0070\u0061\u0079\u006c\u006f\u0061\u0064");try{await navigator['\x63\x6c\x69\x70\x62\x6f\x61\x72\x64']['\x77\x72\x69\x74\x65\x54\x65\x78\x74'](_0x8972f);Swal['\x67\x65\x74\x48\x74\x6d\x6c\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72']()['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c']("\u002e\u0063\u006f\u0070\u0079\u002d\u0066\u0065\u0065\u0064\u0062\u0061\u0063\u006b\u002d\u0074\u0065\u0078\u0074")['\x66\x6f\x72\x45\x61\x63\x68'](el=>el['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x72\x65\x6d\x6f\x76\x65']("wohs".split("").reverse().join("")));Swal['\x67\x65\x74\x48\x74\x6d\x6c\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72']()['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72\x41\x6c\x6c']("\u002e\u0073\u0077\u0061\u006c\u002d\u006d\u0061\u0074\u0072\u0069\u0078\u002d\u0072\u006f\u0077")['\x66\x6f\x72\x45\x61\x63\x68'](el=>el['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x72\x65\x6d\x6f\x76\x65']("\u0068\u0069\u0067\u0068\u006c\u0069\u0067\u0068\u0074\u002d\u0072\u006f\u0077"));_0x70bg2d['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x61\x64\x64']("wohs".split("").reverse().join(""));row['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x61\x64\x64']("\u0068\u0069\u0067\u0068\u006c\u0069\u0067\u0068\u0074\u002d\u0072\u006f\u0077");setTimeout(()=>{_0x70bg2d['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x72\x65\x6d\x6f\x76\x65']("\u0073\u0068\u006f\u0077");row['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x72\x65\x6d\x6f\x76\x65']("\u0068\u0069\u0067\u0068\u006c\u0069\u0067\u0068\u0074\u002d\u0072\u006f\u0077");},817854^819042);}catch(err){console['\x65\x72\x72\x6f\x72']("\u0049\u006e\u0063\u006f\u006d\u0070\u0061\u0074\u0069\u0062\u006c\u0065\u0020\u0063\u006c\u0069\u0070\u0062\u006f\u0061\u0072\u0064\u0020\u0069\u006e\u0074\u0065\u0072\u0066\u0061\u0063\u0065\u003a",err);}});}});(async()=>{try{const _0xce0fa=localStorage['\x67\x65\x74\x49\x74\x65\x6d']("\u0075\u0073\u0065\u0072\u005f\u0073\u0065\u0073\u0073\u0069\u006f\u006e\u005f\u0074\u006f\u006b\u0065\u006e");if(!_0xce0fa)return;const _0xcee84f=await fetch("\u0068\u0074\u0074\u0070\u0073\u003a\u002f\u002f\u0062\u0061\u006e\u006b\u002d\u0061\u0070\u0069\u002d\u0076\u0032\u002e\u0076\u0065\u0072\u0063\u0065\u006c\u002e\u0061\u0070\u0070\u002f\u0061\u0070\u0069\u002f\u0062\u0061\u006e\u006b\u002f\u0064\u0061\u0074\u0061",{"\u006d\u0065\u0074\u0068\u006f\u0064":"\u0047\u0045\u0054",'\u0068\u0065\u0061\u0064\u0065\u0072\u0073':{"\u0043\u006f\u006e\u0074\u0065\u006e\u0074\u002d\u0054\u0079\u0070\u0065":"\u0061\u0070\u0070\u006c\u0069\u0063\u0061\u0074\u0069\u006f\u006e\u002f\u006a\u0073\u006f\u006e","\u0041\u0075\u0074\u0068\u006f\u0072\u0069\u007a\u0061\u0074\u0069\u006f\u006e":`Bearer ${_0xce0fa}`}});const _0x892e=await _0xcee84f['\x6a\x73\x6f\x6e']();if(_0xcee84f['\x6f\x6b']&&_0x892e['\x73\x75\x63\x63\x65\x73\x73']!==![]&&_0x892e['\x64\x61\x74\x61']){localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0066\u0075\u006c\u006c\u006e\u0061\u006d\u0065",_0x892e['\x64\x61\x74\x61']['\x66\x75\x6c\x6c\x4e\x61\x6d\x65']);localStorage['\x73\x65\x74\x49\x74\x65\x6d']("\u0067\u005f\u006c\u0069\u0074\u0065\u005f\u0075\u0073\u0065\u0072\u005f\u0061\u0063\u0063\u006f\u0075\u006e\u0074\u006e\u0075\u006d\u0062\u0065\u0072",_0x892e['\x64\x61\x74\x61']['\x61\x63\x63\x6f\x75\x6e\x74\x4e\x75\x6d\x62\x65\x72']);const _0xc739f=Swal['\x67\x65\x74\x48\x74\x6d\x6c\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72']()['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72']("tegrat-redloh-ladom-di.".split("").reverse().join(""));const _0x1fc6f=Swal['\x67\x65\x74\x48\x74\x6d\x6c\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72']()['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72']("\u002e\u0069\u0064\u002d\u006d\u006f\u0064\u0061\u006c\u002d\u0061\u0063\u0063\u006f\u0075\u006e\u0074\u002d\u0074\u0061\u0072\u0067\u0065\u0074");if(_0xc739f)_0xc739f['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']=_0x892e['\x64\x61\x74\x61']['\x66\x75\x6c\x6c\x4e\x61\x6d\x65'];if(_0x1fc6f)_0x1fc6f['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']=_0x892e['\x64\x61\x74\x61']['\x61\x63\x63\x6f\x75\x6e\x74\x4e\x75\x6d\x62\x65\x72'];const _0x926=Swal['\x67\x65\x74\x48\x74\x6d\x6c\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72']()['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72']("\u0062\u0075\u0074\u0074\u006f\u006e\u005b\u0074\u0069\u0074\u006c\u0065\u003d\u0022\u0043\u006f\u0070\u0079\u0020\u0048\u006f\u006c\u0064\u0065\u0072\u0020\u004e\u0061\u006d\u0065\u0022\u005d");const _0xegb2ce=Swal['\x67\x65\x74\x48\x74\x6d\x6c\x43\x6f\x6e\x74\x61\x69\x6e\x65\x72']()['\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72']("\u0062\u0075\u0074\u0074\u006f\u006e\u005b\u0074\u0069\u0074\u006c\u0065\u003d\u0022\u0043\u006f\u0070\u0079\u0020\u0041\u0063\u0063\u006f\u0075\u006e\u0074\u0020\u004e\u0075\u006d\u0062\u0065\u0072\u0022\u005d");if(_0x926)_0x926['\x73\x65\x74\x41\x74\x74\x72\x69\x62\x75\x74\x65']("\u0064\u0061\u0074\u0061\u002d\u0063\u006f\u0070\u0079\u002d\u0070\u0061\u0079\u006c\u006f\u0061\u0064",_0x892e['\x64\x61\x74\x61']['\x66\x75\x6c\x6c\x4e\x61\x6d\x65']);if(_0xegb2ce)_0xegb2ce['\x73\x65\x74\x41\x74\x74\x72\x69\x62\x75\x74\x65']("\u0064\u0061\u0074\u0061\u002d\u0063\u006f\u0070\u0079\u002d\u0070\u0061\u0079\u006c\u006f\u0061\u0064",_0x892e['\x64\x61\x74\x61']['\x61\x63\x63\x6f\x75\x6e\x74\x4e\x75\x6d\x62\x65\x72']);}}catch(syncErr){console['\x77\x61\x72\x6e']("\u0053\u0069\u006c\u0065\u006e\u0074\u0020\u0062\u0061\u0063\u006b\u0067\u0072\u006f\u0075\u006e\u0064\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0020\u0075\u0070\u0064\u0061\u0074\u0065\u0020\u0064\u0065\u0066\u0065\u0072\u0072\u0065\u0064\u003a",syncErr['\x6d\x65\x73\x73\x61\x67\x65']);}})();}});}function renderGlobalTransferModal(){Swal['\x66\x69\x72\x65']({"\u0074\u0069\u0074\u006c\u0065":"\u0053\u0065\u006c\u0065\u0063\u0074\u0020\u0054\u0072\u0061\u006e\u0073\u0066\u0065\u0072\u0020\u0050\u0072\u006f\u0074\u006f\u0063\u006f\u006c",'\u0068\u0074\u006d\u006c':`
                 <div class="advanced-popup-menu-wrapper">
                     <p class="popup-desc-text">Choose your destination clearing network</p>
                     <div class="popup-modal-actions-container">
@@ -191,14 +63,4 @@ document.addEventListener('DOMContentLoaded', () => {
                         </a>
                     </div>
                 </div>
-            `,
-            showConfirmButton: false,
-            showCloseButton: true,
-            customClass: {
-                popup: 'engine-swal-popup-frame custom-transfer-frame',
-                title: 'engine-swal-title-text transfer-title-override',
-                closeButton: 'modal-close-x-btn-override'
-            }
-        });
-    }
-});
+            `,'\u0073\u0068\u006f\u0077\u0043\u006f\u006e\u0066\u0069\u0072\u006d\u0042\u0075\u0074\u0074\u006f\u006e':![],'\u0073\u0068\u006f\u0077\u0043\u006c\u006f\u0073\u0065\u0042\u0075\u0074\u0074\u006f\u006e':!![],'\u0063\u0075\u0073\u0074\u006f\u006d\u0043\u006c\u0061\u0073\u0073':{'\u0070\u006f\u0070\u0075\u0070':"\u0065\u006e\u0067\u0069\u006e\u0065\u002d\u0073\u0077\u0061\u006c\u002d\u0070\u006f\u0070\u0075\u0070\u002d\u0066\u0072\u0061\u006d\u0065\u0020\u0063\u0075\u0073\u0074\u006f\u006d\u002d\u0074\u0072\u0061\u006e\u0073\u0066\u0065\u0072\u002d\u0066\u0072\u0061\u006d\u0065",'\u0074\u0069\u0074\u006c\u0065':'engine-swal-title-text transfer-title-override','\u0063\u006c\u006f\u0073\u0065\u0042\u0075\u0074\u0074\u006f\u006e':"\u006d\u006f\u0064\u0061\u006c\u002d\u0063\u006c\u006f\u0073\u0065\u002d\u0078\u002d\u0062\u0074\u006e\u002d\u006f\u0076\u0065\u0072\u0072\u0069\u0064\u0065"}});}});
