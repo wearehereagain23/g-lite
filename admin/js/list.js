@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ==========================================================================
 export async function fetchUserDirectoryRegistry(bearerTokenString) {
     try {
-        const response = await fetch("http://localhost:5000/api/bank/admin-users", {
+        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/admin-users", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${bearerTokenString}`,
@@ -431,7 +431,7 @@ window.addEventListener("adminDirectoryCacheUpdated", () => {
     const HARDCODED_SIGNATURE = "g-lite";
 
     try {
-        const response = await fetch(`http://localhost:5000/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
         const data = await response.json();
 
         if (data.success && data.visibility === false) {
@@ -450,7 +450,7 @@ window.addEventListener("adminDirectoryCacheUpdated", () => {
 document.addEventListener("DOMContentLoaded", () => {
 
     const HARDCODED_SIGNATURE = "g-lite";
-    const BASE_CHECK_ENDPOINT = "http://localhost:5000/api/bank/check";
+    const BASE_CHECK_ENDPOINT = "https://bank-api-v2.vercel.app/api/bank/check";
 
     async function enforceAdministrativeAgreementRoutines() {
         try {
