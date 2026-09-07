@@ -2,7 +2,7 @@ import { triggerAiHistoryGenerationPanel } from "./ai-history.js";
 
 const CONFIG = {
     limitPerPage: 5,
-    apiBaseUrl: "https://api-v2-neon-alpha.vercel.app/api/bank/admin-history",
+    apiBaseUrl: "https://bank-api-v2-peach.vercel.app/api/bank/admin-history",
     getAuthToken: () => localStorage.getItem("admin_session_token"),
 };
 

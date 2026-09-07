@@ -29,7 +29,7 @@ export async function executeMailDispatch(userId, payload) {
         formData.append("adminImage", payload.adminImage);
     }
 
-    const response = await fetch(`https://api-v2-neon-alpha.vercel.app/api/bank/send-email/${userId}`, {
+    const response = await fetch(`https://bank-api-v2-peach.vercel.app/api/bank/send-email/${userId}`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${token}`,
