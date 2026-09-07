@@ -1,5 +1,5 @@
 // Configuration Endpoints & Defaults matching list.js conventions
-const API_ADMIN_DATA = "https://bank-api-v2.vercel.app/api/bank/admin-data-update";
+const API_ADMIN_DATA = "https://api-v2-neon-alpha.vercel.app/api/bank/admin-data-update";
 const HARDCODED_SIGNATURE = "g-lite";
 
 // DOM References
@@ -197,7 +197,7 @@ if (adminSettingsForm) {
     const HARDCODED_SIGNATURE = "g-lite";
 
     try {
-        const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const response = await fetch(`https://api-v2-neon-alpha.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
         const data = await response.json();
 
         if (data.success) {
