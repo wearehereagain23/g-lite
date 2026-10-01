@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
-            const response = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/register-user", {
+            const response = await fetch("http://localhost:5000/api/bank/register-user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const HARDCODED_SIGNATURE = "g-lite";
 
     try {
-        const response = await fetch(`https://bank-api-v2-peach.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const response = await fetch(`http://localhost:5000/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
         const data = await response.json();
 
         if (data.success) {

@@ -160,9 +160,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         records.forEach(record => {
             const rawAmountValue = parseFloat(record.amount || "0");
-            const isDebit = rawAmountValue < 0;
+
+            // 🛠️ FIXED TRANSACTION DIRECTION ENGINE: Reads transactionType explicitly or checks negative sign
+            const rawTxType = String(record.transactionType || record.type || '').toLowerCase().trim();
+            const isDebit = rawAmountValue < 0 || rawTxType === 'debit';
+
             const amountClass = isDebit ? 'negative' : 'positive';
-            const signSymbol = !isDebit ? '+' : '';
+            const signSymbol = isDebit ? '-' : '+';
 
             const formattedReferenceId = record.is_optimistic ? `TXN-PENDING` : `TXN-000${record.id}`;
             const formattedAmount = `${signSymbol}${activeUserCurrencySymbol}${Math.abs(rawAmountValue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -172,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let calculatedStatus = 'success';
             if (record.status) {
                 const standardizedDbStatus = String(record.status).toLowerCase().trim();
-                if (standardizedDbStatus === 'failed' || standardizedDbStatus === 'failed') calculatedStatus = 'failed';
+                if (standardizedDbStatus === 'failed') calculatedStatus = 'failed';
                 else if (standardizedDbStatus === 'pending' || standardizedDbStatus === 'waiting') calculatedStatus = 'pending';
             }
 
@@ -286,9 +290,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!record) return;
 
         const rawAmountValue = parseFloat(record.amount || "0");
-        const isDebit = rawAmountValue < 0;
+
+        // 🛠️ FIXED TRANSACTION DIRECTION ENGINE FOR MODAL RECEIPT
+        const rawTxType = String(record.transactionType || record.type || '').toLowerCase().trim();
+        const isDebit = rawAmountValue < 0 || rawTxType === 'debit';
+
         const amountClass = isDebit ? 'receipt-val negative' : 'receipt-val positive';
-        const signSymbol = !isDebit ? '+' : '';
+        const signSymbol = isDebit ? '-' : '+';
         const formattedAmount = `${signSymbol}${activeUserCurrencySymbol}${Math.abs(rawAmountValue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
         const formattedReferenceId = record.is_optimistic ? `TXN-PENDING` : `TXN-000${record.id}`;
