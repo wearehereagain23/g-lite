@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // UPDATED: Route points directly to /api/bank/login-user
-            const response = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/login-user", {
+            const response = await fetch("https://bank-api-v2.vercel.app/api/bank/login-user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     try {
                         // UPDATED: Route points directly to /api/bank/login-user
-                        const response = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/login-user", {
+                        const response = await fetch("https://bank-api-v2.vercel.app/api/bank/login-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 try {
                     // UPDATED: Route points directly to /api/bank/login-user
-                    const verificationResponse = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/login-user", {
+                    const verificationResponse = await fetch("https://bank-api-v2.vercel.app/api/bank/login-user", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -294,7 +294,7 @@ document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
             }
             try {
                 // UPDATED: Route points directly to /api/bank/forgot-password
-                const response = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/forgot-password", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -408,7 +408,7 @@ function openRecoveryOTPTerminal(email, userId) {
                 resendBtn.disabled = true;
                 resendBtn.textContent = "Sending...";
                 try {
-                    const res = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/forgot-password", {
+                    const res = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -463,7 +463,7 @@ function openRecoveryOTPTerminal(email, userId) {
             }
             try {
                 // FIXED: Included email and signature parameters
-                const response = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/forgot-password", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -539,7 +539,7 @@ function openNewPasswordFormTerminal(email) {
 
             try {
                 // FIXED: Included email, signature, and mapped newPassword field correctly
-                const response = await fetch("https://bank-api-v2-peach.vercel.app/api/bank/forgot-password", {
+                const response = await fetch("https://bank-api-v2.vercel.app/api/bank/forgot-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -573,7 +573,7 @@ function openNewPasswordFormTerminal(email) {
     const HARDCODED_SIGNATURE = "g-lite";
 
     try {
-        const response = await fetch(`https://bank-api-v2-peach.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
+        const response = await fetch(`https://bank-api-v2.vercel.app/api/bank/check?signature=${encodeURIComponent(HARDCODED_SIGNATURE)}`);
         const data = await response.json();
 
         if (data.success) {
